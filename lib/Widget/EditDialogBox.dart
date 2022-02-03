@@ -1,13 +1,25 @@
 import 'package:appsimanis/Model/CRUD.dart';
 import 'package:appsimanis/Provider/ThemeProvider.dart';
 import 'package:appsimanis/Widget/Button1.dart';
+import 'package:appsimanis/Widget/Button2.dart';
 import 'package:appsimanis/Widget/Dropdown3.dart';
 import 'package:appsimanis/Widget/InputForm.dart';
 import 'package:appsimanis/Widget/TextLabel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+
+import 'CustomText.dart';
 
 CRUD crud = new CRUD();
+Widget _inputFormType = Container();
+DateTime selectedDate = DateTime.now();
+
+dateFormat(String date) {
+  final DateFormat formatter = DateFormat('dd-MM-yyyy');
+  final String formatted = formatter.format(DateTime.parse(date));
+  return formatted.substring(6, 10);
+}
 
 Widget editDialogBox(
     BuildContext context,
@@ -21,39 +33,75 @@ Widget editDialogBox(
     String _hintText,
     String _labelText,
     String _dropDownValue,
+    String _dateValue,
     TextEditingController _controller,
     List _dropDownListItem,
+    String _keyboardType,
     var _dropDownOnChanged,
+    var _dateOnChanged,
     var _onPressed) {
+  if (_type == "dropDown") {
+    _inputFormType = dropDown3(_dropDownValue, _paramDropdown, _hintText,
+        _dropDownListItem, _dropDownOnChanged);
+  } else if (_type == "date") {
+    _inputFormType = GestureDetector(
+        onTap: _dateOnChanged,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                  "$_labelText ${_dateValue == "" ? "" : dateFormat((_dateValue))}"),
+              Icon(Icons.calendar_today)
+            ],
+          ),
+        ));
+  } else {
+    _inputFormType = inputForm(
+        null, _hintText, _keyboardType, _labelText, "", _controller, false);
+  }
+  ;
   ThemeProvider themeProvider =
       Provider.of<ThemeProvider>(context, listen: false);
   return Scaffold(
     appBar: AppBar(
-      leading: IconButton(onPressed: _onPressed, icon: Icon(Icons.arrow_back)),
-      title: textLabel(_content, 15, Colors.black, "", FontWeight.w400),
-      centerTitle: true,
-      iconTheme: IconThemeData(color: Colors.black),
+      title: customText(context, Color(0xff242F43), 'Edit Profil',
+          TextAlign.left, 20, FontWeight.w600),
+      leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.chevron_left)),
+      iconTheme: IconThemeData(color: Color(0xff242F43)),
       elevation: 0,
       backgroundColor: Colors.white,
     ),
     body: ListView(
       children: [
-        _type == "dropDown"
-            ? dropDown3(_dropDownValue, _paramDropdown, _hintText,
-                _dropDownListItem, _dropDownOnChanged)
-            : inputForm(null, _hintText, _labelText, "", _controller, false),
-        button1("Simpan", themeProvider.fontColor1, context, () {
-          Map<String, String> data = {
-            _param: _type == "dropDown" ? _dropDownValue : _controller.text
-          };
-          print('/badan_usaha/${_param}/${_idUser}');
-          print(data);
-          // print(_dropDownValue);
-          // print(_type);
-          crud.putData('/${_namaTabel}/${_param}/${_idUser}', data);
-          // Navigator.pop(context);
-          Navigator.popAndPushNamed(context, '/${_redirectTo}');
-        })
+        _inputFormType,
+        Padding(
+          padding: const EdgeInsets.only(left: 16, right: 16),
+          child:
+              button2("Simpan", Color(0xff2BA33A), Colors.white, context, () {
+            Map<String, String> data = {};
+            if (_type == "dropDown") {
+              data = {_param: "$_dropDownValue"};
+            } else if (_type == "date") {
+              data = {_param: "$_dateValue"};
+            } else {
+              data = {_param: "${_controller.text}"};
+            }
+            // print('/badan_usaha/${_param}/${_idUser}');
+            // print('/${_namaTabel}/${_param}/${_idUser}');
+            // print(data);
+            // print(_dropDownValue);
+            // print(_type);
+            crud.putData('/${_namaTabel}/${_param}/${_idUser}', data);
+            // Navigator.pop(context);
+            Navigator.popAndPushNamed(context, '/${_redirectTo}');
+          }),
+        )
       ],
     ),
   );

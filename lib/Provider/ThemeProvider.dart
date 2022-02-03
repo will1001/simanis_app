@@ -8,7 +8,7 @@ class ThemeProvider extends ChangeNotifier {
   Color fontColor1 = Color(0xFF133A66);
   Color fontColor2 = Color(0xFF878C92);
   Color fontColorWhite = Colors.white;
-  String fontFamily = "Roboto";
+  String fontFamily = "Poppins";
 
   // void changeThemeColor(Color color) {
   //   mainColor = color;

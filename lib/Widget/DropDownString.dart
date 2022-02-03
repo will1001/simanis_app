@@ -7,6 +7,7 @@ Widget dropDownString(
     child: Container(
       width: double.infinity,
       child: DropdownButton(
+        isExpanded: true,
           value: _value == "" ? null : _value,
           onChanged: _onChanged,
           hint: Text(_hint),

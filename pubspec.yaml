@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.0+24
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -33,11 +33,19 @@ dependencies:
   fl_chart: ^0.36.2
   http: ^0.13.3
   google_maps_flutter: ^2.0.6
-  geocoding: ^2.0.0
-  geolocator: ^7.1.1
   shared_preferences: ^2.0.6
   image_picker: ^0.8.0+4
   permission_handler: ^8.1.1
+  cached_network_image: ^3.0.0
+  url_launcher: ^6.0.9
+  geolocator: ^7.3.1
+  geocoding: ^2.0.0
+  intl: ^0.17.0
+  webview_flutter: ^2.0.10
+  flutter_svg: ^0.22.0
+  carousel_slider: ^4.0.0
+  google_fonts: ^2.1.0
+  share: ^2.0.4
 
 dev_dependencies:
   flutter_test:
@@ -59,8 +67,53 @@ flutter:
     # - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
     - assets/images/logo.png
+    - assets/images/logo2.png
     - assets/images/bgLogin.png
     - assets/images/welcome-removebg-preview.png
+    - assets/images/bg1.png
+    - assets/images/whatsapp.png
+    - assets/images/bghome.png
+    - assets/images/pattern1.png
+    - assets/images/pattern2.png
+    - assets/images/completed-task.png
+    - assets/images/web.png
+    - assets/images/whatsapp (2).png
+    - assets/images/menu_pattern.png
+    - assets/images/tenagaKerjaIcon.svg
+    - assets/images/UMKMIcon.svg
+    - assets/images/map.svg
+    - assets/images/smartphone.svg
+    - assets/images/padlock.svg
+    - assets/images/padlock.png
+    - assets/images/message.svg
+    - assets/images/message.png
+    - assets/images/user.svg
+    - assets/images/badge.png
+    - assets/images/x-button.png
+    - assets/images/server.png
+    - assets/images/profilIcon.svg
+    - assets/images/profilIcon.png
+    - assets/images/UMKMIcon.png
+    - assets/images/ProdukIcon.png
+    - assets/images/BankIcon.png
+    - assets/images/LogoutIcon.png
+    - assets/images/LogoWhite.svg
+    - assets/images/LogoWhite.png
+    - assets/images/slideshow1.jpg
+    - assets/images/slideshow2.jpg
+    - assets/images/slideshow3.jpg
+    - assets/images/permesinan.svg
+    - assets/images/pertambangan.svg
+    - assets/images/pangan.svg
+    - assets/images/kesehatan.svg
+    - assets/images/hulu_agro.svg
+    - assets/images/ekonomi_kreatif.svg
+    - assets/images/website.svg
+    - assets/images/cs_icon.svg
+    - assets/images/survei.svg
+    - assets/images/pie_chart.svg
+    - assets/images/fast-food.svg
+    - assets/images/share.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

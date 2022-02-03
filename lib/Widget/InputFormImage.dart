@@ -15,8 +15,10 @@ Widget inputFormImage(
     var _photoIconOnTap) {
   ThemeProvider themeProvider =
       Provider.of<ThemeProvider>(context, listen: false);
-  print("_imgLink");
-  print(_imgLink);
+  // print("_imgLink");
+  // print("null = ${_imgLink == null}");
+  // print("empty = ${_imgLink == ""}");
+  // print(_imgLink);
   return Padding(
     padding: const EdgeInsets.all(16.0),
     child: Column(
@@ -65,7 +67,9 @@ Widget inputFormImage(
         // _imgLink == ""?
         Padding(
             padding: const EdgeInsets.only(top: 16.0),
-            child: _imgLink == ""
+            child: _imgLink == "" ||
+                    _imgLink == null ||
+                    _imgLink == "https://simanis.ntbprov.go.id/storage/"
                 ? (_imgFile == null
                     ? Stack(
                         alignment: Alignment.center,
@@ -80,7 +84,7 @@ Widget inputFormImage(
                         ],
                       )
                     : Image.file(_imgFile))
-                : Image.network(_imgLink!))
+                : Image.network(_imgLink))
       ],
     ),
   );

@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:appsimanis/Provider/ThemeProvider.dart';
 import 'package:appsimanis/Widget/Button1.dart';
+import 'package:appsimanis/Widget/CustomText.dart';
 import 'package:appsimanis/Widget/DaftarIKM.dart';
 import 'package:appsimanis/Widget/EditDialogBox.dart';
+import 'package:appsimanis/Widget/ListLabelDropDown.dart';
+import 'package:appsimanis/Widget/ListLabelInput.dart';
 import 'package:appsimanis/Widget/LoadingWidget.dart';
 import 'package:http/http.dart' as http;
 
@@ -34,15 +37,17 @@ class _InformasiIKMState extends State<InformasiIKM> {
   bool _showEditBox = false;
   bool _loading = true;
   String _type = "";
+  String _keyboardType = "";
   String _namaTabel = "badan_usaha";
   String _redirectTo = "informasiIKM";
   String? _idUser = "";
   String _param = "";
   String _paramDropdown = "";
-  String _content = "Informasi IKM";
+  String _content = "UMKM Saya";
   String _hintText = "";
   String _labelText = "";
   String _dropDownValue = "";
+  String _dateValue = "";
   String _cabangIndustri = "";
   String _tahun = "";
   String _tenagaKerjaLk = "";
@@ -59,6 +64,7 @@ class _InformasiIKMState extends State<InformasiIKM> {
   List _dataIKM = [];
   List _listCabangIndustri = [];
   var _dropDownOnChanged;
+  var _dateOnChanged;
   var _onPressed;
   var _simpanOnPressed;
 
@@ -91,9 +97,11 @@ class _InformasiIKMState extends State<InformasiIKM> {
                 .toString()
                 .split('.')
                 .last;
-    request.fields['name_before'] = "asdasf";
+    request.fields['tipe_foto'] = _foto == "Alat" ? "Alat" : "Ruang";
     var res = await request.send();
-    res.stream.transform(utf8.decoder).listen((value) {});
+    res.stream.transform(utf8.decoder).listen((value) {
+      // print(value);
+    });
   }
 
   // getImgFile(String _from, String _file) async {
@@ -126,8 +134,11 @@ class _InformasiIKMState extends State<InformasiIKM> {
       String labelText,
       String hintText,
       String dropDownValue,
+      String dateValue,
       List dropDownListItem,
+      String keyboardType,
       var dropDownOnChanged,
+      var dateOnChanged,
       var onPressed) {
     setState(() {
       _showEditBox = showEditBox;
@@ -137,8 +148,11 @@ class _InformasiIKMState extends State<InformasiIKM> {
       _labelText = labelText;
       _hintText = hintText;
       _dropDownValue = dropDownValue;
+      _dateValue = dateValue;
       _dropDownListItem = dropDownListItem;
+      _keyboardType = keyboardType;
       _dropDownOnChanged = dropDownOnChanged;
+      _dateOnChanged = dateOnChanged;
       _onPressed = onPressed;
     });
   }
@@ -154,38 +168,39 @@ class _InformasiIKMState extends State<InformasiIKM> {
   checkDataIKM() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? idUserCache = prefs.getString('idUser');
+    // print("idUserCache");
+    // print(idUserCache);
     crud.getData("/badan_usaha/$idUserCache").then((res) {
       // print(res.statusCode);
       if (res.statusCode == 200) {
         // print("res.body");
-        print(jsonDecode(res.body).length);
+        // print(jsonDecode(res.body).length);
         // print(_listCabangIndustri);
         if (jsonDecode(res.body).length != 0) {
           setState(() {
             _dataIKM = jsonDecode(res.body);
-            _cabangIndustri = _listCabangIndustri
-                .where((e) => e["id"] == _dataIKM[0]["id_cabang_industri"])
-                .toList()[0]["nama"];
-            // print(_dataIKM[0]);
-            _tahun = (_dataIKM[0]["tahun_badan_usaha"] ?? "").toString();
-            _tenagaKerjaLk = (_dataIKM[0]["male"] ?? "").toString();
-            _tenagaKerjaPr = (_dataIKM[0]["famale"] ?? "").toString();
-            _satuanProduksi = (_dataIKM[0]["satuan_produksi"] ?? "").toString();
-            _nilaiInves = (_dataIKM[0]["nilai_investasi"] ?? "").toString();
-            _nilaiBbBp = (_dataIKM[0]["nilai_bb_bp"] ?? "").toString();
-            _jenisUsaha = (_dataIKM[0]["jenis_ikm"] ?? "").toString();
-            _fotoAlatProduksiUrl = "${_storageUrl}" +
-                (_dataIKM[0]["foto_alat_produksi"] ?? "").toString();
-            _fotoRuangProduksiUrl = "${_storageUrl}" +
-                (_dataIKM[0]["foto_ruang_produksi"] ?? "").toString();
+            // _cabangIndustri = _listCabangIndustri
+            //     .where((e) => e["id"] == _dataIKM[0]["id_cabang_industri"])
+            //     .toList()[0]["nama"];
+            // // print(_dataIKM[0]);
+            // _tahun = (_dataIKM[0]["tahun_badan_usaha"] ?? "").toString();
+            // _tenagaKerjaLk = (_dataIKM[0]["male"] ?? "").toString();
+            // _tenagaKerjaPr = (_dataIKM[0]["famale"] ?? "").toString();
+            // _satuanProduksi = (_dataIKM[0]["satuan_produksi"] ?? "").toString();
+            // _nilaiInves = (_dataIKM[0]["nilai_investasi"] ?? "").toString();
+            // _nilaiBbBp = (_dataIKM[0]["nilai_bb_bp"] ?? "").toString();
+            // _jenisUsaha = (_dataIKM[0]["jenis_ikm"] ?? "").toString();
+            // _fotoAlatProduksiUrl = "${_storageUrl}" +
+            //     (_dataIKM[0]["foto_alat_produksi"] ?? "").toString();
+            // _fotoRuangProduksiUrl = "${_storageUrl}" +
+            //     (_dataIKM[0]["foto_ruang_produksi"] ?? "").toString();
             // print(_listCabangIndustri
             //     .where((e) => e["id"] == _dataIKM[0]["id_cabang_industri"]).toList()[0]["nama"]);
           });
         }
       }
     });
-            _loading = false;
-
+    _loading = false;
   }
 
   getCabangIndsutri() {
@@ -201,6 +216,19 @@ class _InformasiIKMState extends State<InformasiIKM> {
   //   print(_listCabangIndustri);
   // }
 
+  Future<void> selectdate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDatePickerMode: DatePickerMode.year,
+        initialDate: selectedDate,
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2100));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        _dateValue = picked.toString();
+      });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -212,9 +240,11 @@ class _InformasiIKMState extends State<InformasiIKM> {
 
   @override
   Widget build(BuildContext context) {
+    // print("_dataIKM.length");
+    // print(_dataIKM.length);
     ThemeProvider themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
-    return _loading
+    return _loading && _dataIKM.length == 0
         ? loadingWidget(context)
         : _dataIKM.length == 0
             ? DaftarIKM()
@@ -231,68 +261,126 @@ class _InformasiIKMState extends State<InformasiIKM> {
                     _hintText,
                     _labelText,
                     _dropDownValue,
+                    _dateValue,
                     _controller,
                     _dropDownListItem,
+                    _keyboardType,
                     _dropDownOnChanged,
+                    _dateOnChanged,
                     _onPressed)
                 : Scaffold(
                     appBar: AppBar(
-                      title: textLabel("Informasi IKM", 15, Colors.black, "",
-                          FontWeight.w400),
-                      centerTitle: true,
-                      iconTheme: IconThemeData(color: Colors.black),
+                      title: customText(context, Color(0xff242F43), 'UMKM Saya',
+                          TextAlign.left, 20, FontWeight.w600),
+                      leading: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(Icons.chevron_left)),
+                      iconTheme: IconThemeData(color: Color(0xff242F43)),
                       elevation: 0,
                       backgroundColor: Colors.white,
                     ),
                     body: ListView(
                       children: [
-                        statusVerifikasiData(context, "Belum diverifikasi", ""),
-                        listLabel(context, "Cabang Industri :", _cabangIndustri,
-                            () {
+                        ListLabelDropDown(
+                            context,
+                            'Cabang Industri',
+                            _listCabangIndustri.length == 0
+                                ? ""
+                                : _listCabangIndustri
+                                    .where((e) =>
+                                        e["id"] ==
+                                        _dataIKM[0]["id_cabang_industri"])
+                                    .toList()[0]["nama"], () {
                           setStateParam(
                               true,
                               "dropDown",
                               "id_cabang_industri",
                               "nama",
-                              "Produk :",
-                              "Produk :",
+                              "Cabang Industri :",
+                              "Cabang Industri :",
                               "",
-                              _listCabangIndustri, (newValue) {
+                              "",
+                              _listCabangIndustri,
+                              "text",
+                              (newValue) {
+                                setState(() {
+                                  _dropDownValue = newValue!;
+                                });
+                              },
+                              () {},
+                              () {
+                                setState(() {
+                                  _showEditBox = false;
+                                });
+                              });
+                        }),
+                        ListLabelInput(
+                            context,
+                            'Nomor Telepon',
+                            _dataIKM.length == 0
+                                ? ""
+                                : _dataIKM[0]["nomor_telpon"] ?? "", () {
+                          setStateParam(
+                              true,
+                              "textfield",
+                              "nomor_telpon",
+                              "",
+                              "Nomor Telpon :",
+                              "Nomor Telpon :",
+                              "",
+                              "",
+                              [],
+                              "number",
+                              (newValue) {},
+                              () {}, () {
                             setState(() {
-                              _dropDownValue = newValue!;
+                              _showEditBox = false;
                             });
+                          });
+                        }),
+                        ListLabelInput(
+                            context,
+                            'Tahun Berdirinya Badan Usaha',
+                            _dataIKM.length == 0
+                                ? ""
+                                : _dataIKM[0]["tahun_badan_usaha"] ?? "", () {
+                          setStateParam(
+                              true,
+                              "date",
+                              "tahun_badan_usaha",
+                              "",
+                              "Tahun :",
+                              "Tahun :",
+                              "",
+                              _dateValue,
+                              [],
+                              "text",
+                              (newValue) {}, () {
+                            selectdate(context);
                           }, () {
                             setState(() {
                               _showEditBox = false;
                             });
                           });
                         }),
-
-                        // listLabel(context, "Produk :", "Pangan", () {}),
-                        listLabel(
-                            context, "Tahun Berdirinya Badan Usaha :", _tahun,
-                            () {
-                          setStateParam(
-                              true,
-                              "textfield",
-                              "tahun_badan_usaha",
-                              "",
-                              "Tahun :",
-                              "Tahun :",
-                              "",
-                              [],
-                              (newValue) {}, () {
-                            setState(() {
-                              _showEditBox = false;
-                            });
-                          });
-                        }),
                         Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: textLabel("Jumlah Tenaga Kerja :", 14,
-                              Colors.black, "", FontWeight.bold),
+                          padding: const EdgeInsets.only(left: 16, top: 24.0),
+                          child: customText(
+                              context,
+                              Color(0xff242F43),
+                              'Jumlah Tenaga Kerja',
+                              TextAlign.left,
+                              16,
+                              FontWeight.w700),
                         ),
-                        listLabel(context, "Laki-Laki :", _tenagaKerjaLk, () {
+                        ListLabelInput(
+                            context,
+                            'Laki-Laki',
+                            _dataIKM.length == 0
+                                ? ""
+                                : _dataIKM[0]["male"] ?? "", () {
                           setStateParam(
                               true,
                               "textfield",
@@ -301,14 +389,22 @@ class _InformasiIKMState extends State<InformasiIKM> {
                               "Tenaga Kerja Laki-Laki :",
                               "Laki-Laki",
                               "",
+                              "",
                               [],
-                              (newValue) {}, () {
+                              "number",
+                              (newValue) {},
+                              () {}, () {
                             setState(() {
                               _showEditBox = false;
                             });
                           });
                         }),
-                        listLabel(context, "Perempuan :", _tenagaKerjaPr, () {
+                        ListLabelInput(
+                            context,
+                            'Perempuan',
+                            _dataIKM.length == 0
+                                ? ""
+                                : _dataIKM[0]["famale"] ?? "", () {
                           setStateParam(
                               true,
                               "textfield",
@@ -317,15 +413,22 @@ class _InformasiIKMState extends State<InformasiIKM> {
                               "Tenaga Kerja Perempuan :",
                               "Perempuan",
                               "",
+                              "",
                               [],
-                              (newValue) {}, () {
+                              "number",
+                              (newValue) {},
+                              () {}, () {
                             setState(() {
                               _showEditBox = false;
                             });
                           });
                         }),
-                        listLabel(context, "Satuan Produksi :", _satuanProduksi,
-                            () {
+                        ListLabelInput(
+                            context,
+                            'Satuan Produksi',
+                            _dataIKM.length == 0
+                                ? ""
+                                : _dataIKM[0]["satuan_produksi"] ?? "", () {
                           setStateParam(
                               true,
                               "textfield",
@@ -334,34 +437,55 @@ class _InformasiIKMState extends State<InformasiIKM> {
                               "Satuan Produksi :",
                               "Satuan Produksi",
                               "",
+                              "",
                               [],
-                              (newValue) {}, () {
+                              "text",
+                              (newValue) {},
+                              () {}, () {
                             setState(() {
                               _showEditBox = false;
                             });
                           });
                         }),
-                        listLabel(context, "Nilai Investasi (Per Tahun) :",
-                            _nilaiInves, () {
+                        ListLabelDropDown(
+                            context,
+                            'Nilai Investasi (Per Tahun)',
+                            _dataIKM.length == 0
+                                ? ""
+                                : _dataIKM[0]["nilai_investasi"] ?? "", () {
                           setStateParam(
                               true,
-                              "textfield",
+                              "dropDown",
                               "nilai_investasi",
                               "",
                               "Nilai Investasi (Per Tahun) :",
                               "Nilai Investasi (Per Tahun)",
                               "",
-                              [],
-                              (newValue) {}, () {
-                            setState(() {
-                              _showEditBox = false;
-                            });
-                          });
+                              "",
+                              [
+                                'Industri Kecil (< Rp.1.000.000.000)',
+                                'Industri Menengah (Rp.1.000.000.000 - Rp.15.000.000.000)',
+                                'Industri Besar (> Rp.15.000.000.000)'
+                              ],
+                              "number",
+                              (newValue) {
+                                setState(() {
+                                  _dropDownValue = newValue!;
+                                });
+                              },
+                              () {},
+                              () {
+                                setState(() {
+                                  _showEditBox = false;
+                                });
+                              });
                         }),
-                        listLabel(
+                        ListLabelInput(
                             context,
-                            "Nilai BB / BP (Bahan Baku / Bahan Penolong) (Per Tahun) :",
-                            _nilaiBbBp, () {
+                            'Nilai BB / BP (Bahan Baku / Bahan Penolong) (Per Tahun)',
+                            _dataIKM.length == 0
+                                ? ""
+                                : _dataIKM[0]["nilai_bb_bp"] ?? "", () {
                           setStateParam(
                               true,
                               "textfield",
@@ -370,35 +494,52 @@ class _InformasiIKMState extends State<InformasiIKM> {
                               "Nilai BB / BP (Bahan Baku / Bahan Penolong) (Per Tahun) :",
                               "Nilai BB / BP (Bahan Baku / Bahan Penolong) (Per Tahun)",
                               "",
+                              "",
                               [],
-                              (newValue) {}, () {
+                              "number",
+                              (newValue) {},
+                              () {}, () {
                             setState(() {
                               _showEditBox = false;
                             });
                           });
                         }),
-                        listLabel(context, "Jenis Badan Usaha :", _jenisUsaha,
-                            () {
+                        ListLabelInput(
+                            context,
+                            'Jenis Badan Usaha',
+                            _dataIKM.length == 0
+                                ? ""
+                                : _dataIKM[0]["jenis_ikm"] ?? "", () {
                           setStateParam(
                               true,
-                              "textfield",
+                              "dropDown",
                               "jenis_ikm",
                               "",
                               "Jenis Badan Usaha :",
                               "Jenis Badan Usaha",
                               "",
-                              [],
-                              (newValue) {}, () {
-                            setState(() {
-                              _showEditBox = false;
-                            });
-                          });
+                              "",
+                              ['UD', 'CV', 'PT'],
+                              "text",
+                              (newValue) {
+                                setState(() {
+                                  _dropDownValue = newValue!;
+                                });
+                              },
+                              () {},
+                              () {
+                                setState(() {
+                                  _showEditBox = false;
+                                });
+                              });
                         }),
                         inputFormImage(
                             context,
                             "Foto Alat Produksi :",
                             "",
-                            _fotoAlatProduksiUrl,
+                            "${_storageUrl}" +
+                                (_dataIKM[0]["foto_alat_produksi"] ?? "")
+                                    .toString(),
                             _fotoAlatProduksiFile, () async {
                           await Permission.photos.request();
                           final picker = ImagePicker();
@@ -423,7 +564,7 @@ class _InformasiIKMState extends State<InformasiIKM> {
                           };
                           // print(data);
                           crud.putData(
-                              '/badan_usahafoto_alat_produksi/${_idUser}',
+                              '/badan_usaha/foto_alat_produksi/${_idUser}',
                               data);
                         }, () async {
                           await Permission.camera.request();
@@ -448,14 +589,16 @@ class _InformasiIKMState extends State<InformasiIKM> {
                                 'foto_alat_produksi/Alat_${_idUser}.${pickedFile!.path.toString().split('.').last}'
                           };
                           crud.putData(
-                              '/badan_usahafoto_alat_produksi/${_idUser}',
+                              '/badan_usaha/foto_alat_produksi/${_idUser}',
                               data);
                         }),
                         inputFormImage(
                             context,
                             "Foto Ruang Produksi :",
                             "",
-                            _fotoRuangProduksiUrl,
+                            "${_storageUrl}" +
+                                (_dataIKM[0]["foto_ruang_produksi"] ?? "")
+                                    .toString(),
                             _fotoRuangProduksiFile, () async {
                           await Permission.photos.request();
                           final picker = ImagePicker();
@@ -479,7 +622,7 @@ class _InformasiIKMState extends State<InformasiIKM> {
                                 'foto_ruang_produksi/Ruang_${_idUser}.${pickedFile!.path.toString().split('.').last}'
                           };
                           crud.putData(
-                              '/badan_usahafoto_ruang_produksi/${_idUser}',
+                              '/badan_usaha/foto_ruang_produksi/${_idUser}',
                               data);
                         }, () async {
                           await Permission.camera.request();
@@ -504,19 +647,9 @@ class _InformasiIKMState extends State<InformasiIKM> {
                                 'foto_ruang_produksi/Ruang_${_idUser}.${pickedFile!.path.toString().split('.').last}'
                           };
                           crud.putData(
-                              '/badan_usahafoto_ruang_produksi/${_idUser}',
+                              '/badan_usaha/foto_ruang_produksi/${_idUser}',
                               data);
                         }),
-                        // IconButton(
-                        //     onPressed: () {
-                        //       uploadImage();
-                        //     },
-                        //     icon: Icon(Icons.ac_unit))
-                        // button1("Simpan", themeProvider.buttonColor, context,
-                        //     () {
-                        //   // Navigator.pushNamed(context, '/daftar');
-                        //   uploadImage();
-                        // }),
                       ],
                     ),
                   );

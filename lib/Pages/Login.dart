@@ -5,11 +5,21 @@ import 'package:appsimanis/Provider/ThemeProvider.dart';
 import 'package:appsimanis/Services/FunctionGroup.dart';
 import 'package:appsimanis/Widget/AlertDialogBox.dart';
 import 'package:appsimanis/Widget/Button1.dart';
+import 'package:appsimanis/Widget/Button2.dart';
+import 'package:appsimanis/Widget/ButtonGradient1.dart';
+import 'package:appsimanis/Widget/CustomText.dart';
 import 'package:appsimanis/Widget/InputForm.dart';
+import 'package:appsimanis/Widget/InputFormStyle2.dart';
+import 'package:appsimanis/Widget/InputFormStyle3.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Login extends StatefulWidget {
+  //  final VoidCallback changeStateLogin;
+
+// const Login({Key? key, required this.changeStateLogin}) : super(key: key);
   const Login({Key? key}) : super(key: key);
 
   @override
@@ -17,9 +27,12 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final _formKey = GlobalKey<FormState>();
+  // final _formKey = GlobalKey<FormState>();
   CRUD crud = new CRUD();
   bool _loading = false;
+  bool _obscPass = true;
+  bool _emailError = false;
+  bool _passError = false;
   FunctionGroup functionGroup = new FunctionGroup();
   TextEditingController emailTextEditingController =
       new TextEditingController();
@@ -30,8 +43,10 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     setState(() {
-      emailTextEditingController.text = "wilirahmatm@gmail.com";
-      passwordTextEditingController.text = "wili123";
+      // emailTextEditingController.text = "wilirahmatm@gmail.com";
+      // passwordTextEditingController.text = "wili123";
+      // emailTextEditingController.text = "wilirahmatm@gmail.com";
+      // passwordTextEditingController.text = "wili123";
     });
   }
 
@@ -40,112 +55,205 @@ class _LoginState extends State<Login> {
     ThemeProvider themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
     return Scaffold(
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          SingleChildScrollView(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Image.asset(
-                'assets/images/bgLogin.png',
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Form(
-            key: _formKey,
-            child: ListView(
+      backgroundColor: Color(0xff2BA33A),
+      body: Container(
+        padding: const EdgeInsets.only(left: 16, top: 56, right: 16),
+        child: ListView(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(Icons.arrow_back)),
-                  ],
-                ),
+                customText(context, Colors.white, "Daftar Sekarang",
+                    TextAlign.left, 28, FontWeight.w600),
                 Padding(
-                  padding: const EdgeInsets.only(top: 00.0, bottom: 104),
-                  child: Image.asset('assets/images/logo.png'),
+                  padding: const EdgeInsets.only(bottom: 52.0),
+                  child: customText(
+                      context,
+                      Colors.white,
+                      "Aplikasi Simanis Dinas Perindustriaan NTB",
+                      TextAlign.left,
+                      20,
+                      FontWeight.w400),
                 ),
-                inputForm(
-                    Icon(Icons.person),
-                    'Masukan Email anda',
-                    'Email',
-                    'Email Tidak Boleh Kosong',
-                    emailTextEditingController,
-                    false),
-                inputForm(
-                    Icon(Icons.lock),
-                    'Masukan Password anda',
-                    'Password',
-                    'Password Tidak Boleh Kosong',
-                    passwordTextEditingController,
-                    true),
-                button1("Login", themeProvider.buttonColor, context, () {
-                  // Navigator.pushNamed(context, '/homeLayoutPage',
-                  //     arguments: <String, dynamic>{"selectedIndex": 3});
-                  if (_formKey.currentState!.validate()) {
-                    Map<String, String> dataUsers = {
-                      "email": emailTextEditingController.text,
-                      "password": passwordTextEditingController.text,
-                    };
-                    crud.checkLogin(dataUsers).then((res) {
-                      String message = jsonDecode(res.body)["message"];
-                      if (res.statusCode == 201) {
-                        if (message == "data ada") {
-                          setState(() {
-                            _loading = true;
-                          });
-                          functionGroup.saveCache(dataUsers);
-                          Navigator.pushNamed(context, '/homeLayoutPage',
-                              arguments: <String, dynamic>{"selectedIndex": 3});
-                          setState(() {
-                            _loading = false;
-                          });
-                        } else {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialogBox("alert", message, []);
-                              });
-                        }
-                      } else {
-                        print("error");
-                      }
+                customText(context, Colors.white, "Email", TextAlign.left, 14,
+                    FontWeight.w400),
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0, bottom: 24),
+                  child: inputFormStyle3(
+                      null,
+                      "Email",
+                      "text",
+                      "Email",
+                      "Email Tidak Boleh Kosong",
+                      _emailError,
+                      emailTextEditingController,
+                      false,
+                      () {}),
+                ),
+                customText(context, Colors.white, "Password", TextAlign.left,
+                    14, FontWeight.w400),
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0, bottom: 16),
+                  child: inputFormStyle3(
+                      Icons.remove_red_eye,
+                      "Password",
+                      "text",
+                      "Password",
+                      "Password Tidak Boleh Kosong",
+                      _passError,
+                      passwordTextEditingController,
+                      _obscPass, () {
+                    setState(() {
+                      _obscPass = !_obscPass;
                     });
-                  }
-                }),
-                button1("Daftar", themeProvider.buttonColor, context, () {
-                  Navigator.pushNamed(context, '/daftar');
-                }),
+                  }),
+                ),
               ],
             ),
-          ),
-          !_loading
-              ? Container()
-              : Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      color: Colors.black26,
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 40.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      String url =
+                          "https://simanis.ntbprov.go.id:8443/get_password.php?locale=default";
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                        return;
+                      }
+                      print("couldn't launch $url");
+                    },
+                    child: customText(context, Colors.white, "Lupa password?",
+                        TextAlign.right, 14, FontWeight.w400),
+                  ),
+                ],
+              ),
+            ),
+            button2("Masuk", Colors.white, Color(0xff2BA33A), context, () {
+              // Navigator.pushNamed(context, '/homeLayoutPage',
+              //     arguments: <String, dynamic>{"selectedIndex": 3});
+              if (emailTextEditingController.text != "" &&
+                  passwordTextEditingController.text != "") {
+                Map<String, String> dataUsers = {
+                  "email": emailTextEditingController.text,
+                  "password": passwordTextEditingController.text,
+                };
+                crud.checkLogin(dataUsers).then((res) {
+                  var dataRes = jsonDecode(res.body);
+
+                  String message = dataRes['message'];
+                  // print(res.statusCode);
+                  // print(res.statusCode == 201);
+                  if (res.statusCode == 201) {
+                    if (message == "data ada") {
+                      setState(() {
+                        _loading = true;
+                      });
+                      crud
+                          .getData("/usersEmail/${emailTextEditingController.text}")
+                          .then((res) async {
+                        if (res.statusCode == 200) {
+                          Map<String, String> dataUsersCache = {
+                            "email": emailTextEditingController.text,
+                            "password": passwordTextEditingController.text,
+                            "idUser": jsonDecode(res.body)[0]['id']
+                          };
+                          functionGroup.saveCache(dataUsersCache);
+                        }
+                      });
+                      Navigator.pushNamed(context, '/homeLayoutPage',
+                          arguments: <String, dynamic>{
+                            "selectedIndex": 4,
+                            "dataUsers": dataUsers
+                          });
+                      setState(() {
+                        _loading = false;
+                      });
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialogBox("alert", message, []);
+                          });
+                    }
+                  } else {
+                    print("error");
+                  }
+                });
+              } else if (emailTextEditingController.text == "" &&
+                  passwordTextEditingController.text != "") {
+                if (mounted) {
+                  setState(() {
+                    _emailError = true;
+                    _passError = false;
+                  });
+                }
+              } else if (emailTextEditingController.text != "" &&
+                  passwordTextEditingController.text == "") {
+                if (mounted) {
+                  setState(() {
+                    _emailError = false;
+                    _passError = true;
+                  });
+                }
+              } else if (emailTextEditingController.text == "" &&
+                  passwordTextEditingController.text == "") {
+                if (mounted) {
+                  setState(() {
+                    _emailError = true;
+                    _passError = true;
+                  });
+                }
+              }
+            }),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 24.0, bottom: 45),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/daftar');
+                    },
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                          text: "Belum punya akun?",
+                          style: GoogleFonts.poppins(
+                              color: Colors.white, fontWeight: FontWeight.w400),
+                          children: [
+                            TextSpan(
+                              text: " Daftar disini",
+                              style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600),
+                            )
+                          ]),
                     ),
-                    Container(
-                        color: Colors.white,
-                        width: 200,
-                        height: 200,
-                        child: Padding(
-                          padding: const EdgeInsets.all(32.0),
-                          child: CircularProgressIndicator(),
-                        )),
-                  ],
+                  ),
                 ),
-        ],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/homeLayoutPage',
+                          arguments: <String, dynamic>{"selectedIndex": 0});
+                    },
+                    child: customText(
+                        context,
+                        Colors.white,
+                        "Masuk ke halaman utama",
+                        TextAlign.center,
+                        14,
+                        FontWeight.w500),
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

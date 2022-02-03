@@ -1,6 +1,10 @@
+import 'package:appsimanis/Pages/HomePageWebView.dart';
 import 'package:appsimanis/Pages/ListDataIKM.dart';
+import 'package:appsimanis/Pages/ListDataIKMHomeMenu.dart';
 import 'package:appsimanis/Pages/Login.dart';
+import 'package:appsimanis/Pages/LoginMemberLayout.dart';
 import 'package:appsimanis/Pages/MemberPage.dart';
+import 'package:appsimanis/Pages/ProdukPage.dart';
 import 'package:appsimanis/Pages/StatistikPage.dart';
 import 'package:appsimanis/Provider/SystemProvider.dart';
 import 'package:appsimanis/Provider/ThemeProvider.dart';
@@ -31,6 +35,7 @@ class _HomeLayoutPageState extends State<HomeLayoutPage> {
     setState(() {
       _selectedIndex = index;
     });
+    // print(index);
   }
 
   Future<bool> onWillPop() {
@@ -56,14 +61,18 @@ class _HomeLayoutPageState extends State<HomeLayoutPage> {
     return Future.value(true);
   }
 
+  changeStateLoginCache(bool _status) {
+    setState(() {
+      _loginCache = _status;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
 
     functionGroup.checkLoginCache().then((loginStatus) {
-      setState(() {
-        _loginCache = loginStatus;
-      });
+      changeStateLoginCache(loginStatus);
     });
   }
 
@@ -78,41 +87,76 @@ class _HomeLayoutPageState extends State<HomeLayoutPage> {
         _loop = false;
       });
     }
+    //  print('args123');
+    // print(args == null ? 'null' : (args as Map)["kategori"] ?? 'null');
     List<Widget> _widgetOptions = <Widget>[
-      HomePage(),
-      ListDataIKM(),
-      StatistikPage(),
-      _loginCache ? MemberPage() : Login()
+      HomePage(
+        loginCache: _selectedIndex,
+      ),
+      // ListDataIKMHomeMenu(),
+      ListDataIKM(
+        loginCache: _selectedIndex,
+      ),
+      // HomePage(),
+      StatistikPage(
+        loginCache: _selectedIndex,
+      ),
+      ProdukPage(
+        loginCache: _selectedIndex,
+        kategoriID: args == null ? 'null' : (args as Map)["kategori"] ?? 'null',
+        aksesLink:
+            args == null ? 'home2' : (args as Map)["aksesLink"] ?? 'home2',
+      ),
+      _loginCache
+          ? MemberPage(
+              dataUsers: args == null ? {} : (args as Map)["dataUsers"] ?? {},
+            )
+          : Login()
+      // LoginMemberLayout(
+      //   loginCache: _loginCache,
+      //   dataUsers: args == null ? {} : (args as Map)["dataUsers"] ?? {},
+      // )
     ];
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
-          body: IndexedStack(
-            index: _selectedIndex,
-            // child: Center(child: _widgetOptions.elementAt(_selectedIndex))),
-            children: _widgetOptions,),
+          // body: IndexedStack(
+          //   index: _selectedIndex,
+          //   children: _widgetOptions,
+          // ),
+            body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
           bottomNavigationBar: BottomNavigationBar(
+            selectedIconTheme: IconThemeData(color: Color(0xff2BA33A)),
+            unselectedItemColor: Color(0xffB2B5BC),
+            selectedItemColor: Color(0xff2BA33A),
             type: BottomNavigationBarType.fixed,
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
-                label: 'Home',
+                label: 'Beranda',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.domain),
-                label: 'List Data IKM',
+                label: 'Data',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.assessment),
+                icon: Icon(Icons.pie_chart),
                 label: 'Statistik',
               ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_bag),
+                label: 'Produk',
+              ),
+              // BottomNavigationBarItem(
+              //   icon: Icon(Icons.assessment),
+              //   label: 'Statistik',
+              // ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
                 label: 'Profil',
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: themeProvider.fontColor1,
             onTap: _onItemTapped,
           )),
     );
