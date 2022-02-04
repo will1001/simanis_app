@@ -21,7 +21,6 @@ import 'package:appsimanis/Widget/SearchButton1.dart';
 import 'package:appsimanis/Widget/SearchInput.dart';
 import 'package:appsimanis/Widget/TextLabel.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -621,7 +620,7 @@ class _ListDataIKMState extends State<ListDataIKM> {
                                           ),
                                           child: Text(
                                             e,
-                                            style: GoogleFonts.poppins(
+                                            style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w400,
                                                 color: _subMenu == i

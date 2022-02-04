@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-import 'package:google_fonts/google_fonts.dart';
 
 Widget dropDownStringStyle2(var _value, String _hint, List _listItem,
     Color _colorBorder, var _onChanged) {
@@ -30,7 +29,7 @@ Widget dropDownStringStyle2(var _value, String _hint, List _listItem,
           onChanged: _onChanged,
           hint: Text(
             _hint,
-            style: GoogleFonts.poppins(color: Color(0xffB2B5BC)),
+            style: TextStyle(color: Color(0xffB2B5BC)),
           ),
           items: _listItem.map((item) {
             return DropdownMenuItem(

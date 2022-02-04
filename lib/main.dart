@@ -21,9 +21,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'Pages/PengajuanPimbayaanPage.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+
+final graphqlEndpoint = 'https://simanis.ntbprov.go.id/graphql';
 
 void main() {
-  runApp(MyApp());
+  final HttpLink httpLink = HttpLink(graphqlEndpoint);
+
+  ValueNotifier<GraphQLClient> client = ValueNotifier(GraphQLClient(
+      link: httpLink, cache: GraphQLCache(store: InMemoryStore())));
+
+  var app = GraphQLProvider(client: client, child: MyApp());
+  runApp(app);
 }
 
 class MyApp extends StatelessWidget {

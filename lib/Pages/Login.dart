@@ -12,7 +12,6 @@ import 'package:appsimanis/Widget/InputForm.dart';
 import 'package:appsimanis/Widget/InputFormStyle2.dart';
 import 'package:appsimanis/Widget/InputFormStyle3.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -221,12 +220,12 @@ class _LoginState extends State<Login> {
                       textAlign: TextAlign.center,
                       text: TextSpan(
                           text: "Belum punya akun?",
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.w400),
                           children: [
                             TextSpan(
                               text: " Daftar disini",
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600),
                             )

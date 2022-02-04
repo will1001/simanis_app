@@ -14,7 +14,7 @@ import 'package:appsimanis/Widget/InputForm.dart';
 import 'package:appsimanis/Widget/InputFormStyle3.dart';
 import 'package:appsimanis/Widget/PanelPopUp.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
@@ -453,12 +453,12 @@ class _DaftarState extends State<Daftar> {
                       textAlign: TextAlign.center,
                       text: TextSpan(
                           text: "Sudah punya akun?",
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.w400),
                           children: [
                             TextSpan(
                               text: " Login disini",
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600),
                             )

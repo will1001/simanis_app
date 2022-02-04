@@ -24,6 +24,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -59,7 +60,7 @@ class _StatistikPageState extends State<StatistikPage> {
   String _dataIKM = '';
   String _dataIKMTerferivikasi = '';
   // String _dataIKMBelumTerferivikasi = '';
-  bool _loading = true;
+  bool _loading = false;
   int touchedIndex = -1;
   double _maxY = 0;
   List _dataBarChart = [7, 4, 5, 6, 7, 8, 9, 10, 3, 5, 7, 4];
@@ -133,7 +134,7 @@ class _StatistikPageState extends State<StatistikPage> {
       setState(() {
         if (_limit == 10) {
           _listProduk.clear();
-          _loading = true;
+          // _loading = true;
         }
         _listProduk.addAll(jsonDecode(res.body));
         _loading = false;
@@ -517,26 +518,26 @@ class _StatistikPageState extends State<StatistikPage> {
         //     // _dataPieChart[1] = 0;
         //   });
         // } else {
-          // for (var i = 0; i < _dataRes.length; i++) {
-          //   var a = _dataRes[i]['male'] == null
-          //       ? 0
-          //       : int.parse(_dataRes[i]['male'].toString());
-          //   var b = _dataRes[i]['famale'] == null
-          //       ? 0
-          //       : int.parse(_dataRes[i]['famale'].toString());
+        // for (var i = 0; i < _dataRes.length; i++) {
+        //   var a = _dataRes[i]['male'] == null
+        //       ? 0
+        //       : int.parse(_dataRes[i]['male'].toString());
+        //   var b = _dataRes[i]['famale'] == null
+        //       ? 0
+        //       : int.parse(_dataRes[i]['famale'].toString());
 
-          //   var c = a + b;
+        //   var c = a + b;
 
-          //   _totalTenagaKerja += c;
-          // }
-          setState(() {
-            // _dataPieChart[5] =
-            //     _totalIkm == null ? 0 : int.parse(_totalIkm.toString());
-            // _dataPieChart3[1] = _totalTenagaKerja == null
-            //     ? 0
-            //     : int.parse(_totalTenagaKerja.toString());
-            _dataPieChart[5] = int.parse(res.body.toString());
-          });
+        //   _totalTenagaKerja += c;
+        // }
+        setState(() {
+          // _dataPieChart[5] =
+          //     _totalIkm == null ? 0 : int.parse(_totalIkm.toString());
+          // _dataPieChart3[1] = _totalTenagaKerja == null
+          //     ? 0
+          //     : int.parse(_totalTenagaKerja.toString());
+          _dataPieChart[5] = int.parse(res.body.toString());
+        });
         // }
       });
     });
@@ -574,12 +575,12 @@ class _StatistikPageState extends State<StatistikPage> {
 
         //     _totalTenagaKerja += c;
         //   }
-          setState(() {
-            _dataPieChart[5] = int.parse(res.body.toString());
-            // _dataPieChart3[1] = _totalTenagaKerja == null
-            //     ? 0
-            //     : int.parse(_totalTenagaKerja.toString());
-          });
+        setState(() {
+          _dataPieChart[5] = int.parse(res.body.toString());
+          // _dataPieChart3[1] = _totalTenagaKerja == null
+          //     ? 0
+          //     : int.parse(_totalTenagaKerja.toString());
+        });
         // }
       });
     });
@@ -608,6 +609,40 @@ class _StatistikPageState extends State<StatistikPage> {
       });
     });
   }
+
+  getKabuatenQuery() {
+    return '''
+      query{
+        Kabupaten{
+          id
+          name
+        }
+      }
+    ''';
+  }
+
+  getKecamatanQuery() {
+    return '''
+      query{
+        Kecamatan(id_kabupaten:"${_kabupaten}"){
+          id
+          name
+        }
+      }
+    ''';
+  }
+ 
+  getKelurahanQuery() {
+    return '''
+      query{
+        Kelurahan(id_kecamatan:"${_kecamatan}"){
+          id
+          name
+        }
+      }
+    ''';
+  }
+  
 
   pushToDetailsPage(
       String _title,
@@ -896,7 +931,6 @@ class _StatistikPageState extends State<StatistikPage> {
       setDataSertifikat('{}', 'null', 'null');
       setDataSertifikat('null', '{}', 'null');
       setDataSertifikat('null', 'null', '{}');
-      getKabupatenList();
       setStateMenuChart();
     }
   }
@@ -926,24 +960,29 @@ class _StatistikPageState extends State<StatistikPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0, top: 4),
-                  child: dropDownStringStyle2(_kabupaten, 'Kabupaten',
-                      _listKabupaten, Color(0xffE4E5E7), (newValue) {
-                    crud
-                        .getData('/kabupaten/' + newValue + '/kecamatan')
-                        .then((data) {
-                      setState(() {
-                        // _loading = true;
-                        _kecamatan = null;
-                        _kelurahan = null;
-                        _listKecamatan.clear();
-                        _listKelurahan.clear();
-                        _listKecamatan = jsonDecode(data.body);
-                        _kabupaten = newValue;
+                  child: Query(
+                    options: QueryOptions(document: gql(getKabuatenQuery())),
+                    builder: (QueryResult result, {fetchMore, refetch}) {
+                      if (result.hasException) {
+                        return Text(result.exception.toString());
+                      }
+                      if (result.isLoading) {
+                        return Text("");
+                      }
+                      final _kabupatenList = result.data?['Kabupaten'];
+                      return dropDownStringStyle2(_kabupaten, 'Kabupaten',
+                          _kabupatenList, Color(0xffE4E5E7), (newValue) {
+                        setState(() {
+                          _kabupaten = newValue;
+                          _kecamatan = null;
+                          _kelurahan = null;
+                        });
+                        updatePieChartbyLocation();
+                        setStateMenuChart();
+                        // });
                       });
-                      updatePieChartbyLocation();
-                      setStateMenuChart();
-                    });
-                  }),
+                    },
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0, top: 24),
@@ -952,22 +991,30 @@ class _StatistikPageState extends State<StatistikPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0, top: 4, right: 16),
-                  child: dropDownStringStyle2(_kecamatan, 'Kecamatan',
-                      _listKecamatan, Color(0xffE4E5E7), (newValue) {
-                    crud
-                        .getData('/kecamatan/' + newValue + '/kelurahan')
-                        .then((data) {
-                      setState(() {
-                        // _loading = true;
-                        _kelurahan = null;
-                        _listKelurahan.clear();
-                        _listKelurahan = jsonDecode(data.body);
-                        _kecamatan = newValue;
+                  child: Query(
+                    options: QueryOptions(document: gql(getKecamatanQuery())),
+                    builder: (QueryResult result, {fetchMore, refetch}) {
+                      if (result.hasException) {
+                        return Text(result.exception.toString());
+                      }
+                      if (result.isLoading) {
+                        return Text("");
+                      }
+                      final _KecamatanList = result.data?['Kecamatan'];
+                      return dropDownStringStyle2(
+                          _kecamatan,
+                          'Kecamatan',
+                          _kabupaten == null ? [] : _KecamatanList,
+                          Color(0xffE4E5E7), (newValue) {
+                        setState(() {
+                          _kecamatan = newValue;
+                          _kelurahan = null;
+                        });
+                        updatePieChartbyLocation();
+                        setStateMenuChart();
                       });
-                      updatePieChartbyLocation();
-                      setStateMenuChart();
-                    });
-                  }),
+                    },
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0, top: 24),
@@ -976,14 +1023,29 @@ class _StatistikPageState extends State<StatistikPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0, top: 4, right: 16),
-                  child: dropDownStringStyle2(_kelurahan, 'Kelurahan',
-                      _listKelurahan, Color(0xffE4E5E7), (newValue) {
-                    setState(() {
-                      _kelurahan = newValue;
-                    });
-                    updatePieChartbyLocation();
-                    setStateMenuChart();
-                  }),
+                  child: Query(
+                    options: QueryOptions(document: gql(getKelurahanQuery())),
+                    builder: (QueryResult result, {fetchMore, refetch}) {
+                      if (result.hasException) {
+                        return Text(result.exception.toString());
+                      }
+                      if (result.isLoading) {
+                        return Text("");
+                      }
+                      final _KelurahanList = result.data?['Kelurahan'];
+                      return dropDownStringStyle2(
+                          _kelurahan,
+                          'Kelurahan',
+                          _kecamatan == null ? [] : _KelurahanList,
+                          Color(0xffE4E5E7), (newValue) {
+                        setState(() {
+                          _kelurahan = newValue;
+                        });
+                        updatePieChartbyLocation();
+                        setStateMenuChart();
+                      });
+                    },
+                  ),
                 ),
                 Padding(
                   padding:

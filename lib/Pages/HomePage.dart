@@ -341,7 +341,7 @@ class _HomePageState extends State<HomePage> {
                       //   padding: const EdgeInsets.only(left: 24.0, top: 8),
                       //   child: Text(
                       //     'Sistem Informasi Manajemen Industri yang berguna sebagai validasi pelaku UMKM Sektor Industri di Provinsi Nusa Tenggara Barat dan untuk memudahkan dalam pengambilan kebijakan.',
-                      //     style: GoogleFonts.poppins(
+                      //     style: TextStyle(
                       //         fontSize: 12,
                       //         color: Colors.white,
                       //         fontWeight: FontWeight.w400,

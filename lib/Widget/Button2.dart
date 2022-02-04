@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 Widget button2(String _text, Color _buttonColor, Color _textColor,
     BuildContext _context, var _onPressed) {
@@ -12,7 +11,7 @@ Widget button2(String _text, Color _buttonColor, Color _textColor,
       onPressed: _onPressed,
       child: Text(
         _text,
-        style: GoogleFonts.poppins(
+        style: TextStyle(
             color: _textColor, fontSize: 14, fontWeight: FontWeight.w500),
       ),
     ),

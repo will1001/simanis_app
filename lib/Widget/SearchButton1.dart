@@ -1,6 +1,5 @@
 import 'package:appsimanis/Provider/ThemeProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 Widget SearchButton1(BuildContext context, String _hintText,
@@ -13,7 +12,7 @@ Widget SearchButton1(BuildContext context, String _hintText,
     child: TextField(
         controller: _keywordController,
         // style: TextStyle(color: Color(0xff545C6C), fontSize: 14),
-        style: GoogleFonts.poppins(color: Color(0xff545C6C), fontSize: 14),
+        style: TextStyle(color: Color(0xff545C6C), fontSize: 14),
         decoration: InputDecoration(
             // border: InputBorder,
 
