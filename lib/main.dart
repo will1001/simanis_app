@@ -24,12 +24,13 @@ import 'Pages/PengajuanPimbayaanPage.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 final graphqlEndpoint = 'https://simanis.ntbprov.go.id/graphql';
+final HttpLink httpLink = HttpLink(graphqlEndpoint);
 
+ValueNotifier<GraphQLClient> client = ValueNotifier(
+    GraphQLClient(link: httpLink, cache: GraphQLCache(store: InMemoryStore())));
+    
 void main() {
-  final HttpLink httpLink = HttpLink(graphqlEndpoint);
-
-  ValueNotifier<GraphQLClient> client = ValueNotifier(GraphQLClient(
-      link: httpLink, cache: GraphQLCache(store: InMemoryStore())));
+ 
 
   var app = GraphQLProvider(client: client, child: MyApp());
   runApp(app);

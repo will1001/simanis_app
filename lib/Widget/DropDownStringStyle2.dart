@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-
 Widget dropDownStringStyle2(var _value, String _hint, List _listItem,
     Color _colorBorder, var _onChanged) {
   return Padding(
@@ -33,7 +32,11 @@ Widget dropDownStringStyle2(var _value, String _hint, List _listItem,
           ),
           items: _listItem.map((item) {
             return DropdownMenuItem(
-              value: item["id"],
+              value: item[_hint == 'Kabupaten' ||
+                      _hint == 'Cabang Industri' ||
+                      _hint == 'Sub Cabang Industri'
+                  ? "id"
+                  : "name"],
               child: Text(item["name"]),
             );
           }).toList()),

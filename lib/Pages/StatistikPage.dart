@@ -53,6 +53,9 @@ class _StatistikPageState extends State<StatistikPage> {
   String? _kabupaten = null;
   String? _kecamatan = null;
   String? _kelurahan = null;
+  String? _cabangIndustri = null;
+  String? _subCabangIndustri = null;
+
   List _listKabupaten = [];
   List _listKecamatan = [];
   List _listKelurahan = [];
@@ -65,7 +68,7 @@ class _StatistikPageState extends State<StatistikPage> {
   double _maxY = 0;
   List _dataBarChart = [7, 4, 5, 6, 7, 8, 9, 10, 3, 5, 7, 4];
   List _dataPieChart = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-  List _dataPieChart2 = [0, 0, 0, 0, 0, 0];
+  List _dataPieChart2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   // List _dataPieChart2 = [0, 0];
   List _dataPieChart3 = [0, 0];
   List _dataPieChart4 = [0, 0];
@@ -84,7 +87,6 @@ class _StatistikPageState extends State<StatistikPage> {
     'Industri Menengah (Rp.1.000.000.000 - Rp.15.000.000.000)',
     'Industri Besar (> Rp.15.000.000.000)'
   ];
-  List _cabangIndustri = [];
 
   var HeadTable = [
     'No',
@@ -553,8 +555,6 @@ class _StatistikPageState extends State<StatistikPage> {
         // int _totalTenagaKerja = 0;
         // int _totalIkm = _dataRes.length;
         // print('_totalTenagaKerja');
-        print("ketek bau");
-        print(res.body);
         // print(_dataRes[0]['male']);
         // print(_dataRes[0]['famale']);
         // if (_dataRes.length == 0) {
@@ -610,6 +610,27 @@ class _StatistikPageState extends State<StatistikPage> {
     });
   }
 
+  getStatistikQuery() {
+    return '''
+     query{
+      Statistik(kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}"){
+        total_ikm
+        total_tenaga_kerja
+        total_industri_kecil
+        total_industri_menengah
+        total_industri_besar
+        total_ikm_baru
+        total_ikm_sertifikat_halal
+        total_ikm_sertifikat_haki
+        total_ikm_sertifikat_sni
+        total_ikm_sertifikat_test_report
+        total_ikm_formal
+        total_ikm_informal
+      }
+    }
+    ''';
+  }
+
   getKabuatenQuery() {
     return '''
       query{
@@ -631,7 +652,7 @@ class _StatistikPageState extends State<StatistikPage> {
       }
     ''';
   }
- 
+
   getKelurahanQuery() {
     return '''
       query{
@@ -642,7 +663,28 @@ class _StatistikPageState extends State<StatistikPage> {
       }
     ''';
   }
-  
+
+  getCabangIndustriQuery() {
+    return '''
+      query{
+        cabangIndustri{
+          id
+          name
+        }
+      }
+    ''';
+  }
+
+  getSubCabangIndustriQuery() {
+    return '''
+      query{
+        SubCabangIndustri(id_cabang_industri:"${_cabangIndustri}"){
+          id
+          name
+        }
+      }
+    ''';
+  }
 
   pushToDetailsPage(
       String _title,
@@ -654,21 +696,17 @@ class _StatistikPageState extends State<StatistikPage> {
       String _kabupaten,
       String _kecamatan,
       String _kelurahan) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DetailsStatistik(
-            title: _title,
-            kabupaten: _kabupaten,
-            kecamatan: _kecamatan,
-            kelurahan: _kelurahan,
-            industri: _jenisIndustri,
-            ikmBaru: _ikmBaru,
-            halal: _halal,
-            haki: _haki,
-            sni: _sni,
-          ),
-        ));
+    // Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => DetailsStatistik(
+    //         title: _title,
+    //         kabupaten: _kabupaten,
+    //         kecamatan: _kecamatan,
+    //         kelurahan: _kelurahan,
+    //         industri: _jenisIndustri,
+    //       ),
+    //     ));
   }
 
   setStateMenuChart() {
@@ -688,6 +726,26 @@ class _StatistikPageState extends State<StatistikPage> {
 
           // 'param1': 'Industri Menengah (Rp.1.000.000.000 - Rp.15.000.000.000)'
           // 'value': _dataPieChart[1],
+        },
+        {
+          'color': Colors.lime,
+          'title': 'IKM Baru',
+          'onTap': () {
+            pushToDetailsPage(
+                'IKM Baru',
+                "",
+                "true",
+                "",
+                "",
+                "",
+                _kabupaten.toString(),
+                _kecamatan.toString(),
+                _kelurahan.toString());
+          }
+
+          // 'param1': 'Industri Kecil (< Rp.1.000.000.000)',
+
+          // 'value': _dataPieChart[5],
         },
         {
           'color': Colors.blueAccent,
@@ -745,26 +803,6 @@ class _StatistikPageState extends State<StatistikPage> {
           // 'param1': 'Industri Besar (> Rp.15.000.000.000)'
 
           // 'value': _dataPieChart[4],
-        },
-        {
-          'color': Colors.lime,
-          'title': 'IKM Baru',
-          'onTap': () {
-            pushToDetailsPage(
-                'IKM Baru',
-                "",
-                "true",
-                "",
-                "",
-                "",
-                _kabupaten.toString(),
-                _kecamatan.toString(),
-                _kelurahan.toString());
-          }
-
-          // 'param1': 'Industri Kecil (< Rp.1.000.000.000)',
-
-          // 'value': _dataPieChart[5],
         },
         {
           'color': Colors.teal,
@@ -840,7 +878,7 @@ class _StatistikPageState extends State<StatistikPage> {
         },
         {
           'color': Color(0xfff41AAC9),
-          'title': 'Hulu Agro',
+          'title': 'Farmasi',
           'ontap': () {
             Navigator.pushNamed(context, '/homeLayoutPage',
                 arguments: <String, dynamic>{
@@ -853,7 +891,7 @@ class _StatistikPageState extends State<StatistikPage> {
         },
         {
           'color': Colors.blueAccent,
-          'title': 'Permesinan',
+          'title': 'Tekstil',
           'ontap': () {
             Navigator.pushNamed(context, '/homeLayoutPage',
                 arguments: <String, dynamic>{
@@ -866,7 +904,7 @@ class _StatistikPageState extends State<StatistikPage> {
         },
         {
           'color': Colors.amber,
-          'title': 'Hasil Pertambangan',
+          'title': 'Alat Transportasi',
           'ontap': () {
             Navigator.pushNamed(context, '/homeLayoutPage',
                 arguments: <String, dynamic>{
@@ -879,7 +917,7 @@ class _StatistikPageState extends State<StatistikPage> {
         },
         {
           'color': Colors.green,
-          'title': 'Kesehatan',
+          'title': 'Elektronika dan Telematika',
           'ontap': () {
             Navigator.pushNamed(context, '/homeLayoutPage',
                 arguments: <String, dynamic>{
@@ -892,7 +930,59 @@ class _StatistikPageState extends State<StatistikPage> {
         },
         {
           'color': Colors.lime,
-          'title': 'Ekonomi Kreatif',
+          'title': 'Pembangkit Energi',
+          'ontap': () {
+            Navigator.pushNamed(context, '/homeLayoutPage',
+                arguments: <String, dynamic>{
+                  "selectedIndex": 3,
+                  "kategori": "006eb850-7806-11eb-87a5-6fa3dfe46649",
+                  "aksesLink": "home"
+                });
+          }
+          // 'value': _dataPieChart[0],
+        },
+        {
+          'color': Colors.deepPurpleAccent,
+          'title': 'Barang Modal',
+          'ontap': () {
+            Navigator.pushNamed(context, '/homeLayoutPage',
+                arguments: <String, dynamic>{
+                  "selectedIndex": 3,
+                  "kategori": "006eb850-7806-11eb-87a5-6fa3dfe46649",
+                  "aksesLink": "home"
+                });
+          }
+          // 'value': _dataPieChart[0],
+        },
+        {
+          'color': Colors.pinkAccent,
+          'title': 'Hulu Agro',
+          'ontap': () {
+            Navigator.pushNamed(context, '/homeLayoutPage',
+                arguments: <String, dynamic>{
+                  "selectedIndex": 3,
+                  "kategori": "006eb850-7806-11eb-87a5-6fa3dfe46649",
+                  "aksesLink": "home"
+                });
+          }
+          // 'value': _dataPieChart[0],
+        },
+        {
+          'color': Colors.lightGreenAccent,
+          'title': 'Logam Dasar',
+          'ontap': () {
+            Navigator.pushNamed(context, '/homeLayoutPage',
+                arguments: <String, dynamic>{
+                  "selectedIndex": 3,
+                  "kategori": "006eb850-7806-11eb-87a5-6fa3dfe46649",
+                  "aksesLink": "home"
+                });
+          }
+          // 'value': _dataPieChart[0],
+        },
+        {
+          'color': Color(0xfff395B64),
+          'title': 'Kimia Dasar',
           'ontap': () {
             Navigator.pushNamed(context, '/homeLayoutPage',
                 arguments: <String, dynamic>{
@@ -907,6 +997,14 @@ class _StatistikPageState extends State<StatistikPage> {
     });
   }
 
+  intNullChecker(int? data) {
+    if (data == null) {
+      return 0;
+    }
+    ;
+    return data;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -914,24 +1012,6 @@ class _StatistikPageState extends State<StatistikPage> {
 
     if (widget.loginCache == 2) {
       if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-      setData('null');
-      getProduk(10);
-      getCabangIndustri();
-      setDataIKMBaru();
-      setDataIndustri('Industri Kecil (< Rp.1.000.000.000)', 'null');
-      setDataIndustri(
-          'Industri Menengah (Rp.1.000.000.000 - Rp.15.000.000.000)', 'null');
-      setDataIndustri('Industri Besar (> Rp.15.000.000.000)', 'null');
-      setDataIndustri('null', '006c4210-7806-11eb-9b1b-81d2fad81425');
-      setDataIndustri('null', '006d2610-7806-11eb-ab4c-a1abd6abcd37');
-      setDataIndustri('null', '006d8f20-7806-11eb-9444-bd238317ed47');
-      setDataIndustri('null', '006e3bd0-7806-11eb-a766-e1c38c7e931e');
-      setDataIndustri('null', '006eb850-7806-11eb-87a5-6fa3dfe46649');
-      setDataIndustri('null', '006f3b70-7806-11eb-ae50-d1725dc37289');
-      setDataSertifikat('{}', 'null', 'null');
-      setDataSertifikat('null', '{}', 'null');
-      setDataSertifikat('null', 'null', '{}');
-      setStateMenuChart();
     }
   }
 
@@ -977,8 +1057,6 @@ class _StatistikPageState extends State<StatistikPage> {
                           _kecamatan = null;
                           _kelurahan = null;
                         });
-                        updatePieChartbyLocation();
-                        setStateMenuChart();
                         // });
                       });
                     },
@@ -1010,8 +1088,6 @@ class _StatistikPageState extends State<StatistikPage> {
                           _kecamatan = newValue;
                           _kelurahan = null;
                         });
-                        updatePieChartbyLocation();
-                        setStateMenuChart();
                       });
                     },
                   ),
@@ -1041,8 +1117,79 @@ class _StatistikPageState extends State<StatistikPage> {
                         setState(() {
                           _kelurahan = newValue;
                         });
-                        updatePieChartbyLocation();
-                        setStateMenuChart();
+                      });
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0, top: 24),
+                  child: customText(context, Color(0xff242F43),
+                      'Cabang Industri', TextAlign.left, 14, FontWeight.w400),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0, top: 4, right: 16),
+                  child: Query(
+                    options:
+                        QueryOptions(document: gql(getCabangIndustriQuery())),
+                    builder: (QueryResult result, {fetchMore, refetch}) {
+                      if (result.hasException) {
+                        return Text(result.exception.toString());
+                      }
+                      if (result.isLoading) {
+                        return Text("");
+                      }
+                      final _CabangIndustriList =
+                          result.data?['cabangIndustri'];
+                      return dropDownStringStyle2(
+                          _cabangIndustri,
+                          'Cabang Industri',
+                          _CabangIndustriList == null
+                              ? []
+                              : _CabangIndustriList,
+                          Color(0xffE4E5E7), (newValue) {
+                        setState(() {
+                          _cabangIndustri = newValue;
+                          _subCabangIndustri = null;
+                        });
+                      });
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0, top: 24),
+                  child: customText(
+                      context,
+                      Color(0xff242F43),
+                      'Sub Cabang Industri',
+                      TextAlign.left,
+                      14,
+                      FontWeight.w400),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0, top: 4, right: 16),
+                  child: Query(
+                    options: QueryOptions(
+                        document: gql(getSubCabangIndustriQuery())),
+                    builder: (QueryResult result, {fetchMore, refetch}) {
+                      if (result.hasException) {
+                        return Text(result.exception.toString());
+                      }
+                      if (result.isLoading) {
+                        return Text("");
+                      }
+                      final _subCabangIndustriList =
+                          result.data?['SubCabangIndustri'];
+
+                      return dropDownStringStyle2(
+                          _subCabangIndustri,
+                          'SubCabang Industri',
+                          _subCabangIndustriList == null
+                              ? []
+                              : _subCabangIndustriList,
+                          Color(0xffE4E5E7), (newValue) {
+                        setState(() {
+                          _subCabangIndustri = newValue;
+                        });
                       });
                     },
                   ),
@@ -1058,6 +1205,7 @@ class _StatistikPageState extends State<StatistikPage> {
                           _kabupaten = null;
                           _kecamatan = null;
                           _kelurahan = null;
+                          _cabangIndustri = null;
                         });
                         setData('null');
                         setDataIKMBaru();
@@ -1097,30 +1245,71 @@ class _StatistikPageState extends State<StatistikPage> {
                     Expanded(
                       child: AspectRatio(
                         aspectRatio: 1.3,
-                        child: PieChart(
-                          PieChartData(
-                              pieTouchData: PieTouchData(
-                                  touchCallback: (pieTouchResponse) {
-                                setState(() {
-                                  final desiredTouch = pieTouchResponse
-                                          .touchInput is! PointerExitEvent &&
-                                      pieTouchResponse.touchInput
-                                          is! PointerUpEvent;
-                                  if (desiredTouch &&
-                                      pieTouchResponse.touchedSection != null) {
-                                    touchedIndex = pieTouchResponse
-                                        .touchedSection!.touchedSectionIndex;
-                                  } else {
-                                    touchedIndex = -1;
-                                  }
-                                });
-                              }),
-                              borderData: FlBorderData(
-                                show: false,
-                              ),
-                              sectionsSpace: 0,
-                              centerSpaceRadius: 30,
-                              sections: showingSections()),
+                        child: Query(
+                          options:
+                              QueryOptions(document: gql(getStatistikQuery())),
+                          builder: (QueryResult result, {fetchMore, refetch}) {
+                            if (result.hasException) {
+                              return Text(result.exception.toString());
+                            }
+                            if (result.isLoading) {
+                              return Text("");
+                            }
+                            final data = result.data?['Statistik'][0];
+                            final _totalIkm = data['total_ikm'];
+                            final _totalTenagaKerja =
+                                data['total_tenaga_kerja'];
+                            final _industriKecil = data['total_industri_kecil'];
+                            final _industriMenengah =
+                                data['total_industri_menengah'];
+                            final _industriBesar = data['total_industri_besar'];
+                            final _ikmBaru = data['total_ikm_baru'];
+                            final _sertifikatHalal =
+                                data['total_ikm_sertifikat_halal'];
+                            final _sertifikatHaki =
+                                data['total_ikm_sertifikat_haki'];
+                            final _sertifikatSni =
+                                data['total_ikm_sertifikat_sni'];
+
+                            return PieChart(
+                              PieChartData(
+                                  pieTouchData: PieTouchData(
+                                      touchCallback: (pieTouchResponse) {
+                                    setState(() {
+                                      final desiredTouch =
+                                          pieTouchResponse.touchInput
+                                                  is! PointerExitEvent &&
+                                              pieTouchResponse.touchInput
+                                                  is! PointerUpEvent;
+                                      if (desiredTouch &&
+                                          pieTouchResponse.touchedSection !=
+                                              null) {
+                                        touchedIndex = pieTouchResponse
+                                            .touchedSection!
+                                            .touchedSectionIndex;
+                                      } else {
+                                        touchedIndex = -1;
+                                      }
+                                    });
+                                  }),
+                                  borderData: FlBorderData(
+                                    show: false,
+                                  ),
+                                  sectionsSpace: 0,
+                                  centerSpaceRadius: 30,
+                                  sections: showingSections(
+                                    intNullChecker(_totalIkm),
+                                    intNullChecker(_totalTenagaKerja),
+                                    intNullChecker(_industriKecil),
+                                    intNullChecker(_industriMenengah),
+                                    intNullChecker(_industriBesar),
+                                    intNullChecker(_ikmBaru),
+                                    intNullChecker(_sertifikatHalal),
+                                    intNullChecker(_sertifikatHaki),
+                                    intNullChecker(_sertifikatSni),
+                                  )),
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -1130,104 +1319,593 @@ class _StatistikPageState extends State<StatistikPage> {
                   padding:
                       const EdgeInsets.only(left: 32, top: 16.0, right: 32),
                   child: Container(
-                    child: GridView.count(
-                      physics: NeverScrollableScrollPhysics(),
-                      childAspectRatio: 1 / 1,
-                      crossAxisCount: 3,
-                      shrinkWrap: true,
-                      primary: true,
-                      children: _indicatorDiagram1
-                          .asMap()
-                          .map((i, e) => MapEntry(
-                              i,
-                              GestureDetector(
-                                onTap: e['onTap'],
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    customText(
-                                        context,
-                                        Color(0xff242F43),
-                                        _dataPieChart[i].toString(),
-                                        TextAlign.left,
-                                        20,
-                                        FontWeight.w500),
-                                    Row(
+                    child: Query(
+                      options: QueryOptions(document: gql(getStatistikQuery())),
+                      builder: (QueryResult result, {fetchMore, refetch}) {
+                        if (result.hasException) {
+                          return Text(result.exception.toString());
+                        }
+                        if (result.isLoading) {
+                          return Text("");
+                        }
+
+                        final data = result.data?['Statistik'][0];
+                        final _totalIkm = data['total_ikm'];
+                        final _totalTenagaKerja = data['total_tenaga_kerja'];
+                        final _industriKecil = data['total_industri_kecil'];
+                        final _industriMenengah =
+                            data['total_industri_menengah'];
+                        final _industriBesar = data['total_industri_besar'];
+                        final _ikmBaru = data['total_ikm_baru'];
+                        final _sertifikatHalal =
+                            data['total_ikm_sertifikat_halal'];
+                        final _sertifikatHaki =
+                            data['total_ikm_sertifikat_haki'];
+                        final _sertifikatSni = data['total_ikm_sertifikat_sni'];
+                        final _sertifikatTestReport =
+                            data['total_ikm_sertifikat_test_report'];
+                        final _ikmFormal = data['total_ikm_formal'];
+                        final _ikmInformal = data['total_ikm_informal'];
+
+                        List indicatorDiagramList = [
+                          {
+                            'color': Color(0xff4930C5),
+                            'title': 'Total IKM',
+                            'value': _totalIkm,
+                            'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                          },
+                          {
+                            'color': Color(0xfff41AAC9),
+                            'title': 'Tenaga Kerja',
+                            'value': _totalTenagaKerja,
+                            'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                          },
+                          {
+                            'color': Colors.lime,
+                            'title': 'IKM Baru',
+                            'value': _ikmBaru,
+                            'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"baru"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                          },
+                          {
+                            'color': Colors.blueAccent,
+                            'title': 'Industri Kecil',
+                            'value': _industriKecil,
+                            'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"kecil"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                          },
+                          {
+                            'color': Colors.amber,
+                            'title': 'Industri Menengah',
+                            'value': _industriMenengah,
+                            'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"menengah"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                          },
+                          {
+                            'color': Colors.green,
+                            'title': 'Industri Besar',
+                            'value': _industriBesar,
+                            'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"besar"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                          },
+                          {
+                            'color': Colors.teal,
+                            'title': 'Sertifikat Halal',
+                            'value': _sertifikatHalal,
+                            'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"halal"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                          },
+                          {
+                            'color': Colors.brown,
+                            'title': 'Sertifikat HAKI',
+                            'value': _sertifikatHaki,
+                            'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"haki"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                          },
+                          {
+                            'color': Colors.pink,
+                            'title': 'Sertifikat SNI',
+                            'value': _sertifikatSni,
+                            'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"sni"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                          },
+                          {
+                            'color': Color(0xff151D3B),
+                            'title': 'Sertifikat Test Report',
+                            'value': _sertifikatTestReport,
+                            'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"test_report"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                          },
+                          {
+                            'color': Color(0xffF76E11),
+                            'title': 'Formal',
+                            'value': _ikmFormal,
+                            'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"formal"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                          },
+                          {
+                            'color': Color(0xff4C0027),
+                            'title': 'Informal',
+                            'value': _ikmInformal,
+                            'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"informal"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                          },
+                        ];
+
+                        return GridView.count(
+                          physics: NeverScrollableScrollPhysics(),
+                          childAspectRatio: 1 / 1,
+                          crossAxisCount: 3,
+                          shrinkWrap: true,
+                          primary: true,
+                          children: indicatorDiagramList
+                              .asMap()
+                              .map((i, e) => MapEntry(
+                                  i,
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                DetailsStatistik(
+                                              title: e['title'],
+                                              graphqlQuery: e['query'],
+                                            ),
+                                          ));
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Container(
-                                          width: 8,
-                                          height: 8,
-                                          decoration: BoxDecoration(
-                                            color: e['color'],
-                                            shape: BoxShape.rectangle,
-                                          ),
-                                        ),
-                                        Container(
-                                          padding:
-                                              const EdgeInsets.only(left: 4),
-                                          width: 80,
-                                          child: customText(
-                                              context,
-                                              Color(0xff242F43),
-                                              e['title'],
-                                              TextAlign.left,
-                                              12,
-                                              FontWeight.w400),
+                                        customText(
+                                            context,
+                                            Color(0xff242F43),
+                                            intNullChecker(e['value'])
+                                                .toString(),
+                                            TextAlign.left,
+                                            20,
+                                            FontWeight.w500),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 8,
+                                              height: 8,
+                                              decoration: BoxDecoration(
+                                                color: e['color'],
+                                                shape: BoxShape.rectangle,
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4),
+                                              width: 80,
+                                              child: customText(
+                                                  context,
+                                                  Color(0xff242F43),
+                                                  e['title'],
+                                                  TextAlign.left,
+                                                  12,
+                                                  FontWeight.w400),
+                                            )
+                                          ],
                                         )
                                       ],
-                                    )
-                                  ],
-                                ),
-                              )))
-                          .values
-                          .toList(),
+                                    ),
+                                  )))
+                              .values
+                              .toList(),
+                        );
+                      },
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 32.0, top: 40),
-                  child: customText(
-                      context,
-                      Color(0xff242F43),
-                      'Statistik Berdasarkan Sektor Industri',
-                      TextAlign.left,
-                      14,
-                      FontWeight.w500),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AspectRatio(
-                        aspectRatio: 1.3,
-                        child: PieChart(
-                          PieChartData(
-                              pieTouchData: PieTouchData(
-                                  touchCallback: (pieTouchResponse) {
-                                setState(() {
-                                  final desiredTouch = pieTouchResponse
-                                          .touchInput is! PointerExitEvent &&
-                                      pieTouchResponse.touchInput
-                                          is! PointerUpEvent;
-                                  if (desiredTouch &&
-                                      pieTouchResponse.touchedSection != null) {
-                                    touchedIndex = pieTouchResponse
-                                        .touchedSection!.touchedSectionIndex;
-                                  } else {
-                                    touchedIndex = -1;
-                                  }
-                                });
-                              }),
-                              borderData: FlBorderData(
-                                show: false,
-                              ),
-                              sectionsSpace: 0,
-                              centerSpaceRadius: 30,
-                              sections: showingSections2()),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(left: 32.0, top: 40),
+                //   child: customText(
+                //       context,
+                //       Color(0xff242F43),
+                //       'Statistik Berdasarkan Sektor Industri',
+                //       TextAlign.left,
+                //       14,
+                //       FontWeight.w500),
+                // ),
+                // Row(
+                //   children: [
+                //     Expanded(
+                //       child: AspectRatio(
+                //         aspectRatio: 1.3,
+                //         child: PieChart(
+                //           PieChartData(
+                //               pieTouchData: PieTouchData(
+                //                   touchCallback: (pieTouchResponse) {
+                //                 setState(() {
+                //                   final desiredTouch = pieTouchResponse
+                //                           .touchInput is! PointerExitEvent &&
+                //                       pieTouchResponse.touchInput
+                //                           is! PointerUpEvent;
+                //                   if (desiredTouch &&
+                //                       pieTouchResponse.touchedSection != null) {
+                //                     touchedIndex = pieTouchResponse
+                //                         .touchedSection!.touchedSectionIndex;
+                //                   } else {
+                //                     touchedIndex = -1;
+                //                   }
+                //                 });
+                //               }),
+                //               borderData: FlBorderData(
+                //                 show: false,
+                //               ),
+                //               sectionsSpace: 0,
+                //               centerSpaceRadius: 30,
+                //               sections: showingSections2()),
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 Padding(
                   padding:
                       const EdgeInsets.only(left: 32, top: 16.0, right: 32),
@@ -1295,7 +1973,17 @@ class _StatistikPageState extends State<StatistikPage> {
     );
   }
 
-  List<PieChartSectionData> showingSections() {
+  List<PieChartSectionData> showingSections(
+    int _totalIkm,
+    int _totalTenagaKerja,
+    int _industriKecil,
+    int _industriMenengah,
+    int _industriBesar,
+    int _ikmBaru,
+    int _sertifikatHalal,
+    int _sertifikatHaki,
+    int _sertifikatSni,
+  ) {
     return List.generate(9, (i) {
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 25.0 : 16.0;
@@ -1305,155 +1993,101 @@ class _StatistikPageState extends State<StatistikPage> {
         case 0:
           return PieChartSectionData(
             color: const Color(0xff4930C5),
-            value: _dataPieChart[0].toDouble(),
-            title: '${_dataPieChart[0]}',
+            value: _totalIkm.toDouble(),
+            title: '${_totalIkm}',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
-            // badgeWidget: _Badge(
-            //   'assets/images/UMKMIcon.svg',
-            //   size: widgetSize,
-            //   borderColor: const Color(0xff41AAC9),
-            // ),
-            // badgePositionPercentageOffset: 1.1,
           );
         case 1:
           return PieChartSectionData(
             color: const Color(0xfff41AAC9),
-            value: _dataPieChart[1].toDouble(),
-            title: '${_dataPieChart[1]}',
+            value: _totalTenagaKerja.toDouble(),
+            title: '${_totalTenagaKerja}',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
-            // badgeWidget: _Badge(
-            //   'assets/images/tenagaKerjaIcon.svg',
-            //   size: widgetSize,
-            //   borderColor: const Color(0xff4930C5),
-            // ),
-            // badgePositionPercentageOffset: 1.1,
           );
         case 2:
           return PieChartSectionData(
             color: Colors.blueAccent,
-            value: _dataPieChart[2].toDouble(),
-            title: '${_dataPieChart[2]}',
+            value: _industriKecil.toDouble(),
+            title: '${_industriKecil}',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
-            // badgeWidget: _Badge(
-            //   'assets/images/tenagaKerjaIcon.svg',
-            //   size: widgetSize,
-            //   borderColor: const Color(0xff4930C5),
-            // ),
-            // badgePositionPercentageOffset: 1.1,
           );
         case 3:
           return PieChartSectionData(
             color: Colors.amber,
-            value: _dataPieChart[3].toDouble(),
-            title: '${_dataPieChart[3]}',
+            value: _industriMenengah.toDouble(),
+            title: '${_industriMenengah}',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
-            // badgeWidget: _Badge(
-            //   'assets/images/tenagaKerjaIcon.svg',
-            //   size: widgetSize,
-            //   borderColor: const Color(0xff4930C5),
-            // ),
-            // badgePositionPercentageOffset: 1.1,
           );
         case 4:
           return PieChartSectionData(
             color: Colors.green,
-            value: _dataPieChart[4].toDouble(),
-            title: '${_dataPieChart[4]}',
+            value: _industriBesar.toDouble(),
+            title: '${_industriBesar}',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
-            // badgeWidget: _Badge(
-            //   'assets/images/tenagaKerjaIcon.svg',
-            //   size: widgetSize,
-            //   borderColor: const Color(0xff4930C5),
-            // ),
-            // badgePositionPercentageOffset: 1.1,
           );
         case 5:
           return PieChartSectionData(
             color: Colors.lime,
-            value: _dataPieChart[5].toDouble(),
-            title: '${_dataPieChart[5]}',
+            value: _ikmBaru.toDouble(),
+            title: '${_ikmBaru}',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
-            // badgeWidget: _Badge(
-            //   'assets/images/tenagaKerjaIcon.svg',
-            //   size: widgetSize,
-            //   borderColor: const Color(0xff4930C5),
-            // ),
-            // badgePositionPercentageOffset: 1.1,
           );
         case 6:
           return PieChartSectionData(
             color: Colors.teal,
-            value: _dataPieChart[6].toDouble(),
-            title: '${_dataPieChart[6]}',
+            value: _sertifikatHalal.toDouble(),
+            title: '${_sertifikatHalal}',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
-            // badgeWidget: _Badge(
-            //   'assets/images/tenagaKerjaIcon.svg',
-            //   size: widgetSize,
-            //   borderColor: const Color(0xff4930C5),
-            // ),
-            // badgePositionPercentageOffset: 1.1,
           );
         case 7:
           return PieChartSectionData(
             color: Colors.brown,
-            value: _dataPieChart[7].toDouble(),
-            title: '${_dataPieChart[7]}',
+            value: _sertifikatHaki.toDouble(),
+            title: '${_sertifikatHaki}',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
-            // badgeWidget: _Badge(
-            //   'assets/images/tenagaKerjaIcon.svg',
-            //   size: widgetSize,
-            //   borderColor: const Color(0xff4930C5),
-            // ),
-            // badgePositionPercentageOffset: 1.1,
           );
         case 8:
           return PieChartSectionData(
             color: Colors.pink,
-            value: _dataPieChart[8].toDouble(),
-            title: '${_dataPieChart[8]}',
+            value: _sertifikatSni.toDouble(),
+            title: '${_sertifikatSni}',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
-            // badgeWidget: _Badge(
-            //   'assets/images/tenagaKerjaIcon.svg',
-            //   size: widgetSize,
-            //   borderColor: const Color(0xff4930C5),
-            // ),
-            // badgePositionPercentageOffset: 1.1,
           );
         default:
           throw Error();
@@ -1461,327 +2095,84 @@ class _StatistikPageState extends State<StatistikPage> {
     });
   }
 
-  List<PieChartSectionData> showingSections2() {
-    return List.generate(6, (i) {
-      final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 25.0 : 16.0;
-      final radius = isTouched ? 60.0 : 50.0;
-      final widgetSize = isTouched ? 55.0 : 35.0;
-      switch (i) {
-        case 0:
-          return PieChartSectionData(
-            color: const Color(0xff4930C5),
-            value: _dataPieChart2[0].toDouble(),
-            title: '${_dataPieChart2[0]}',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-            // badgeWidget: _Badge(
-            //   'assets/images/UMKMIcon.svg',
-            //   size: widgetSize,
-            //   borderColor: const Color(0xff41AAC9),
-            // ),
-            // badgePositionPercentageOffset: 1.1,
-          );
-        case 1:
-          return PieChartSectionData(
-            color: const Color(0xfff41AAC9),
-            value: _dataPieChart2[1].toDouble(),
-            title: '${_dataPieChart2[1]}',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-            // badgeWidget: _Badge(
-            //   'assets/images/tenagaKerjaIcon.svg',
-            //   size: widgetSize,
-            //   borderColor: const Color(0xff4930C5),
-            // ),
-            // badgePositionPercentageOffset: 1.1,
-          );
-        case 2:
-          return PieChartSectionData(
-            color: Colors.blueAccent,
-            value: _dataPieChart2[2].toDouble(),
-            title: '${_dataPieChart2[2]}',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-            // badgeWidget: _Badge(
-            //   'assets/images/tenagaKerjaIcon.svg',
-            //   size: widgetSize,
-            //   borderColor: const Color(0xff4930C5),
-            // ),
-            // badgePositionPercentageOffset: 1.1,
-          );
-        case 3:
-          return PieChartSectionData(
-            color: Colors.amber,
-            value: _dataPieChart2[3].toDouble(),
-            title: '${_dataPieChart2[3]}',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-            // badgeWidget: _Badge(
-            //   'assets/images/tenagaKerjaIcon.svg',
-            //   size: widgetSize,
-            //   borderColor: const Color(0xff4930C5),
-            // ),
-            // badgePositionPercentageOffset: 1.1,
-          );
-        case 4:
-          return PieChartSectionData(
-            color: Colors.green,
-            value: _dataPieChart2[4].toDouble(),
-            title: '${_dataPieChart2[4]}',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-            // badgeWidget: _Badge(
-            //   'assets/images/tenagaKerjaIcon.svg',
-            //   size: widgetSize,
-            //   borderColor: const Color(0xff4930C5),
-            // ),
-            // badgePositionPercentageOffset: 1.1,
-          );
-        case 5:
-          return PieChartSectionData(
-            color: Colors.lime,
-            value: _dataPieChart2[5].toDouble(),
-            title: '${_dataPieChart2[5]}',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-            // badgeWidget: _Badge(
-            //   'assets/images/tenagaKerjaIcon.svg',
-            //   size: widgetSize,
-            //   borderColor: const Color(0xff4930C5),
-            // ),
-            // badgePositionPercentageOffset: 1.1,
-          );
-        default:
-          throw Error();
-      }
-    });
-  }
-
-  // List<PieChartSectionData> showingSections2() {
-  //   return List.generate(2, (i) {
-  //     final isTouched = i == touchedIndex;
-  //     final fontSize = isTouched ? 25.0 : 16.0;
-  //     final radius = isTouched ? 60.0 : 50.0;
-  //     final widgetSize = isTouched ? 65.0 : 40.0;
-  //     switch (i) {
-  //       case 0:
-  //         return PieChartSectionData(
-  //           color: const Color(0xff41AAC9),
-  //           value: _dataPieChart2[0].toDouble(),
-  //           title: '${_dataPieChart2[0]}',
-  //           radius: radius,
-  //           titleStyle: TextStyle(
-  //               fontSize: fontSize,
-  //               fontWeight: FontWeight.bold,
-  //               color: const Color(0xffffffff)),
-  //           badgeWidget: _Badge(
-  //             'assets/images/UMKMIcon.svg',
-  //             size: widgetSize,
-  //             borderColor: const Color(0xff41AAC9),
-  //           ),
-  //           badgePositionPercentageOffset: 1.29,
-  //         );
-  //       case 1:
-  //         return PieChartSectionData(
-  //           color: const Color(0xff4930C5),
-  //           value: _dataPieChart2[1].toDouble(),
-  //           title: '${_dataPieChart2[1]}',
-  //           radius: radius,
-  //           titleStyle: TextStyle(
-  //               fontSize: fontSize,
-  //               fontWeight: FontWeight.bold,
-  //               color: const Color(0xffffffff)),
-  //           badgeWidget: _Badge(
-  //             'assets/images/tenagaKerjaIcon.svg',
-  //             size: widgetSize,
-  //             borderColor: const Color(0xff4930C5),
-  //           ),
-  //           badgePositionPercentageOffset: 1.29,
-  //         );
-  //       // case 2:
-  //       //   return PieChartSectionData(
-  //       //     color: const Color(0xff845bef),
-  //       //     value: 15,
-  //       //     title: '15%',
-  //       //     radius: radius,
-  //       //     titleStyle: TextStyle(
-  //       //         fontSize: fontSize,
-  //       //         fontWeight: FontWeight.bold,
-  //       //         color: const Color(0xffffffff)),
-  //       //   );
-  //       // case 3:
-  //       //   return PieChartSectionData(
-  //       //     color: const Color(0xff13d38e),
-  //       //     value: 15,
-  //       //     title: '15%',
-  //       //     radius: radius,
-  //       //     titleStyle: TextStyle(
-  //       //         fontSize: fontSize,
-  //       //         fontWeight: FontWeight.bold,
-  //       //         color: const Color(0xffffffff)),
-  //       //   );
-  //       default:
-  //         throw Error();
-  //     }
-  //   });
-  // }
-
-  // List<PieChartSectionData> showingSections3() {
-  //   return List.generate(2, (i) {
-  //     final isTouched = i == touchedIndex;
-  //     final fontSize = isTouched ? 25.0 : 16.0;
-  //     final radius = isTouched ? 60.0 : 50.0;
-  //     final widgetSize = isTouched ? 65.0 : 40.0;
-  //     switch (i) {
-  //       case 0:
-  //         return PieChartSectionData(
-  //           color: const Color(0xff41AAC9),
-  //           value: _dataPieChart3[0].toDouble(),
-  //           title: '${_dataPieChart3[0]}',
-  //           radius: radius,
-  //           titleStyle: TextStyle(
-  //               fontSize: fontSize,
-  //               fontWeight: FontWeight.bold,
-  //               color: const Color(0xffffffff)),
-  //           badgeWidget: _Badge(
-  //             'assets/images/UMKMIcon.svg',
-  //             size: widgetSize,
-  //             borderColor: const Color(0xff41AAC9),
-  //           ),
-  //           badgePositionPercentageOffset: 1.29,
-  //         );
-  //       case 1:
-  //         return PieChartSectionData(
-  //           color: const Color(0xff4930C5),
-  //           value: _dataPieChart3[1].toDouble(),
-  //           title: '${_dataPieChart3[1]}',
-  //           radius: radius,
-  //           titleStyle: TextStyle(
-  //               fontSize: fontSize,
-  //               fontWeight: FontWeight.bold,
-  //               color: const Color(0xffffffff)),
-  //           badgeWidget: _Badge(
-  //             'assets/images/tenagaKerjaIcon.svg',
-  //             size: widgetSize,
-  //             borderColor: const Color(0xff4930C5),
-  //           ),
-  //           badgePositionPercentageOffset: 1.29,
-  //         );
-  //       // case 2:
-  //       //   return PieChartSectionData(
-  //       //     color: const Color(0xff845bef),
-  //       //     value: 15,
-  //       //     title: '15%',
-  //       //     radius: radius,
-  //       //     titleStyle: TextStyle(
-  //       //         fontSize: fontSize,
-  //       //         fontWeight: FontWeight.bold,
-  //       //         color: const Color(0xffffffff)),
-  //       //   );
-  //       // case 3:
-  //       //   return PieChartSectionData(
-  //       //     color: const Color(0xff13d38e),
-  //       //     value: 15,
-  //       //     title: '15%',
-  //       //     radius: radius,
-  //       //     titleStyle: TextStyle(
-  //       //         fontSize: fontSize,
-  //       //         fontWeight: FontWeight.bold,
-  //       //         color: const Color(0xffffffff)),
-  //       //   );
-  //       default:
-  //         throw Error();
-  //     }
-  //   });
-  // }
-
-  // List<PieChartSectionData> showingSections4() {
-  //   return List.generate(2, (i) {
-  //     final isTouched = i == touchedIndex;
-  //     final fontSize = isTouched ? 25.0 : 16.0;
-  //     final radius = isTouched ? 60.0 : 50.0;
-  //     final widgetSize = isTouched ? 65.0 : 40.0;
-  //     switch (i) {
-  //       case 0:
-  //         return PieChartSectionData(
-  //           color: const Color(0xff41AAC9),
-  //           value: _dataPieChart4[0].toDouble(),
-  //           title: '${_dataPieChart4[0]}',
-  //           radius: radius,
-  //           titleStyle: TextStyle(
-  //               fontSize: fontSize,
-  //               fontWeight: FontWeight.bold,
-  //               color: const Color(0xffffffff)),
-  //           badgeWidget: _Badge(
-  //             'assets/images/UMKMIcon.svg',
-  //             size: widgetSize,
-  //             borderColor: const Color(0xff41AAC9),
-  //           ),
-  //           badgePositionPercentageOffset: 1.29,
-  //         );
-  //       case 1:
-  //         return PieChartSectionData(
-  //           color: const Color(0xff4930C5),
-  //           value: _dataPieChart4[1].toDouble(),
-  //           title: '${_dataPieChart4[1]}',
-  //           radius: radius,
-  //           titleStyle: TextStyle(
-  //               fontSize: fontSize,
-  //               fontWeight: FontWeight.bold,
-  //               color: const Color(0xffffffff)),
-  //           badgeWidget: _Badge(
-  //             'assets/images/tenagaKerjaIcon.svg',
-  //             size: widgetSize,
-  //             borderColor: const Color(0xff4930C5),
-  //           ),
-  //           badgePositionPercentageOffset: 1.29,
-  //         );
-  //       // case 2:
-  //       //   return PieChartSectionData(
-  //       //     color: const Color(0xff845bef),
-  //       //     value: 15,
-  //       //     title: '15%',
-  //       //     radius: radius,
-  //       //     titleStyle: TextStyle(
-  //       //         fontSize: fontSize,
-  //       //         fontWeight: FontWeight.bold,
-  //       //         color: const Color(0xffffffff)),
-  //       //   );
-  //       // case 3:
-  //       //   return PieChartSectionData(
-  //       //     color: const Color(0xff13d38e),
-  //       //     value: 15,
-  //       //     title: '15%',
-  //       //     radius: radius,
-  //       //     titleStyle: TextStyle(
-  //       //         fontSize: fontSize,
-  //       //         fontWeight: FontWeight.bold,
-  //       //         color: const Color(0xffffffff)),
-  //       //   );
-  //       default:
-  //         throw Error();
-  //     }
-  //   });
-  // }
+//   List<PieChartSectionData> showingSections2(List dataPie) {
+//     return List.generate(6, (i) {
+//       final isTouched = i == touchedIndex;
+//       final fontSize = isTouched ? 25.0 : 16.0;
+//       final radius = isTouched ? 60.0 : 50.0;
+//       final widgetSize = isTouched ? 55.0 : 35.0;
+//       switch (i) {
+//         case 0:
+//           return PieChartSectionData(
+//             color: const Color(0xff4930C5),
+//             value: dataPie2[0].toDouble(),
+//             title: '${dataPie2[0]}',
+//             radius: radius,
+//             titleStyle: TextStyle(
+//                 fontSize: fontSize,
+//                 fontWeight: FontWeight.bold,
+//                 color: const Color(0xffffffff)),
+//           );
+//         case 1:
+//           return PieChartSectionData(
+//             color: const Color(0xfff41AAC9),
+//             value: dataPie2[1].toDouble(),
+//             title: '${dataPie2[1]}',
+//             radius: radius,
+//             titleStyle: TextStyle(
+//                 fontSize: fontSize,
+//                 fontWeight: FontWeight.bold,
+//                 color: const Color(0xffffffff)),
+//           );
+//         case 2:
+//           return PieChartSectionData(
+//             color: Colors.blueAccent,
+//             value: dataPie2[2].toDouble(),
+//             title: '${dataPie2[2]}',
+//             radius: radius,
+//             titleStyle: TextStyle(
+//                 fontSize: fontSize,
+//                 fontWeight: FontWeight.bold,
+//                 color: const Color(0xffffffff)),
+//           );
+//         case 3:
+//           return PieChartSectionData(
+//             color: Colors.amber,
+//             value: dataPie2[3].toDouble(),
+//             title: '${dataPie2[3]}',
+//             radius: radius,
+//             titleStyle: TextStyle(
+//                 fontSize: fontSize,
+//                 fontWeight: FontWeight.bold,
+//                 color: const Color(0xffffffff)),
+//           );
+//         case 4:
+//           return PieChartSectionData(
+//             color: Colors.green,
+//             value: dataPie2[4].toDouble(),
+//             title: '${dataPie2[4]}',
+//             radius: radius,
+//             titleStyle: TextStyle(
+//                 fontSize: fontSize,
+//                 fontWeight: FontWeight.bold,
+//                 color: const Color(0xffffffff)),
+//           );
+//         case 5:
+//           return PieChartSectionData(
+//             color: Colors.lime,
+//             value: dataPie2[5].toDouble(),
+//             title: '${dataPie2[5]}',
+//             radius: radius,
+//             titleStyle: TextStyle(
+//                 fontSize: fontSize,
+//                 fontWeight: FontWeight.bold,
+//                 color: const Color(0xffffffff)),
+//           );
+//         default:
+//           throw Error();
+//       }
+//     });
+//   }
 }
 
 class _Badge extends StatelessWidget {

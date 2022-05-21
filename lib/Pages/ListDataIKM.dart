@@ -21,9 +21,12 @@ import 'package:appsimanis/Widget/SearchButton1.dart';
 import 'package:appsimanis/Widget/SearchInput.dart';
 import 'package:appsimanis/Widget/TextLabel.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../main.dart';
 
 class ListDataIKM extends StatefulWidget {
   final int loginCache;
@@ -39,10 +42,12 @@ class _ListDataIKMState extends State<ListDataIKM> {
   ScrollController _scrollController = new ScrollController();
 
   int _subMenu = 0;
+  int _page = 1;
   List _listBadanUsaha = [];
   String? _kabupaten = null;
   String? _kecamatan = null;
   String? _kelurahan = null;
+  String? _cabangIndustri = null;
   String _lat = '';
   String _lng = '';
   List _listKabupaten = [];
@@ -136,21 +141,9 @@ class _ListDataIKMState extends State<ListDataIKM> {
     // print('keyword');
     // print(keyword);
     if (keyword == '') {
-      getBadanUsaha(10, _statusVerifikasi);
+      getBadanUsaha();
     } else {
-      crud.getData('/badan_usaha/cari/$keyword').then((res) {
-        setState(() {
-          _listBadanUsaha.clear();
-          _listBadanUsaha.addAll(jsonDecode(res.body));
-          _listBadanUsahaNotNullFoto = jsonDecode(res.body)
-              .where((el) =>
-                  el['foto_alat_produksi'] != null &&
-                  el['foto_alat_produksi'] != '')
-              .toList();
-          _loading = false;
-          // _keywordController.text = '';
-        });
-      });
+      getBadanUsaha();
     }
   }
 
@@ -164,25 +157,15 @@ class _ListDataIKMState extends State<ListDataIKM> {
   //   });
   // }
 
-  getBadanUsaha(int _limit, String status) {
-    // print('/badan_usaha/limit/$_limit/$status');
-    crud.getData('/badan_usaha/limit/$_limit/$status').then((res) {
-      // print(res.body);
-      // print('badan_usaha/limit/$_limit/$status');
-      setState(() {
-        if (_limit == 10) {
-          _listBadanUsaha.clear();
-        }
-        _listBadanUsaha = jsonDecode(res.body);
-        _listBadanUsahaNotNullFoto = jsonDecode(res.body)
-            .where((el) =>
-                el['foto_alat_produksi'] != null &&
-                el['foto_alat_produksi'] != '')
-            .toList();
-        _loading = false;
-        _dataLoaded = _limit;
-      });
-    });
+  getBadanUsaha() {
+    var data = client.value
+        .query(QueryOptions(document: gql(getBadanUsahaQuery(_page))));
+    data.then((value) => {
+          setState(() {
+            _listBadanUsaha.addAll(value.data?['badanUsaha']);
+            _loading = false;
+          })
+        });
   }
 
   getBadanUsahaTerdekat(int _limit, String lat, String lng, String status) {
@@ -210,7 +193,7 @@ class _ListDataIKMState extends State<ListDataIKM> {
       setState(() {
         _listCabangIndustri.add({'id': '212', 'nama': 'Semua'});
         _listCabangIndustri.addAll(jsonDecode(res.body));
-        getBadanUsaha(10, _statusVerifikasi);
+        // getBadanUsaha(10, _statusVerifikasi);
       });
     });
   }
@@ -227,44 +210,80 @@ class _ListDataIKMState extends State<ListDataIKM> {
         position.longitude.toString(), _statusVerifikasi);
   }
 
+  getBadanUsahaQuery(int page) {
+    return '''
+     query{
+                                  badanUsaha(page:${page},kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+    ''';
+  }
+
+  _getMoreData() {
+    setState(() {
+      _page += 1;
+    });
+    getBadanUsaha();
+  }
+
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance!.addPostFrameCallback((_) async {
-    //   final Object? arguments = (ModalRoute.of(context)!.settings.arguments
-    //           as Map)['status_verifikasi']
-    //       .toString();
-    //   setState(() {
-    //     args = arguments;
-    //   });
-    // });
-    // print("asdafasf21212");
-    // print(widget.loginCache);
+
     if (widget.loginCache == 1) {
-      getCabangIndsutri();
-      getBadanUsaha(10, _statusVerifikasi);
-      crud.getData('/provinsi/52/kabupaten').then((data) {
-        //print(data.statusCode);
-        setState(() {
-          _listKabupaten = jsonDecode(data.body);
-        });
-      });
+      getBadanUsaha();
+      // getCabangIndsutri();
+      // getBadanUsaha(10, _statusVerifikasi);
+      // crud.getData('/provinsi/52/kabupaten').then((data) {
+      //   //print(data.statusCode);
+      //   setState(() {
+      //     _listKabupaten = jsonDecode(data.body);
+      //   });
+      // });
       _scrollController.addListener(() {
         if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent) {
-          print('object');
-          if (_iDkategori == 'Semua' &&
-              _kabupaten == null &&
-              _kecamatan == null &&
-              _kelurahan == null &&
-              !_filterTerdekat) {
-            getBadanUsaha(_dataLoaded + 10, _statusVerifikasi);
-          } else if (_filterTerdekat) {
-            getLatLng(_dataLoaded + 10);
-          } else {
-            getBadanUsahaFilter(_iDkategori, _statusVerifikasi, _kabupaten,
-                _kecamatan, _kelurahan, _dataLoaded + 10);
-          }
+          _getMoreData();
+
+          // if (_iDkategori == 'Semua' &&
+          //     _kabupaten == null &&
+          //     _kecamatan == null &&
+          //     _kelurahan == null &&
+          //     !_filterTerdekat) {
+          //   // getBadanUsaha(_dataLoaded + 10, _statusVerifikasi);
+          // } else if (_filterTerdekat) {
+          //   getLatLng(_dataLoaded + 10);
+          // } else {
+          //   getBadanUsahaFilter(_iDkategori, _statusVerifikasi, _kabupaten,
+          //       _kecamatan, _kelurahan, _dataLoaded + 10);
+          // }
+
         }
       });
     }
@@ -478,7 +497,7 @@ class _ListDataIKMState extends State<ListDataIKM> {
               _kabupaten == null &&
               _kecamatan == null &&
               _kelurahan == null) {
-            getBadanUsaha(10, _statusVerifikasi);
+            // getBadanUsaha(10, _statusVerifikasi);
             Navigator.pop(context);
           } else {
             getBadanUsahaFilter(_iDkategori, _statusVerifikasi, _kabupaten,
@@ -545,7 +564,7 @@ class _ListDataIKMState extends State<ListDataIKM> {
                               _listBadanUsaha.clear();
                               _loading = true;
                             });
-                            getBadanUsaha(10, 'null');
+                            // getBadanUsaha(10, 'null');
                             clearFilter();
                           }),
                           Padding(
@@ -602,8 +621,8 @@ class _ListDataIKMState extends State<ListDataIKM> {
                                         // _statusVerifikasi =
                                         //     e == 'Semua' ? 'null' : e;
                                       });
-                                      getBadanUsaha(
-                                          10, (e == 'Semua' ? 'null' : e));
+                                      // getBadanUsaha(
+                                      //     10, (e == 'Semua' ? 'null' : e));
                                     },
                                     child: Column(
                                       children: [
@@ -810,7 +829,7 @@ class _ListDataIKMState extends State<ListDataIKM> {
                               _kabupaten == null &&
                               _kecamatan == null &&
                               _kelurahan == null) {
-                            getBadanUsaha(10, _statusVerifikasi);
+                            // getBadanUsaha(10, _statusVerifikasi);
                             // Navigator.pop(context);
 
                           } else {

@@ -94,7 +94,7 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
         setState(() {
           _kGooglePlex = CameraPosition(
             target: LatLng(
-                double.parse(arguments["lat"]), double.parse(arguments["lng"])),
+                double.parse(arguments["lat"].toString()), double.parse(arguments["lng"].toString())),
             zoom: 14.4746,
           );
         });

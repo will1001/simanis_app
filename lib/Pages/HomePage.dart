@@ -10,8 +10,27 @@ import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
+
+const slideShowQuery = '''
+query{
+  SlideShow{
+    id
+    img
+  }
+}
+''';
+
+const surveiQuery = '''
+query{
+  Survei{
+    id
+    link
+  }
+}
+''';
 
 class HomePage extends StatefulWidget {
   final int loginCache;
@@ -245,44 +264,52 @@ class _HomePageState extends State<HomePage> {
               Stack(
                 alignment: Alignment.topCenter,
                 children: [
-                  CarouselSlider(
-                    carouselController: buttonCarouselController,
-                    options: CarouselOptions(
-                      autoPlay: true,
-                      autoPlayInterval: Duration(seconds: 3),
-                      aspectRatio: 1 / 1,
-                      viewportFraction: 1,
-                      height: 286.0,
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          _current = index;
-                        });
-                      },
-                    ),
-                    items: _listcma.length == 0
-                        ? []
-                        : _listcma[0]['slide_show']
-                            .toString()
-                            .split(',')
-                            .map((i) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return Stack(
-                                  fit: StackFit.expand,
-                                  children: [
-                                    Image.network(
-                                      i,
-                                      fit: BoxFit.fill,
-                                    ),
-                                    ColoredBox(
-                                        color: Colors.black.withOpacity(
-                                            0.25) // 0: Light, 1: Dark
-                                        ),
-                                  ],
-                                );
-                              },
-                            );
-                          }).toList(),
+                  Query(
+                    options: QueryOptions(document: gql(slideShowQuery)),
+                    builder: (QueryResult result, {fetchMore, refetch}) {
+                      if (result.hasException) {
+                        return Text(result.exception.toString());
+                      }
+                      if (result.isLoading) {
+                        return Text("");
+                      }
+                      final _slideShowList = result.data?['SlideShow'];
+                      return CarouselSlider(
+                        carouselController: buttonCarouselController,
+                        options: CarouselOptions(
+                          autoPlay: true,
+                          autoPlayInterval: Duration(seconds: 3),
+                          aspectRatio: 1 / 1,
+                          viewportFraction: 1,
+                          height: 286.0,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              _current = index;
+                            });
+                          },
+                        ),
+                        items: _slideShowList.map<Widget>((e) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  Image.network(
+                                    'https://simanis.ntbprov.go.id'+
+                                    e['img'],
+                                    fit: BoxFit.fill,
+                                  ),
+                                  ColoredBox(
+                                      color: Colors.black.withOpacity(
+                                          0.25) // 0: Light, 1: Dark
+                                      ),
+                                ],
+                              );
+                            },
+                          );
+                        }).toList(),
+                      );
+                    },
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -396,9 +423,27 @@ class _HomePageState extends State<HomePage> {
                 crossAxisCount: 4,
                 shrinkWrap: true,
                 primary: true,
-                children: _listMenu
-                    .map((e) => GestureDetector(
-                          onTap: e['_ontap'],
+                children: _listMenu.map((e) {
+                  if (e['title'] == 'Survei') {
+                    return Query(
+                      options: QueryOptions(document: gql(surveiQuery)),
+                      builder: (QueryResult result, {fetchMore, refetch}) {
+                        if (result.hasException) {
+                          return Text(result.exception.toString());
+                        }
+                        if (result.isLoading) {
+                          return Text("");
+                        }
+                        final _surveiList = result.data?['Survei'];
+                        return GestureDetector(
+                          onTap: () async {
+                            String url = _surveiList[0]['link'];
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                              return;
+                            }
+                            print("couldn't launch $url");
+                          },
                           child: Column(
                             children: [
                               SvgPicture.asset(
@@ -418,8 +463,34 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-                        ))
-                    .toList(),
+                        );
+                      },
+                    );
+                  } else {
+                    return GestureDetector(
+                      onTap: e['_ontap'],
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(
+                            e['icon'],
+                            width: 32,
+                            height: 32,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: customText(
+                                context,
+                                Color(0xff242F43),
+                                e['title'],
+                                TextAlign.center,
+                                12,
+                                FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                }).toList(),
               ),
             ),
           ),

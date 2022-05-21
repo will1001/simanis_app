@@ -58,10 +58,10 @@ Widget cardUMKM2(BuildContext context, var e) {
                     child: customText(
                         context,
                         Color(0xff242F43),
-                        e['nama_perusahaan'].toString().length > 30
-                            ? e['nama_perusahaan'].toString().substring(0, 30) +
+                        e['nama_usaha'].toString().length > 30
+                            ? e['nama_usaha'].toString().substring(0, 30) +
                                 ' . . .'
-                            : e['nama_perusahaan'] ?? "",
+                            : e['nama_usaha'] ?? "",
                         TextAlign.left,
                         14,
                         FontWeight.w500),
@@ -71,10 +71,23 @@ Widget cardUMKM2(BuildContext context, var e) {
                     child: customText(
                         context,
                         Color(0xff727986),
-                        e['nama_pemilik'] ?? "",
+                        e['nama_direktur'] ?? "",
                         TextAlign.left,
                         12,
                         FontWeight.w500),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Container(
+                      width: 200,
+                      child: customText(
+                          context,
+                          Color(0xff727986),
+                          e['jenis_usaha'] ?? "",
+                          TextAlign.left,
+                          12,
+                          FontWeight.w500),
+                    ),
                   ),
                   Row(
                     children: [
@@ -88,10 +101,12 @@ Widget cardUMKM2(BuildContext context, var e) {
                         child: customText(
                             context,
                             Color(0xff727986),
-                            e['alamat'].toString().length > 30
-                                ? e['alamat'].toString().substring(0, 30) +
+                            e['alamat_lengkap'].toString().length > 30
+                                ? e['alamat_lengkap']
+                                        .toString()
+                                        .substring(0, 30) +
                                     ' . . .'
-                                : e['alamat'] ?? "",
+                                : e['alamat_lengkap'] ?? "",
                             TextAlign.left,
                             12,
                             FontWeight.w400),
