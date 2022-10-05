@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class FunctionGroup {
   CRUD crud = new CRUD();
-  saveCache(Map<String, String> data) async {
+  saveCache(Map<String, String?> data) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? email = prefs.getString('email');
 

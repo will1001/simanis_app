@@ -14,6 +14,7 @@ import 'package:appsimanis/Widget/InputForm.dart';
 import 'package:appsimanis/Widget/InputFormStyle3.dart';
 import 'package:appsimanis/Widget/PanelPopUp.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -51,9 +52,9 @@ class _DaftarState extends State<Daftar> {
 
   String _message = "";
   String _provinsi = "52";
-  String _kabupaten = "";
-  String _kecamatan = "";
-  String _kelurahan = "";
+  String? _kabupaten = null;
+  String? _kecamatan = null;
+  String? _kelurahan = null;
   String _lat = "";
   String _lng = "";
   List _listProvinsi = [
@@ -73,6 +74,39 @@ class _DaftarState extends State<Daftar> {
       new TextEditingController();
   TextEditingController _latController = new TextEditingController();
   TextEditingController _lngController = new TextEditingController();
+
+  getKabuatenQuery() {
+    return '''
+      query{
+        Kabupaten{
+          id
+          name
+        }
+      }
+    ''';
+  }
+
+  getKecamatanQuery() {
+    return '''
+      query{
+        Kecamatan(id_kabupaten:"${_kabupaten}"){
+          id
+          name
+        }
+      }
+    ''';
+  }
+
+  getKelurahanQuery() {
+    return '''
+      query{
+        Kelurahan(id_kecamatan:"${_kecamatan}"){
+          id
+          name
+        }
+      }
+    ''';
+  }
 
   getAlamat() async {
     // LocationPermission permission = await Geolocator.requestPermission();
@@ -185,70 +219,99 @@ class _DaftarState extends State<Daftar> {
                   false,
                   () {}),
             ),
-            customText(context, Colors.white, "Provinsi", TextAlign.left, 14,
-                FontWeight.w400),
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: dropDownStringStyle2(
-                  _provinsi, 'Provinsi', _listProvinsi, Colors.white,
-                  (newValue) {
-                setState(() {
-                  _provinsi = newValue!;
-                });
-              }),
-            ),
+            // customText(context, Colors.white, "Provinsi", TextAlign.left, 14,
+            //     FontWeight.w400),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 4.0, bottom: 16),
+            //   child: dropDownStringStyle2(
+            //       _provinsi, 'Provinsi', _listProvinsi, Colors.white,
+            //       (newValue) {
+            //     setState(() {
+            //       _provinsi = newValue!;
+            //     });
+            //   }),
+            // ),
             customText(context, Colors.white, "Kabupaten", TextAlign.left, 14,
                 FontWeight.w400),
             Padding(
               padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: dropDownStringStyle2(
-                  _kabupaten, 'Kabupaten', _listKabupaten, Colors.white,
-                  (newValue) {
-                crud
-                    .getData("/kabupaten/" + newValue + "/kecamatan")
-                    .then((data) {
-                  setState(() {
-                    _kecamatan = "";
-                    _kelurahan = "";
-                    _listKecamatan.clear();
-                    _listKelurahan.clear();
-                    _listKecamatan = jsonDecode(data.body);
-                    _kabupaten = newValue;
+              child: Query(
+                options: QueryOptions(document: gql(getKabuatenQuery())),
+                builder: (QueryResult result, {fetchMore, refetch}) {
+                  if (result.hasException) {
+                    return Text(result.exception.toString());
+                  }
+                  if (result.isLoading) {
+                    return Text("");
+                  }
+                  final _kabupatenList = result.data?['Kabupaten'];
+                  return dropDownStringStyle2(_kabupaten, 'Kabupaten',
+                      _kabupatenList, Color(0xffE4E5E7), (newValue) {
+                    setState(() {
+                      _kabupaten = newValue;
+                      _kecamatan = null;
+                      _kelurahan = null;
+                    });
                   });
-                });
-              }),
+                },
+              ),
             ),
+
             customText(context, Colors.white, "Kecamatan", TextAlign.left, 14,
                 FontWeight.w400),
             Padding(
               padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: dropDownStringStyle2(
-                  _kecamatan, 'Kecamatan', _listKecamatan, Colors.white,
-                  (newValue) {
-                crud
-                    .getData("/kecamatan/" + newValue + "/kelurahan")
-                    .then((data) {
-                  setState(() {
-                    _kelurahan = "";
-                    _listKelurahan.clear();
-                    _listKelurahan = jsonDecode(data.body);
-                    _kecamatan = newValue;
+              child: Query(
+                options: QueryOptions(document: gql(getKecamatanQuery())),
+                builder: (QueryResult result, {fetchMore, refetch}) {
+                  if (result.hasException) {
+                    return Text(result.exception.toString());
+                  }
+                  if (result.isLoading) {
+                    return Text("");
+                  }
+                  final _KecamatanList = result.data?['Kecamatan'];
+                  return dropDownStringStyle2(
+                      _kecamatan,
+                      'Kecamatan',
+                      _kabupaten == null ? [] : _KecamatanList,
+                      Color(0xffE4E5E7), (newValue) {
+                    setState(() {
+                      _kecamatan = newValue;
+                      _kelurahan = null;
+                    });
                   });
-                });
-              }),
+                },
+              ),
             ),
+
             customText(context, Colors.white, "Kelurahan", TextAlign.left, 14,
                 FontWeight.w400),
             Padding(
               padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: dropDownStringStyle2(
-                  _kelurahan, 'Kelurahan', _listKelurahan, Colors.white,
-                  (newValue) {
-                setState(() {
-                  _kelurahan = newValue;
-                });
-              }),
+              child: Query(
+                options: QueryOptions(document: gql(getKelurahanQuery())),
+                builder: (QueryResult result, {fetchMore, refetch}) {
+                  if (result.hasException) {
+                    return Text(result.exception.toString());
+                  }
+                  if (result.isLoading) {
+                    return Text("");
+                  }
+                  final _KelurahanList = result.data?['Kelurahan'];
+                  return dropDownStringStyle2(
+                      _kelurahan,
+                      'Kelurahan',
+                      _kecamatan == null ? [] : _KelurahanList,
+                      Color(0xffE4E5E7), (newValue) {
+                    setState(() {
+                      _kelurahan = newValue;
+                    });
+                  });
+                },
+              ),
             ),
+
             customText(context, Colors.white, "Alamat", TextAlign.left, 14,
                 FontWeight.w400),
             Padding(
@@ -394,7 +457,7 @@ class _DaftarState extends State<Daftar> {
               child: button2("Daftar", Colors.white, Color(0xff2BA33A), context,
                   () {
                 if (_formKey.currentState!.validate()) {
-                  Map<String, String> dataUsers = {
+                  Map<String, String?> dataUsers = {
                     "nama": _namaPemilikController.text,
                     "nama_perusahaan": _namaPerusahaanController.text,
                     "nik": _nikController.text,
