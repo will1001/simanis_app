@@ -41,6 +41,10 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
   // );
   // }
 
+  nullHandler(String? field) {
+    return (field == null ? "" : field);
+  }
+
   convertIdCabangIndustri(String? _idCabangIndustri) {
     String result = "";
     switch (_idCabangIndustri) {
@@ -93,8 +97,8 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
       if (arguments["lat"] != null && arguments["lng"] != null) {
         setState(() {
           _kGooglePlex = CameraPosition(
-            target: LatLng(
-                double.parse(arguments["lat"].toString()), double.parse(arguments["lng"].toString())),
+            target: LatLng(double.parse(arguments["lat"].toString()),
+                double.parse(arguments["lng"].toString())),
             zoom: 14.4746,
           );
         });
@@ -251,7 +255,7 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
               child: customText(
                   context,
                   Color(0xff242F43),
-                  args == null ? "" : args['nama_perusahaan'],
+                  args == null ? "" : nullHandler(args['nama_perusahaan']),
                   TextAlign.left,
                   20,
                   FontWeight.w500),
@@ -264,7 +268,7 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
               child: customText(
                   context,
                   Color(0xff545C6C),
-                  args == null ? "" : args['nama_pemilik'],
+                  args == null ? "" : nullHandler(args['nama_pemilik']),
                   TextAlign.left,
                   14,
                   FontWeight.w400),
@@ -331,19 +335,19 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
                   ? ListView(
                       children: [
                         listLabel2(context,
-                            "Bentuk Badan Usaha : ${args == null ? "" : args['bentuk_badan_usaha']}"),
+                            "Bentuk Badan Usaha : ${args == null ? "" : nullHandler(args['bentuk_badan_usaha'])}"),
                         listLabel2(context,
-                            "Tahun Berdiri Badan Usaha : ${args == null ? "" : args['tahun_badan_usaha']}"),
+                            "Tahun Berdiri Badan Usaha : ${args == null ? "" : nullHandler(args['tahun_badan_usaha'])}"),
                         listLabel2(context,
-                            "Kapasitas Produksi : ${args == null ? "" : args['kapasitas_produksi']}"),
+                            "Kapasitas Produksi : ${args == null ? "" : nullHandler(args['kapasitas_produksi'])}"),
                         listLabel2(context,
-                            "Satuan Produksi : ${args == null ? "" : args['satuan_produksi']}"),
+                            "Satuan Produksi : ${args == null ? "" : nullHandler(args['satuan_produksi'])}"),
                         listLabel2(context,
-                            "Nilai Investasi : ${args == null ? "" : args['nilai_produksi']}"),
+                            "Nilai Investasi : ${args == null ? "" : nullHandler(args['nilai_produksi'])}"),
                         listLabel2(context,
-                            "Nilai Bahan Baku / Bahan Penolong : ${args == null ? "" : args['nilai_bb_bp']}"),
+                            "Nilai Bahan Baku / Bahan Penolong : ${args == null ? "" : nullHandler(args['nilai_bb_bp'])}"),
                         listLabel2(context,
-                            "Alamat : ${args == null ? "" : args['alamat']}"),
+                            "Alamat : ${args == null ? "" : nullHandler(args['alamat'])}"),
                       ],
                     )
                   : GestureDetector(

@@ -8,6 +8,9 @@ Widget customText(BuildContext context, Color _fontColor, String _text,
   return Text(
     _text,
     textAlign: _textAlign,
+    softWrap: false,
+    maxLines: 3,
+    overflow: TextOverflow.ellipsis,
     style: TextStyle(
         fontSize: _fontSize,
         fontWeight: _fontWeight,

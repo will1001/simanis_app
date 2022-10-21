@@ -113,6 +113,13 @@ flutter:
     - assets/images/pie_chart.svg
     - assets/images/fast-food.svg
     - assets/images/share.svg
+    - assets/images/AjukanDana.svg
+    - assets/images/HubungiKami.svg
+    - assets/images/Logo_blue.svg
+    - assets/images/cross.svg
+    - assets/images/backArrow.svg
+    - assets/images/Dana.svg
+    - assets/images/filter.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

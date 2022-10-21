@@ -21,6 +21,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../Widget/inputFormStyle4.dart';
+
 class Daftar extends StatefulWidget {
   const Daftar({Key? key}) : super(key: key);
 
@@ -49,6 +51,7 @@ class _DaftarState extends State<Daftar> {
   bool _emailError = false;
   bool _passwordError = false;
   bool _confirmPasswordError = false;
+  bool _obscPass = true;
 
   String _message = "";
   String _provinsi = "52";
@@ -109,7 +112,6 @@ class _DaftarState extends State<Daftar> {
   }
 
   getAlamat() async {
-    // LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     List<Placemark> placemarks =
@@ -135,30 +137,18 @@ class _DaftarState extends State<Daftar> {
       _alamatController.text = alamat;
       _latController.text = position.latitude.toString();
       _lngController.text = position.longitude.toString();
-      // String _getkabupaten =
-      //     placemarks[0].subAdministrativeArea.toString().toUpperCase();
-      // String _getkecamatan = placemarks[0].locality.toString().toUpperCase();
-      // String _getkelurahan = placemarks[0].subLocality.toString().toUpperCase();
-      // _listKabupaten.add(_getkabupaten);
-      // _listKecamatan.add(_getkecamatan);
-      // _listKelurahan.add(_getkelurahan);
-      // _kabupaten = _getkabupaten;
-      // _kecamatan = _getkecamatan;
-      // _kelurahan = _getkelurahan;
       allMarkers.add(Marker(
           markerId: MarkerId("marker1"),
           draggable: false,
           onTap: () {},
           position: LatLng(position.latitude, position.longitude)));
     });
-    // print(placemarks);
   }
 
   @override
   void initState() {
     super.initState();
     crud.getData("/provinsi/52/kabupaten").then((data) {
-      // print(jsonDecode(data.body));
       setState(() {
         _listKabupaten = jsonDecode(data.body);
       });
@@ -170,369 +160,103 @@ class _DaftarState extends State<Daftar> {
     ThemeProvider themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
     return Scaffold(
-      backgroundColor: Color(0xff2BA33A),
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.chevron_left,
-              color: Colors.white,
-            )),
-        title: customText(context, Colors.white, "Daftar Akun", TextAlign.left,
-            20, FontWeight.w600),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: Container(
         padding: const EdgeInsets.only(left: 16, top: 24, right: 16),
-        child: ListView(
-          children: [
-            customText(context, Colors.white, "Nama Pemilik", TextAlign.left,
-                14, FontWeight.w400),
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: inputFormStyle3(
-                  null,
-                  "Nama Pemilik",
-                  "text",
-                  "Nama Pemilik",
-                  "Nama Pemilik Tidak Boleh Kosong",
-                  _namaPemilikError,
-                  _namaPemilikController,
-                  false,
-                  () {}),
-            ),
-            customText(context, Colors.white, "NIK", TextAlign.left, 14,
-                FontWeight.w400),
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: inputFormStyle3(
-                  null,
-                  "NIK",
-                  "number",
-                  "NIK",
-                  "NIK Tidak Boleh Kosong",
-                  _nikError,
-                  _nikController,
-                  false,
-                  () {}),
-            ),
-            // customText(context, Colors.white, "Provinsi", TextAlign.left, 14,
-            //     FontWeight.w400),
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-            //   child: dropDownStringStyle2(
-            //       _provinsi, 'Provinsi', _listProvinsi, Colors.white,
-            //       (newValue) {
-            //     setState(() {
-            //       _provinsi = newValue!;
-            //     });
-            //   }),
-            // ),
-            customText(context, Colors.white, "Kabupaten", TextAlign.left, 14,
-                FontWeight.w400),
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: Query(
-                options: QueryOptions(document: gql(getKabuatenQuery())),
-                builder: (QueryResult result, {fetchMore, refetch}) {
-                  if (result.hasException) {
-                    return Text(result.exception.toString());
-                  }
-                  if (result.isLoading) {
-                    return Text("");
-                  }
-                  final _kabupatenList = result.data?['Kabupaten'];
-                  return dropDownStringStyle2(_kabupaten, 'Kabupaten',
-                      _kabupatenList, Color(0xffE4E5E7), (newValue) {
-                    setState(() {
-                      _kabupaten = newValue;
-                      _kecamatan = null;
-                      _kelurahan = null;
-                    });
-                  });
-                },
+        child: ListView(children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 32.0),
+            child: customText(context, themeProvider.fontColor1,
+                "Pendaftaran Simanis", TextAlign.center, 30, FontWeight.bold),
+          ),
+          customText(
+              context,
+              themeProvider.fontColor1,
+              "Dinas Perindustrian Prov. NTB",
+              TextAlign.center,
+              17,
+              FontWeight.normal),
+          Padding(
+            padding: const EdgeInsets.only(top: 16, bottom: 8),
+            child: customText(context, themeProvider.fontColor1, "NIK",
+                TextAlign.left, 17, FontWeight.normal),
+          ),
+          inputFormStyle4(null, "Nomor Induk Kependudukan", "text", "NIK",
+              "NIK Tidak Boleh Kosong", false, _nikController, false, () {}),
+          Padding(
+            padding: const EdgeInsets.only(top: 16, bottom: 8),
+            child: customText(context, themeProvider.fontColor1, "Nama",
+                TextAlign.left, 17, FontWeight.normal),
+          ),
+          inputFormStyle4(
+              null,
+              "Nama Anda",
+              "text",
+              "Nama",
+              "Nama Tidak Boleh Kosong",
+              false,
+              _namaPemilikController,
+              false,
+              () {}),
+          Padding(
+            padding: const EdgeInsets.only(top: 16, bottom: 8),
+            child: customText(context, themeProvider.fontColor1, "No HP",
+                TextAlign.left, 17, FontWeight.normal),
+          ),
+          inputFormStyle4(
+              null,
+              "No HP Anda",
+              "text",
+              "No HP",
+              "No HP Tidak Boleh Kosong",
+              false,
+              _passwordController,
+              false,
+              () {}),
+          Padding(
+            padding: const EdgeInsets.only(top: 16, bottom: 8),
+            child: customText(context, themeProvider.fontColor1, "Password",
+                TextAlign.left, 17, FontWeight.normal),
+          ),
+          inputFormStyle3(
+              Icons.remove_red_eye,
+              "Tulis Password Baru",
+              "text",
+              "Password",
+              "No HP Tidak Boleh Kosong",
+              false,
+              _nomorTelponController,
+              _obscPass, () {
+            setState(() {
+              _obscPass = !_obscPass;
+            });
+          }),
+          button2(
+              "Registter", Colors.blue.shade600, Colors.white, context, () {}),
+          Padding(
+            padding: const EdgeInsets.only(top: 24.0, bottom: 45),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/login');
+              },
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                    text: "Sudah punya akun?",
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w400),
+                    children: [
+                      TextSpan(
+                        text: " Login disini",
+                        style: TextStyle(
+                            color: Colors.blue.shade600,
+                            fontWeight: FontWeight.w600),
+                      )
+                    ]),
               ),
             ),
-
-            customText(context, Colors.white, "Kecamatan", TextAlign.left, 14,
-                FontWeight.w400),
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: Query(
-                options: QueryOptions(document: gql(getKecamatanQuery())),
-                builder: (QueryResult result, {fetchMore, refetch}) {
-                  if (result.hasException) {
-                    return Text(result.exception.toString());
-                  }
-                  if (result.isLoading) {
-                    return Text("");
-                  }
-                  final _KecamatanList = result.data?['Kecamatan'];
-                  return dropDownStringStyle2(
-                      _kecamatan,
-                      'Kecamatan',
-                      _kabupaten == null ? [] : _KecamatanList,
-                      Color(0xffE4E5E7), (newValue) {
-                    setState(() {
-                      _kecamatan = newValue;
-                      _kelurahan = null;
-                    });
-                  });
-                },
-              ),
-            ),
-
-            customText(context, Colors.white, "Kelurahan", TextAlign.left, 14,
-                FontWeight.w400),
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: Query(
-                options: QueryOptions(document: gql(getKelurahanQuery())),
-                builder: (QueryResult result, {fetchMore, refetch}) {
-                  if (result.hasException) {
-                    return Text(result.exception.toString());
-                  }
-                  if (result.isLoading) {
-                    return Text("");
-                  }
-                  final _KelurahanList = result.data?['Kelurahan'];
-                  return dropDownStringStyle2(
-                      _kelurahan,
-                      'Kelurahan',
-                      _kecamatan == null ? [] : _KelurahanList,
-                      Color(0xffE4E5E7), (newValue) {
-                    setState(() {
-                      _kelurahan = newValue;
-                    });
-                  });
-                },
-              ),
-            ),
-
-            customText(context, Colors.white, "Alamat", TextAlign.left, 14,
-                FontWeight.w400),
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: inputFormStyle3(
-                  null,
-                  "Alamat",
-                  "text",
-                  "Alamat",
-                  "Alamat Tidak Boleh Kosong",
-                  _alamatError,
-                  _alamatController,
-                  false,
-                  () {}),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Container(
-                height: 200,
-                width: MediaQuery.of(context).size.width,
-                child: GoogleMap(
-                  markers: Set.from(allMarkers),
-                  mapType: MapType.normal,
-                  initialCameraPosition: _kGooglePlex,
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                  },
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(0),
-              child: Container(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    getAlamat();
-                  },
-                  icon: Icon(
-                    Icons.place,
-                    color: Color(0xff2BA33A),
-                  ),
-                  label: customText(context, Color(0xff2BA33A), "Cari Lokasi",
-                      TextAlign.left, 20, FontWeight.w500),
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.white,
-                      padding: EdgeInsets.symmetric(vertical: 10)),
-                ),
-              ),
-            ),
-            customText(context, Colors.white, "Latitude", TextAlign.left, 14,
-                FontWeight.w400),
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: inputFormStyle3(
-                  null,
-                  "Latitude",
-                  "number",
-                  "Latitude",
-                  "Latitude Tidak Boleh Kosong",
-                  _latError,
-                  _latController,
-                  false,
-                  () {}),
-            ),
-            customText(context, Colors.white, "Longitude", TextAlign.left, 14,
-                FontWeight.w400),
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: inputFormStyle3(
-                  null,
-                  "Longitude",
-                  "number",
-                  "Longitude",
-                  "Longitude Tidak Boleh Kosong",
-                  _lngError,
-                  _lngController,
-                  false,
-                  () {}),
-            ),
-            customText(context, Colors.white, "Nomor Telpon", TextAlign.left,
-                14, FontWeight.w400),
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: inputFormStyle3(
-                  null,
-                  "Nomor Telpon",
-                  "number",
-                  "Nomor Telpon",
-                  "Nomor Telpon Tidak Boleh Kosong",
-                  _nomorTelponError,
-                  _nomorTelponController,
-                  false,
-                  () {}),
-            ),
-            customText(context, Colors.white, "Email", TextAlign.left, 14,
-                FontWeight.w400),
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: inputFormStyle3(
-                  null,
-                  "Email",
-                  "text",
-                  "Email",
-                  "Email Tidak Boleh Kosong",
-                  _emailError,
-                  _emailController,
-                  false,
-                  () {}),
-            ),
-            customText(context, Colors.white, "Password", TextAlign.left, 14,
-                FontWeight.w400),
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: inputFormStyle3(
-                  null,
-                  "Password",
-                  "text",
-                  "Password",
-                  "Password Tidak Boleh Kosong",
-                  _passwordError,
-                  _passwordController,
-                  false,
-                  () {}),
-            ),
-            customText(context, Colors.white, "Confirm Password",
-                TextAlign.left, 14, FontWeight.w400),
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-              child: inputFormStyle3(
-                  null,
-                  "Confirm Password",
-                  "text",
-                  "Confirm Password",
-                  "Confirm Password Tidak Boleh Kosong",
-                  _confirmPasswordError,
-                  _confirmPasswordController,
-                  false,
-                  () {}),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0, top: 40),
-              child: button2("Daftar", Colors.white, Color(0xff2BA33A), context,
-                  () {
-                if (_formKey.currentState!.validate()) {
-                  Map<String, String?> dataUsers = {
-                    "nama": _namaPemilikController.text,
-                    "nama_perusahaan": _namaPerusahaanController.text,
-                    "nik": _nikController.text,
-                    "id_provinsi": _provinsi,
-                    "id_kabupaten": _kabupaten,
-                    "id_kecamatan": _kecamatan,
-                    "id_kelurahan": _kelurahan,
-                    "lat": _latController.text,
-                    "lng": _lngController.text,
-                    "alamat": _alamatController.text,
-                    "nomor_telpon": _nomorTelponController.text,
-                    "tipe_user": "Pengusaha",
-                    "email": _emailController.text,
-                    "password": _passwordController.text,
-                  };
-
-                  Map<String, String> checkData = {
-                    "email": _emailController.text,
-                    "password": _passwordController.text,
-                  };
-
-                  crud.checkLogin(checkData).then((res) {
-                    var data = jsonDecode(res.body);
-                    // print(data['message']);
-                    if (data['message'] == 'data ada' ||
-                        data['message'] == 'Password Salah') {
-                      setState(() {
-                        _showPopUp = true;
-                        _message = "Email sudah Terdaftar";
-                      });
-                    } else {
-                      crud.postData("/users", dataUsers).then((res) {
-                        if (res.statusCode == 201) {
-                          functionGroup.saveCache(dataUsers);
-                          Navigator.pushNamed(context, '/homeLayoutPage',
-                              arguments: <String, dynamic>{"selectedIndex": 4});
-                        } else {
-                          print("error");
-                        }
-                      });
-                    }
-                  });
-                }
-              }),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 24.0, bottom: 65),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                          text: "Sudah punya akun?",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w400),
-                          children: [
-                            TextSpan(
-                              text: " Login disini",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600),
-                            )
-                          ]),
-                    ),
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
+          )
+        ]),
       ),
     );
   }

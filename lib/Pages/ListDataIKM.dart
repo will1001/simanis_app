@@ -6,6 +6,7 @@ import 'package:appsimanis/Widget/Button2.dart';
 import 'package:appsimanis/Widget/ButtonGradient1.dart';
 import 'package:appsimanis/Widget/CardUMKM.dart';
 import 'package:appsimanis/Widget/CardUMKM2.dart';
+import 'package:appsimanis/Widget/CardUMKM3.dart';
 import 'package:appsimanis/Widget/CustomText.dart';
 import 'package:appsimanis/Widget/DropDown3Style2.dart';
 import 'package:appsimanis/Widget/DropDownString.dart';
@@ -21,6 +22,7 @@ import 'package:appsimanis/Widget/SearchButton1.dart';
 import 'package:appsimanis/Widget/SearchInput.dart';
 import 'package:appsimanis/Widget/TextLabel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
@@ -538,8 +540,16 @@ class _ListDataIKMState extends State<ListDataIKM> {
                   Padding(
                     padding:
                         const EdgeInsets.only(left: 16.0, top: 16, bottom: 16),
-                    child: customText(context, Colors.black, 'Data UMKM',
-                        TextAlign.left, 16, FontWeight.w500),
+                    child: customText(context, Colors.black, 'Data IKM',
+                        TextAlign.center, 16, FontWeight.w500),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Container(
+                        height: 1,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                        )),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 16.0, right: 16),
@@ -551,7 +561,7 @@ class _ListDataIKMState extends State<ListDataIKM> {
                         scrollDirection: Axis.horizontal,
                         children: [
                           SearchButton1(
-                              context, 'Cari UMKM', _keywordController, () {
+                              context, 'Cari Data IKM', _keywordController, () {
                             setState(() {
                               _loading = true;
                             });
@@ -579,17 +589,15 @@ class _ListDataIKMState extends State<ListDataIKM> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Icon(
-                                    Icons.filter_alt_rounded,
-                                    color: Color(0xff545C6C),
+                                  Container(
+                                    padding: const EdgeInsets.all(14),
+                                    decoration: BoxDecoration(
+                                        border:
+                                            Border.all(color: Colors.black12)),
+                                    child: SvgPicture.asset(
+                                      "assets/images/filter.svg",
+                                    ),
                                   ),
-                                  customText(
-                                      context,
-                                      Color(0xff242F43),
-                                      'Filter',
-                                      TextAlign.left,
-                                      12,
-                                      FontWeight.w500)
                                 ],
                               ),
                             ),
@@ -598,74 +606,88 @@ class _ListDataIKMState extends State<ListDataIKM> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 16, right: 16, top: 24),
-                    child: Container(
-                      // color: Colors.amber,
-                      width: MediaQuery.of(context).size.width,
-                      height: 30,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: _tabStatusVerikasi
-                            .asMap()
-                            .map((i, e) => MapEntry(
-                                i,
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 69.0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        _subMenu = i;
-                                        _loading = true;
-                                        // _statusVerifikasi =
-                                        //     e == 'Semua' ? 'null' : e;
-                                      });
-                                      // getBadanUsaha(
-                                      //     10, (e == 'Semua' ? 'null' : e));
-                                    },
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 4),
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                                bottom: BorderSide(
-                                                    width: 4,
-                                                    color: _subMenu == i
-                                                        ? Color(0xff2BA33A)
-                                                        : Colors.transparent)),
-                                          ),
-                                          child: Text(
-                                            e,
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400,
-                                                color: _subMenu == i
-                                                    ? Color(0xff2BA33A)
-                                                    : Color(0xffB2B5BC)),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )))
-                            .values
-                            .toList(),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding:
+                  //       const EdgeInsets.only(left: 16, right: 16, top: 24),
+                  //   child: Container(
+                  //     // color: Colors.amber,
+                  //     width: MediaQuery.of(context).size.width,
+                  //     height: 30,
+                  //     child: ListView(
+                  //       scrollDirection: Axis.horizontal,
+                  //       children: _tabStatusVerikasi
+                  //           .asMap()
+                  //           .map((i, e) => MapEntry(
+                  //               i,
+                  //               Padding(
+                  //                 padding: const EdgeInsets.only(right: 69.0),
+                  //                 child: GestureDetector(
+                  //                   onTap: () {
+                  //                     setState(() {
+                  //                       _subMenu = i;
+                  //                       _loading = true;
+                  //                       // _statusVerifikasi =
+                  //                       //     e == 'Semua' ? 'null' : e;
+                  //                     });
+                  //                     // getBadanUsaha(
+                  //                     //     10, (e == 'Semua' ? 'null' : e));
+                  //                   },
+                  //                   child: Column(
+                  //                     children: [
+                  //                       Container(
+                  //                         padding:
+                  //                             const EdgeInsets.only(bottom: 4),
+                  //                         decoration: BoxDecoration(
+                  //                           border: Border(
+                  //                               bottom: BorderSide(
+                  //                                   width: 4,
+                  //                                   color: _subMenu == i
+                  //                                       ? Color(0xff2BA33A)
+                  //                                       : Colors.transparent)),
+                  //                         ),
+                  //                         child: Text(
+                  //                           e,
+                  //                           style: TextStyle(
+                  //                               fontSize: 14,
+                  //                               fontWeight: FontWeight.w400,
+                  //                               color: _subMenu == i
+                  //                                   ? Color(0xff2BA33A)
+                  //                                   : Color(0xffB2B5BC)),
+                  //                         ),
+                  //                       ),
+                  //                     ],
+                  //                   ),
+                  //                 ),
+                  //               )))
+                  //           .values
+                  //           .toList(),
+                  //     ),
+                  //   ),
+                  // ),
                   Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height * 0.6,
                     child: ListView(
                       controller: _scrollController,
                       children: _listBadanUsaha
-                          .map((e) => Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 16, right: 16),
-                                child: cardUMKM2(context, e),
+                          .map((e) => Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 16, right: 16),
+                                    child: cardUMKM3(context, e),
+                                  ),
+                                  Container(
+                                    height: 8,
+                                  ),
+                                  Container(
+                                    color: Colors.black12,
+                                    height: 1,
+                                  ),
+                                  Container(
+                                    height: 8,
+                                  ),
+                                ],
                               ))
                           .toList(),
                     ),

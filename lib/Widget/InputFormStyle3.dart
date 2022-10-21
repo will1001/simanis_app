@@ -28,7 +28,7 @@ Widget inputFormStyle3(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4.0),
               borderSide: BorderSide(
-                color: Colors.white,
+                color: Colors.black38,
               ),
             ),
             suffixIcon: Row(
@@ -63,13 +63,13 @@ Widget inputFormStyle3(
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4.0),
               borderSide: BorderSide(
-                color: errorSign ? Color(0xffCB3A31) : Colors.white,
+                color: errorSign ? Color(0xffCB3A31) : Colors.black38,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4.0),
               borderSide: BorderSide(
-                color: errorSign ? Color(0xffCB3A31) : Colors.white,
+                color: errorSign ? Color(0xffCB3A31) : Colors.black38,
               ),
             ),
             fillColor: Colors.white,

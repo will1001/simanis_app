@@ -1,8 +1,10 @@
 import 'package:appsimanis/Pages/AddProduk.dart';
 import 'package:appsimanis/Pages/Daftar.dart';
+import 'package:appsimanis/Pages/DetailUsaha.dart';
 import 'package:appsimanis/Pages/DetailsDataUMKM.dart';
 import 'package:appsimanis/Pages/DetailsProduk.dart';
 import 'package:appsimanis/Pages/DetailsStatistik.dart';
+import 'package:appsimanis/Pages/FormPengajuanDana.dart';
 import 'package:appsimanis/Pages/HomeLayoutPage.dart';
 import 'package:appsimanis/Pages/HomePage.dart';
 import 'package:appsimanis/Pages/InformasiIKM.dart';
@@ -10,6 +12,7 @@ import 'package:appsimanis/Pages/LinkPerbankan.dart';
 import 'package:appsimanis/Pages/ListDataIKM.dart';
 import 'package:appsimanis/Pages/Login.dart';
 import 'package:appsimanis/Pages/MemberPage.dart';
+import 'package:appsimanis/Pages/PengajuanDana.dart';
 import 'package:appsimanis/Pages/ProdukPage.dart';
 import 'package:appsimanis/Pages/ProdukPageMember.dart';
 import 'package:appsimanis/Pages/ProfilPage.dart';
@@ -20,18 +23,20 @@ import 'package:flutter/material.dart';
 // import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
 
+import 'Pages/Kartu.dart';
+import 'Pages/NotificationList.dart';
 import 'Pages/PengajuanPimbayaanPage.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+
+import 'Pages/PengaturanAkun.dart';
 
 final graphqlEndpoint = 'https://simanis.ntbprov.go.id/graphql';
 final HttpLink httpLink = HttpLink(graphqlEndpoint);
 
 ValueNotifier<GraphQLClient> client = ValueNotifier(
     GraphQLClient(link: httpLink, cache: GraphQLCache(store: InMemoryStore())));
-    
-void main() {
- 
 
+void main() {
   var app = GraphQLProvider(client: client, child: MyApp());
   runApp(app);
 }
@@ -80,6 +85,12 @@ class MyApp extends StatelessWidget {
           '/detailsProduk': (BuildContext context) => DetailsProduk(),
           '/AddProduk': (BuildContext context) => AddProduk(),
           '/linkBank': (BuildContext context) => LinkPerbankan(),
+          '/notificationList': (BuildContext context) => NotificationList(),
+          '/detailUsaha': (BuildContext context) => DetailUsaha(),
+          '/pengaturanAkun': (BuildContext context) => PengaturanAkun(),
+          '/kartu': (BuildContext context) => Kartu(),
+          '/pengajuanDana': (BuildContext context) => PengajuanDana(),
+          '/formPengajuanDana': (BuildContext context) => FormPengajuanDana(),
         },
       ),
     );

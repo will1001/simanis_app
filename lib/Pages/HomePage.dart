@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:appsimanis/Widget/AlertButton.dart';
 import 'package:appsimanis/Widget/AlertDialogBox.dart';
+import 'package:appsimanis/Widget/Button1.dart';
 import 'package:appsimanis/Widget/CardProduk3.dart';
 import 'package:appsimanis/Widget/CustomText.dart';
 import 'package:appsimanis/Widget/EditDialogBox.dart';
@@ -54,6 +55,11 @@ class _HomePageState extends State<HomePage> {
   List _listProduk = [];
   List _listcma = [];
   // List _listBadanUsaha = [];
+
+  List _kategory = [
+    {"image": "assets/images/bg1.png", "title": "Alat Bangunan"},
+    {"image": "assets/images/bg1.png", "title": "Fashion"},
+  ];
 
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
@@ -124,8 +130,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
+    List _kategory = [
+      {"image": "assets/images/bg1.png", "title": "Alat Bangunan"},
+      {"image": "assets/images/bg1.png", "title": "Fashion"},
+    ];
     List _listMenu = [
       {
         'title': 'Simanis Website',
@@ -256,311 +268,537 @@ class _HomePageState extends State<HomePage> {
     ];
     return WillPopScope(
       onWillPop: onWillPop,
-      child: ListView(
-        children: [
-          Stack(
-            alignment: Alignment.bottomCenter,
+      child: Scaffold(
+        key: _scaffoldKey,
+        drawer: Drawer(
+          child: ListView(
             children: [
-              Stack(
-                alignment: Alignment.topCenter,
-                children: [
-                  Query(
-                    options: QueryOptions(document: gql(slideShowQuery)),
-                    builder: (QueryResult result, {fetchMore, refetch}) {
-                      if (result.hasException) {
-                        return Text(result.exception.toString());
-                      }
-                      if (result.isLoading) {
-                        return Text("");
-                      }
-                      final _slideShowList = result.data?['SlideShow'];
-                      return CarouselSlider(
-                        carouselController: buttonCarouselController,
-                        options: CarouselOptions(
-                          autoPlay: true,
-                          autoPlayInterval: Duration(seconds: 3),
-                          aspectRatio: 1 / 1,
-                          viewportFraction: 1,
-                          height: 286.0,
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              _current = index;
-                            });
-                          },
-                        ),
-                        items: _slideShowList.map<Widget>((e) {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  Image.network(
-                                    'https://simanis.ntbprov.go.id'+
-                                    e['img'],
-                                    fit: BoxFit.fill,
-                                  ),
-                                  ColoredBox(
-                                      color: Colors.black.withOpacity(
-                                          0.25) // 0: Light, 1: Dark
-                                      ),
-                                ],
-                              );
-                            },
-                          );
-                        }).toList(),
-                      );
-                    },
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 16.0, right: 16, top: 8),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/homeLayoutPage',
-                                arguments: <String, dynamic>{
-                                  "selectedIndex": 3,
-                                  "kategori": "null",
-                                  "aksesLink": "home2"
-                                });
-                          },
-                          child: Container(
-                              height: 36,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(4)),
-                                color: Colors.white,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 4, horizontal: 18),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 10.0),
-                                      child: Icon(
-                                        Icons.search,
-                                        color: Color(0xff545C6C),
-                                        size: 18,
-                                      ),
-                                    ),
-                                    customText(
-                                        context,
-                                        Color(0xff848A95),
-                                        "Cari produk",
-                                        TextAlign.left,
-                                        14,
-                                        FontWeight.w400),
-                                  ],
-                                ),
-                              )),
-                        ),
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 24.0, top: 16),
-                      //   child: customText(context, Colors.white, 'SIMANIS',
-                      //       TextAlign.start, 24, FontWeight.w600),
-                      // ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 24.0, top: 8),
-                      //   child: Text(
-                      //     'Sistem Informasi Manajemen Industri yang berguna sebagai validasi pelaku UMKM Sektor Industri di Provinsi Nusa Tenggara Barat dan untuk memudahkan dalam pengambilan kebijakan.',
-                      //     style: TextStyle(
-                      //         fontSize: 12,
-                      //         color: Colors.white,
-                      //         fontWeight: FontWeight.w400,
-                      //         height: 1.3,
-                      //         letterSpacing: 0.5),
-                      //   ),
-                      // )
-                    ],
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: _slideShowImg.asMap().entries.map((entry) {
-                  return GestureDetector(
-                    onTap: () =>
-                        buttonCarouselController.animateToPage(entry.key),
-                    child: Container(
-                      width: 8.0,
-                      height: 8.0,
-                      margin:
-                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _current == entry.key
-                              ? Color(0xffFAFBFB)
-                              : Color(0xff848A95)),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SvgPicture.asset(
+                      "assets/images/Logo_blue.svg",
+                      width: 32,
+                      height: 32,
                     ),
-                  );
-                }).toList(),
+                    GestureDetector(
+                      onTap: () {
+                        _scaffoldKey.currentState?.closeDrawer();
+                      },
+                      child: SvgPicture.asset(
+                        "assets/images/cross.svg",
+                        width: 20,
+                        height: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage: NetworkImage(
+                              "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"),
+                        ),
+                        customText(context, Colors.black, "Wili Rahmat M",
+                            TextAlign.left, 24, FontWeight.bold),
+                        customText(context, Colors.black38, "Akun Member IKM",
+                            TextAlign.left, 18, FontWeight.normal),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/detailUsaha');
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: customText(context, Colors.black, "Detail Usaha",
+                      TextAlign.left, 18, FontWeight.normal),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/pengaturanAkun');
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: customText(context, Colors.black, "Update Password",
+                      TextAlign.left, 18, FontWeight.normal),
+                ),
+              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(16.0),
+              //   child: customText(context, Colors.black, "Update Password",
+              //       TextAlign.left, 18, FontWeight.normal),
+              // ),
+              Container(
+                color: Colors.black12,
+                height: 1,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/kartu');
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: customText(context, Colors.black, "Kartu",
+                      TextAlign.left, 18, FontWeight.normal),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/pengajuanDana');
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: customText(context, Colors.black, "Pengajuan Dana",
+                      TextAlign.left, 18, FontWeight.normal),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: customText(context, Colors.black, "Pengajuan Produk",
+                    TextAlign.left, 18, FontWeight.normal),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: customText(context, Colors.black, "Surat Rekomendasi",
+                    TextAlign.left, 18, FontWeight.normal),
+              ),
+              Container(
+                color: Colors.black12,
+                height: 1,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: customText(context, Colors.black, "Kontak Kami",
+                    TextAlign.left, 18, FontWeight.normal),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: customText(context, Colors.black, "Syarat & Ketentuan",
+                    TextAlign.left, 18, FontWeight.normal),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: customText(context, Colors.red, "Logout", TextAlign.left,
+                    18, FontWeight.normal),
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16, top: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                customText(context, Color(0xff242F43), "Daftar Menu",
-                    TextAlign.center, 16, FontWeight.w600),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16, top: 16),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 250,
-              child: GridView.count(
-                physics: NeverScrollableScrollPhysics(),
-                childAspectRatio: 1 / 0.9,
-                crossAxisCount: 4,
-                shrinkWrap: true,
-                primary: true,
-                children: _listMenu.map((e) {
-                  if (e['title'] == 'Survei') {
-                    return Query(
-                      options: QueryOptions(document: gql(surveiQuery)),
-                      builder: (QueryResult result, {fetchMore, refetch}) {
-                        if (result.hasException) {
-                          return Text(result.exception.toString());
-                        }
-                        if (result.isLoading) {
-                          return Text("");
-                        }
-                        final _surveiList = result.data?['Survei'];
-                        return GestureDetector(
-                          onTap: () async {
-                            String url = _surveiList[0]['link'];
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                              return;
-                            }
-                            print("couldn't launch $url");
-                          },
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                e['icon'],
-                                width: 32,
-                                height: 32,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 4.0),
-                                child: customText(
-                                    context,
-                                    Color(0xff242F43),
-                                    e['title'],
-                                    TextAlign.center,
-                                    12,
-                                    FontWeight.w600),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  } else {
-                    return GestureDetector(
-                      onTap: e['_ontap'],
-                      child: Column(
-                        children: [
-                          SvgPicture.asset(
-                            e['icon'],
-                            width: 32,
-                            height: 32,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: customText(
-                                context,
-                                Color(0xff242F43),
-                                e['title'],
-                                TextAlign.center,
-                                12,
-                                FontWeight.w600),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                }).toList(),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16, bottom: 16),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.amber[50],
-                  borderRadius: BorderRadius.all(Radius.circular(8))),
-              child: Column(
+        ),
+        body: ListView(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 16.0, right: 16, top: 16, bottom: 8),
+                  GestureDetector(
+                    onTap: () {
+                      _scaffoldKey.currentState?.openDrawer();
+                    },
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        customText(context, Color(0xff242F43), "Produk",
-                            TextAlign.left, 16, FontWeight.w600),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/homeLayoutPage',
-                                arguments: <String, dynamic>{
-                                  "selectedIndex": 3,
-                                  "kategori": "null",
-                                  "aksesLink": "home2"
-                                });
-                          },
-                          child: customText(
-                              context,
-                              Color(0xff2BA33A),
-                              "Lihat Semua",
-                              TextAlign.left,
-                              12,
-                              FontWeight.w500),
-                        )
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(
+                                "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"),
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            customText(context, Colors.black, "Wili Rahmat M",
+                                TextAlign.left, 18, FontWeight.normal),
+                            customText(
+                                context,
+                                Colors.black38,
+                                "Akun Member IKM",
+                                TextAlign.left,
+                                12,
+                                FontWeight.normal),
+                          ],
+                        ),
                       ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(left: 16, right: 16),
-                    width: MediaQuery.of(context).size.width,
-                    height: 150,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: _listProduk
-                          .map((e) => Padding(
-                                padding: const EdgeInsets.only(right: 16.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, "/detailsProduk",
-                                        arguments: e);
-                                  },
-                                  child: cardProduk3(
-                                      context,
-                                      e['nama'],
-                                      e["foto"] == null
-                                          ? "https://www.btklsby.go.id/images/placeholder/basic.png"
-                                          : _storageUrl + e["foto"]),
-                                ),
-                              ))
-                          .toList(),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/notificationList');
+                    },
+                    child: Image.network(
+                      "https://freeiconshop.com/wp-content/uploads/edd/notification-outline.png",
+                      height: 25,
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
-          ),
-        ],
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Stack(
+                    alignment: Alignment.topCenter,
+                    children: [
+                      Query(
+                        options: QueryOptions(document: gql(slideShowQuery)),
+                        builder: (QueryResult result, {fetchMore, refetch}) {
+                          if (result.hasException) {
+                            return Text(result.exception.toString());
+                          }
+                          if (result.isLoading) {
+                            return Text("");
+                          }
+                          final _slideShowList = result.data?['SlideShow'];
+                          return CarouselSlider(
+                            carouselController: buttonCarouselController,
+                            options: CarouselOptions(
+                              autoPlay: true,
+                              autoPlayInterval: Duration(seconds: 3),
+                              aspectRatio: 1 / 1,
+                              viewportFraction: 1,
+                              height: 286.0,
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  _current = index;
+                                });
+                              },
+                            ),
+                            items: _slideShowList.map<Widget>((e) {
+                              return Builder(
+                                builder: (BuildContext context) {
+                                  return ClipRRect(
+                                    borderRadius: BorderRadius.circular(32.0),
+                                    child: Stack(
+                                      fit: StackFit.expand,
+                                      children: [
+                                        Image.network(
+                                          'https://simanis.ntbprov.go.id' +
+                                              e['img'],
+                                          fit: BoxFit.fill,
+                                        ),
+                                        ColoredBox(
+                                            color: Colors.black.withOpacity(
+                                                0.25) // 0: Light, 1: Dark
+                                            ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            }).toList(),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _slideShowImg.asMap().entries.map((entry) {
+                return GestureDetector(
+                  onTap: () =>
+                      buttonCarouselController.animateToPage(entry.key),
+                  child: Container(
+                    width: _current == entry.key ? 20 : 8.0,
+                    height: 8.0,
+                    margin:
+                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                    decoration: BoxDecoration(
+                        borderRadius: _current == entry.key
+                            ? BorderRadius.circular(10)
+                            : null,
+                        shape: _current == entry.key
+                            ? BoxShape.rectangle
+                            : BoxShape.circle,
+                        color: _current == entry.key
+                            ? Colors.blue.shade600
+                            : Color(0xffE5E7EB)),
+                  ),
+                );
+              }).toList(),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16, top: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  customText(context, Color(0xff242F43), "Kategori Produk IKM",
+                      TextAlign.center, 16, FontWeight.w600),
+                ],
+              ),
+            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 16.0, right: 16, top: 16),
+            //   child: Container(
+            //     width: MediaQuery.of(context).size.width,
+            //     height: 400,
+            //     child: GridView.count(
+            //       physics: NeverScrollableScrollPhysics(),
+            //       childAspectRatio: 1 / 0.9,
+            //       crossAxisCount: 4,
+            //       shrinkWrap: true,
+            //       primary: true,
+            //       children: _kategory.map((e) {
+            //         return Column(
+            //           children: [
+            //             Image.asset(
+            //               e['image'],
+            //               // height: 350,
+            //             ),
+            //             customText(context, Colors.black38, "Alat Bangunan",
+            //                 TextAlign.left, 12, FontWeight.normal)
+            //           ],
+            //         );
+            //       }).toList(),
+            //     ),
+            //   ),
+            // ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16, top: 16),
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 250,
+                child: GridView.count(
+                  physics: NeverScrollableScrollPhysics(),
+                  childAspectRatio: 1 / 0.9,
+                  crossAxisCount: 4,
+                  shrinkWrap: true,
+                  primary: true,
+                  children: _listMenu.map((e) {
+                    if (e['title'] == 'Survei') {
+                      return Query(
+                        options: QueryOptions(document: gql(surveiQuery)),
+                        builder: (QueryResult result, {fetchMore, refetch}) {
+                          if (result.hasException) {
+                            return Text(result.exception.toString());
+                          }
+                          if (result.isLoading) {
+                            return Text("");
+                          }
+                          final _surveiList = result.data?['Survei'];
+                          return GestureDetector(
+                            onTap: () async {
+                              String url = _surveiList[0]['link'];
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                                return;
+                              }
+                              print("couldn't launch $url");
+                            },
+                            child: Column(
+                              children: [
+                                SvgPicture.asset(
+                                  e['icon'],
+                                  width: 32,
+                                  height: 32,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 4.0),
+                                  child: customText(
+                                      context,
+                                      Color(0xff242F43),
+                                      e['title'],
+                                      TextAlign.center,
+                                      12,
+                                      FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return GestureDetector(
+                        onTap: e['_ontap'],
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(
+                              e['icon'],
+                              width: 32,
+                              height: 32,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: customText(
+                                  context,
+                                  Color(0xff242F43),
+                                  e['title'],
+                                  TextAlign.center,
+                                  12,
+                                  FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  }).toList(),
+                ),
+              ),
+            ),
+            Container(
+              color: Color(0xffECF6FF),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 39, horizontal: 21),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: customText(
+                          context,
+                          Colors.black,
+                          "Layanan Simanis",
+                          TextAlign.left,
+                          16,
+                          FontWeight.bold),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(8)),
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: SvgPicture.asset(
+                                  "assets/images/AjukanDana.svg",
+                                  width: 32,
+                                  height: 32,
+                                ),
+                              ),
+                              customText(context, Colors.white, "Ajukan Dana",
+                                  TextAlign.left, 16, FontWeight.normal),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Color(0xffF59E0B),
+                              borderRadius: BorderRadius.circular(8)),
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: SvgPicture.asset(
+                                  "assets/images/HubungiKami.svg",
+                                  width: 32,
+                                  height: 32,
+                                ),
+                              ),
+                              customText(context, Colors.white, "Hubungi Kami",
+                                  TextAlign.left, 16, FontWeight.normal),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: ListView(
+            //     scrollDirection: Axis.horizontal,
+            //     children: [
+
+            //     ],
+            //   ),
+            // )
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 16.0, right: 16, bottom: 16),
+            //   child: Container(
+            //     decoration: BoxDecoration(
+            //         color: Colors.amber[50],
+            //         borderRadius: BorderRadius.all(Radius.circular(8))),
+            //     child: Column(
+            //       children: [
+            //         Padding(
+            //           padding: const EdgeInsets.only(
+            //               left: 16.0, right: 16, top: 16, bottom: 8),
+            //           child: Row(
+            //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //             children: [
+            //               customText(context, Color(0xff242F43), "Produk",
+            //                   TextAlign.left, 16, FontWeight.w600),
+            //               GestureDetector(
+            //                 onTap: () {
+            //                   Navigator.pushNamed(context, '/homeLayoutPage',
+            //                       arguments: <String, dynamic>{
+            //                         "selectedIndex": 3,
+            //                         "kategori": "null",
+            //                         "aksesLink": "home2"
+            //                       });
+            //                 },
+            //                 child: customText(
+            //                     context,
+            //                     Color(0xff2BA33A),
+            //                     "Lihat Semua",
+            //                     TextAlign.left,
+            //                     12,
+            //                     FontWeight.w500),
+            //               )
+            //             ],
+            //           ),
+            //         ),
+            //         Container(
+            //           padding: const EdgeInsets.only(left: 16, right: 16),
+            //           width: MediaQuery.of(context).size.width,
+            //           height: 150,
+            //           child: ListView(
+            //             scrollDirection: Axis.horizontal,
+            //             children: _listProduk
+            //                 .map((e) => Padding(
+            //                       padding: const EdgeInsets.only(right: 16.0),
+            //                       child: GestureDetector(
+            //                         onTap: () {
+            //                           Navigator.pushNamed(
+            //                               context, "/detailsProduk",
+            //                               arguments: e);
+            //                         },
+            //                         child: cardProduk3(
+            //                             context,
+            //                             e['nama'],
+            //                             e["foto"] == null
+            //                                 ? "https://www.btklsby.go.id/images/placeholder/basic.png"
+            //                                 : _storageUrl + e["foto"]),
+            //                       ),
+            //                     ))
+            //                 .toList(),
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+          ],
+        ),
       ),
     );
   }

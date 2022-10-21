@@ -93,8 +93,8 @@ class _ListDataIKMHomeMenuState extends State<ListDataIKMHomeMenu> {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 13, horizontal: 50),
                   color: Colors.white,
-                  child: customText(context, Color(0xff4930C5), "Data UMKM",
-                      TextAlign.left, 17, FontWeight.w700),
+                  child: customText(context, Color(0xff4930C5), "Data IKM",
+                      TextAlign.center, 17, FontWeight.w700),
                 ),
               ),
             ),
