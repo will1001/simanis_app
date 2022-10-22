@@ -120,6 +120,18 @@ flutter:
     - assets/images/backArrow.svg
     - assets/images/Dana.svg
     - assets/images/filter.svg
+    - assets/images/total_ikm.svg
+    - assets/images/tenaga_kerja.svg
+    - assets/images/ikm_baru.svg
+    - assets/images/industri_kecil.svg
+    - assets/images/industri_menengah.svg
+    - assets/images/industri_besar.svg
+    - assets/images/sert_halal.svg
+    - assets/images/sert_haki.svg
+    - assets/images/sert_sni.svg
+    - assets/images/sert_test_report.svg
+    - assets/images/formal.svg
+    - assets/images/informal.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

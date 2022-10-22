@@ -4,6 +4,7 @@ import 'package:appsimanis/Provider/ThemeProvider.dart';
 import 'package:appsimanis/Widget/Button2.dart';
 import 'package:appsimanis/Widget/CustomText.dart';
 import 'package:appsimanis/Widget/FilterButton.dart';
+import 'package:appsimanis/Widget/ListDataIKMWidget.dart';
 import 'package:appsimanis/Widget/ListLabel2.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -41,8 +42,8 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
   // );
   // }
 
-  nullHandler(String? field) {
-    return (field == null ? "" : field);
+  nullHandler(var field) {
+    return (field == null ? "" : field.toString());
   }
 
   convertIdCabangIndustri(String? _idCabangIndustri) {
@@ -77,7 +78,7 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       var arguments = (ModalRoute.of(context)!.settings.arguments as Map);
-      // print(arguments);
+      print(arguments);
       setState(() {
         args = arguments;
         arguments == null
@@ -110,143 +111,116 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
   @override
   Widget build(BuildContext context) {
     Completer<GoogleMapController> _controller = Completer();
-
-    // print('_slideFoto');
-    // print(_slideFoto);
     ThemeProvider themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: SvgPicture.asset(
+              "assets/images/backArrow.svg",
+            ),
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Icon(
+              Icons.more_vert,
+              color: Colors.black,
+            ),
+          )
+        ],
+      ),
       body: ListView(
         children: [
-          Stack(
-            alignment: Alignment.topLeft,
-            children: [
-              Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  CarouselSlider(
-                    carouselController: buttonCarouselController,
-                    options: CarouselOptions(
-                      autoPlay: true,
-                      autoPlayInterval: Duration(seconds: 3),
-                      aspectRatio: 1 / 1,
-                      viewportFraction: 1,
-                      height: 200.0,
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          _current = index;
-                        });
-                      },
-                    ),
-                    items: _slideFoto
-                        .asMap()
-                        .map((i, e) => MapEntry(i, Builder(
-                              builder: (BuildContext context) {
-                                return Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: [
-                                    Stack(
-                                      fit: StackFit.expand,
-                                      children: [
-                                        Image.network(
-                                          e,
-                                          fit: BoxFit.fill,
-                                        ),
-                                        ColoredBox(
-                                            color: Colors.black.withOpacity(
-                                                0.25) // 0: Light, 1: Dark
-                                            ),
-                                      ],
+          CarouselSlider(
+            carouselController: buttonCarouselController,
+            options: CarouselOptions(
+              autoPlay: true,
+              autoPlayInterval: Duration(seconds: 3),
+              aspectRatio: 1 / 1,
+              viewportFraction: 1,
+              height: 300.0,
+              onPageChanged: (index, reason) {
+                setState(() {
+                  _current = index;
+                });
+              },
+            ),
+            items: _slideFoto
+                .asMap()
+                .map((i, e) => MapEntry(i, Builder(
+                      builder: (BuildContext context) {
+                        return Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                Image.network(
+                                  e,
+                                  fit: BoxFit.fill,
+                                ),
+                                ColoredBox(
+                                    color: Colors.black
+                                        .withOpacity(0.25) // 0: Light, 1: Dark
                                     ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 24.0),
-                                      child: Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          Opacity(
-                                            opacity: 0.4,
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 8,
-                                                      vertical: 4),
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(4)),
-                                                color: Color(0xffE4E5E7),
-                                              ),
-                                              child: Opacity(
-                                                opacity: 0,
-                                                child: customText(
-                                                    context,
-                                                    Color(0xffFDFDFD),
-                                                    i == 0
-                                                        ? 'Ruang Produksi'
-                                                        : 'Alat Poduksi',
-                                                    TextAlign.left,
-                                                    12,
-                                                    FontWeight.w400),
-                                              ),
-                                            ),
-                                          ),
-                                          customText(
-                                              context,
-                                              Color(0xffFDFDFD),
-                                              i == 0
-                                                  ? 'Ruang Produksi'
-                                                  : 'Alat Poduksi',
-                                              TextAlign.left,
-                                              12,
-                                              FontWeight.w400)
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                );
-                              },
-                            )))
-                        .values
-                        .toList(),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: _slideFoto.asMap().entries.map((entry) {
-                      return GestureDetector(
-                        onTap: () =>
-                            buttonCarouselController.animateToPage(entry.key),
-                        child: Container(
-                          width: 8.0,
-                          height: 8.0,
-                          margin: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 4.0),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: _current == entry.key
-                                  ? Color(0xffFAFBFB)
-                                  : Color(0xff848A95)),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16, top: 16),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Color(0xff848A95), shape: BoxShape.circle),
-                  child: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
+                              ],
+                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(bottom: 24.0),
+                            //   child: Stack(
+                            //     alignment: Alignment.center,
+                            //     children: [
+                            //       Opacity(
+                            //         opacity: 0.4,
+                            //         child: Container(
+                            //           padding: const EdgeInsets.symmetric(
+                            //               horizontal: 8, vertical: 4),
+                            //           decoration: BoxDecoration(
+                            //             borderRadius: BorderRadius.all(
+                            //                 Radius.circular(4)),
+                            //             color: Color(0xffE4E5E7),
+                            //           ),
+                            //           child: Opacity(
+                            //             opacity: 0,
+                            //             child: customText(
+                            //                 context,
+                            //                 Color(0xffFDFDFD),
+                            //                 i == 0
+                            //                     ? 'Ruang Produksi'
+                            //                     : 'Alat Poduksi',
+                            //                 TextAlign.left,
+                            //                 12,
+                            //                 FontWeight.w400),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       customText(
+                            //           context,
+                            //           Color(0xffFDFDFD),
+                            //           i == 0
+                            //               ? 'Ruang Produksi'
+                            //               : 'Alat Poduksi',
+                            //           TextAlign.left,
+                            //           12,
+                            //           FontWeight.w400)
+                            //     ],
+                            //   ),
+                            // )
+                          ],
+                        );
                       },
-                      icon: Icon(
-                        Icons.chevron_left,
-                        color: Colors.white,
-                      )),
-                ),
-              )
-            ],
+                    )))
+                .values
+                .toList(),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 24, right: 16),
@@ -255,143 +229,142 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
               child: customText(
                   context,
                   Color(0xff242F43),
-                  args == null ? "" : nullHandler(args['nama_perusahaan']),
+                  args == null ? "" : nullHandler(args['nama_usaha']),
                   TextAlign.left,
-                  20,
-                  FontWeight.w500),
+                  24,
+                  FontWeight.bold),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 16, top: 4, right: 16),
+            padding: const EdgeInsets.only(left: 16, top: 10, right: 16),
             child: Container(
               width: MediaQuery.of(context).size.width - 32,
               child: customText(
                   context,
-                  Color(0xff545C6C),
-                  args == null ? "" : nullHandler(args['nama_pemilik']),
+                  Colors.blue,
+                  args == null ? "" : nullHandler(args['nama_direktur']),
                   TextAlign.left,
-                  14,
-                  FontWeight.w400),
+                  16,
+                  FontWeight.w300),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 24, right: 16),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: ['Deskripsi', 'Lokasi']
-                    .asMap()
-                    .map((i, e) => MapEntry(
-                        i,
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _subMenu = i;
-                              if (i == 1) {
-                                _kGooglePlex = CameraPosition(
-                                  target: LatLng(
-                                      args != null
-                                          ? double.parse(args['lat'].toString())
-                                          : 37.42796133580664,
-                                      args != null
-                                          ? double.parse(args['lng'].toString())
-                                          : -122.085749655962),
-                                  zoom: 14.4746,
-                                );
-                              }
-                            });
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            width: MediaQuery.of(context).size.width * 0.5 - 32,
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                        width: 4,
-                                        color: _subMenu == i
-                                            ? Color(0xff2BA33A)
-                                            : Colors.transparent))),
-                            child: Center(
-                              child: customText(
-                                  context,
-                                  _subMenu == i
-                                      ? Color(0xff2BA33A)
-                                      : Color(0xffB2B5BC),
-                                  e,
-                                  TextAlign.left,
-                                  14,
-                                  FontWeight.w500),
-                            ),
-                          ),
-                        )))
-                    .values
-                    .toList()),
+            child: Container(
+              width: MediaQuery.of(context).size.width - 32,
+              child: customText(context, Color(0xff242F43), "Detail IKM",
+                  TextAlign.left, 18, FontWeight.w500),
+            ),
           ),
+          ListDataIKMWidget(
+              context, "NIK", args == null ? "" : nullHandler(args['nik'])),
+          ListDataIKMWidget(context, "Nama",
+              args == null ? "" : nullHandler(args['nama_direktur'])),
+          ListDataIKMWidget(
+              context, "Kab/Kota", args == null ? "" : nullHandler(args[''])),
+          ListDataIKMWidget(
+              context, "Kecamatan", args == null ? "" : nullHandler(args[''])),
+          ListDataIKMWidget(context, "Kelurahan/Desa",
+              args == null ? "" : nullHandler(args[''])),
+          ListDataIKMWidget(context, "Alamat Lengkap",
+              args == null ? "" : nullHandler(args['alamat_lengkap'])),
+          ListDataIKMWidget(
+              context, "No Hp", args == null ? "" : nullHandler(args['no_hp'])),
+          ListDataIKMWidget(context, "Nama Usaha",
+              args == null ? "" : nullHandler(args['nama_usaha'])),
+          ListDataIKMWidget(context, "Bentuk Usaha",
+              args == null ? "" : nullHandler(args['bentuk_usaha'])),
+          ListDataIKMWidget(context, "Tahun Berdiri",
+              args == null ? "" : nullHandler(args['tahun_berdiri'])),
+          ListDataIKMWidget(context, "Legalitas Usaha",
+              args == null ? "" : nullHandler(args[''])),
+          ListDataIKMWidget(context, "NIB Tahun",
+              args == null ? "" : nullHandler(args['nib_tahun'])),
+          ListDataIKMWidget(
+              context,
+              "No Sertifikat Halal Tahun",
+              args == null
+                  ? ""
+                  : nullHandler(args['nomor_sertifikat_halal_tahun'])),
+          ListDataIKMWidget(
+              context, "SNI Tahun", args == null ? "" : nullHandler(args[''])),
+          ListDataIKMWidget(context, "Jenis Usaha",
+              args == null ? "" : nullHandler(args['jenis_usaha'])),
+          ListDataIKMWidget(context, "Cabang Industri",
+              args == null ? "" : nullHandler(args['cabang_industri'])),
+          ListDataIKMWidget(context, "Sub Cabang Industri",
+              args == null ? "" : nullHandler(args['sub_cabang_industri'])),
+          ListDataIKMWidget(context, "ID KBLI",
+              args == null ? "" : nullHandler(args['id_kbli'])),
+          ListDataIKMWidget(context, "Investasi Modal",
+              args == null ? "" : nullHandler(args['investasi_modal'])),
+          ListDataIKMWidget(
+              context,
+              "Jumlah Tenaga Kerja Pria",
+              args == null
+                  ? ""
+                  : nullHandler(args['jumlah_tenaga_kerja_pria'])),
+          ListDataIKMWidget(
+              context,
+              "Jumlah Tenaga Kerja Wanita",
+              args == null
+                  ? ""
+                  : nullHandler(args['jumlah_tenaga_kerja_wanita'])),
+          ListDataIKMWidget(
+              context,
+              "Kapasitas Produksi ",
+              args == null
+                  ? ""
+                  : nullHandler(args['kapasitas_produksi_perbulan'])),
+          ListDataIKMWidget(context, "Nilai Produksi",
+              args == null ? "" : nullHandler(args[''])),
+          ListDataIKMWidget(context, "Nilai Bahan Baku",
+              args == null ? "" : nullHandler(args[''])),
+          ListDataIKMWidget(context, "Latitude",
+              args == null ? "" : nullHandler(args['lat'])),
+          ListDataIKMWidget(context, "Longitude",
+              args == null ? "" : nullHandler(args['lng'])),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 16, right: 16),
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.4,
-              child: _subMenu == 0
-                  ? ListView(
-                      children: [
-                        listLabel2(context,
-                            "Bentuk Badan Usaha : ${args == null ? "" : nullHandler(args['bentuk_badan_usaha'])}"),
-                        listLabel2(context,
-                            "Tahun Berdiri Badan Usaha : ${args == null ? "" : nullHandler(args['tahun_badan_usaha'])}"),
-                        listLabel2(context,
-                            "Kapasitas Produksi : ${args == null ? "" : nullHandler(args['kapasitas_produksi'])}"),
-                        listLabel2(context,
-                            "Satuan Produksi : ${args == null ? "" : nullHandler(args['satuan_produksi'])}"),
-                        listLabel2(context,
-                            "Nilai Investasi : ${args == null ? "" : nullHandler(args['nilai_produksi'])}"),
-                        listLabel2(context,
-                            "Nilai Bahan Baku / Bahan Penolong : ${args == null ? "" : nullHandler(args['nilai_bb_bp'])}"),
-                        listLabel2(context,
-                            "Alamat : ${args == null ? "" : nullHandler(args['alamat'])}"),
-                      ],
-                    )
-                  : GestureDetector(
-                      onTap: () async {
-                        String url =
-                            "http://maps.google.com/maps?q=${args == null ? "" : args['lat']},${args == null ? "" : args['lng']}";
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                          return;
-                        }
-                        print("couldn't launch $url");
-                      },
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          GoogleMap(
-                            markers: Set.from(allMarkers),
-                            mapType: MapType.normal,
-                            initialCameraPosition: _kGooglePlex,
-                            onMapCreated: (GoogleMapController controller) {
-                              _controller.complete(controller);
-                            },
-                          ),
-                          Container(
-                            color: Colors.transparent,
-                          )
-                        ],
+              child: GestureDetector(
+                onTap: () async {
+                  String url =
+                      "http://maps.google.com/maps?q=${args == null ? "" : args['lat']},${args == null ? "" : args['lng']}";
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                    return;
+                  }
+                  print("couldn't launch $url");
+                },
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                      child: GoogleMap(
+                        markers: Set.from(allMarkers),
+                        mapType: MapType.normal,
+                        initialCameraPosition: _kGooglePlex,
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+                        },
                       ),
                     ),
+                    Container(
+                      color: Colors.transparent,
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: button2(
-                "Hubungi UMKM", Color(0xff2BA33A), Colors.white, context,
-                () async {
-              String url =
-                  "https://api.whatsapp.com/send?phone=62${args == null ? "" : args['nomor_telpon'].toString().substring(1, args == null ? "" : args['nomor_telpon'].length)}";
-              if (await canLaunch(url)) {
-                await launch(url);
-                return;
-              }
-              print("couldn't launch $url");
-            }),
+          ListDataIKMWidget(context, "Media Sosial",
+              args == null ? "" : nullHandler(args['media_sosial'])),
+          Container(
+            height: 100,
           )
         ],
       ),

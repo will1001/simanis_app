@@ -60,6 +60,8 @@ class _StatistikPageState extends State<StatistikPage> {
   List _listKecamatan = [];
   List _listKelurahan = [];
 
+  String _subPage = "chart";
+
   String _dataIKM = '';
   String _dataIKMTerferivikasi = '';
   // String _dataIKMBelumTerferivikasi = '';
@@ -1030,8 +1032,80 @@ class _StatistikPageState extends State<StatistikPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0, top: 24),
-                  child: customText(context, Color(0xff000000), 'Statistik',
-                      TextAlign.left, 16, FontWeight.w500),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      customText(context, Color(0xff000000), 'Statistik',
+                          TextAlign.center, 24, FontWeight.bold)
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Container(
+                    color: Colors.black12,
+                    height: 1,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, left: 16),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16),
+                        child: GestureDetector(
+                          onTap: () => {
+                            setState(() {
+                              _subPage = "table";
+                            })
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 16),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(16)),
+                                color: _subPage == "chart"
+                                    ? Colors.white
+                                    : Color(0xff374151),
+                                border: Border.all(
+                                    color: Color(0xff374151), width: 1)),
+                            child: Text("Data Table",
+                                style: TextStyle(
+                                    color: _subPage == "chart"
+                                        ? Color(0xff374151)
+                                        : Colors.white)),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => {
+                          setState(() {
+                            _subPage = "chart";
+                          })
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 16),
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16)),
+                              color: _subPage == "table"
+                                  ? Colors.white
+                                  : Color(0xff374151),
+                              border: Border.all(
+                                  color: Color(0xff374151), width: 1)),
+                          child: Text(
+                            "Pie Chart",
+                            style: TextStyle(
+                                color: _subPage == "table"
+                                    ? Color(0xff374151)
+                                    : Colors.white),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0, top: 24),
@@ -1235,16 +1309,8 @@ class _StatistikPageState extends State<StatistikPage> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 32.0, top: 40),
-                  child: customText(context, Color(0xff242F43), 'Total IKM',
-                      TextAlign.left, 14, FontWeight.w500),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AspectRatio(
-                        aspectRatio: 1.3,
+                _subPage == "table"
+                    ? (Container(
                         child: Query(
                           options:
                               QueryOptions(document: gql(getStatistikQuery())),
@@ -1255,6 +1321,7 @@ class _StatistikPageState extends State<StatistikPage> {
                             if (result.isLoading) {
                               return Text("");
                             }
+
                             final data = result.data?['Statistik'][0];
                             final _totalIkm = data['total_ikm'];
                             final _totalTenagaKerja =
@@ -1270,89 +1337,18 @@ class _StatistikPageState extends State<StatistikPage> {
                                 data['total_ikm_sertifikat_haki'];
                             final _sertifikatSni =
                                 data['total_ikm_sertifikat_sni'];
+                            final _sertifikatTestReport =
+                                data['total_ikm_sertifikat_test_report'];
+                            final _ikmFormal = data['total_ikm_formal'];
+                            final _ikmInformal = data['total_ikm_informal'];
 
-                            return PieChart(
-                              PieChartData(
-                                  pieTouchData: PieTouchData(
-                                      touchCallback: (pieTouchResponse) {
-                                    setState(() {
-                                      final desiredTouch =
-                                          pieTouchResponse.touchInput
-                                                  is! PointerExitEvent &&
-                                              pieTouchResponse.touchInput
-                                                  is! PointerUpEvent;
-                                      if (desiredTouch &&
-                                          pieTouchResponse.touchedSection !=
-                                              null) {
-                                        touchedIndex = pieTouchResponse
-                                            .touchedSection!
-                                            .touchedSectionIndex;
-                                      } else {
-                                        touchedIndex = -1;
-                                      }
-                                    });
-                                  }),
-                                  borderData: FlBorderData(
-                                    show: false,
-                                  ),
-                                  sectionsSpace: 0,
-                                  centerSpaceRadius: 30,
-                                  sections: showingSections(
-                                    intNullChecker(_totalIkm),
-                                    intNullChecker(_totalTenagaKerja),
-                                    intNullChecker(_industriKecil),
-                                    intNullChecker(_industriMenengah),
-                                    intNullChecker(_industriBesar),
-                                    intNullChecker(_ikmBaru),
-                                    intNullChecker(_sertifikatHalal),
-                                    intNullChecker(_sertifikatHaki),
-                                    intNullChecker(_sertifikatSni),
-                                  )),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 32, top: 16.0, right: 32),
-                  child: Container(
-                    child: Query(
-                      options: QueryOptions(document: gql(getStatistikQuery())),
-                      builder: (QueryResult result, {fetchMore, refetch}) {
-                        if (result.hasException) {
-                          return Text(result.exception.toString());
-                        }
-                        if (result.isLoading) {
-                          return Text("");
-                        }
-
-                        final data = result.data?['Statistik'][0];
-                        final _totalIkm = data['total_ikm'];
-                        final _totalTenagaKerja = data['total_tenaga_kerja'];
-                        final _industriKecil = data['total_industri_kecil'];
-                        final _industriMenengah =
-                            data['total_industri_menengah'];
-                        final _industriBesar = data['total_industri_besar'];
-                        final _ikmBaru = data['total_ikm_baru'];
-                        final _sertifikatHalal =
-                            data['total_ikm_sertifikat_halal'];
-                        final _sertifikatHaki =
-                            data['total_ikm_sertifikat_haki'];
-                        final _sertifikatSni = data['total_ikm_sertifikat_sni'];
-                        final _sertifikatTestReport =
-                            data['total_ikm_sertifikat_test_report'];
-                        final _ikmFormal = data['total_ikm_formal'];
-                        final _ikmInformal = data['total_ikm_informal'];
-
-                        List indicatorDiagramList = [
-                          {
-                            'color': Color(0xff4930C5),
-                            'title': 'Total IKM',
-                            'value': _totalIkm,
-                            'query': '''
+                            List indicatorDiagramList = [
+                              {
+                                'color': Color(0xff4930C5),
+                                'title': 'Total IKM',
+                                'value': _totalIkm,
+                                'icon': "total_ikm.svg",
+                                'query': '''
                                 query{
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}"){
                                     id
@@ -1384,12 +1380,13 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                          },
-                          {
-                            'color': Color(0xfff41AAC9),
-                            'title': 'Tenaga Kerja',
-                            'value': _totalTenagaKerja,
-                            'query': '''
+                              },
+                              {
+                                'color': Color(0xfff41AAC9),
+                                'title': 'Tenaga Kerja',
+                                'icon': "tenaga_kerja.svg",
+                                'value': _totalTenagaKerja,
+                                'query': '''
                                 query{
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
@@ -1421,12 +1418,13 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                          },
-                          {
-                            'color': Colors.lime,
-                            'title': 'IKM Baru',
-                            'value': _ikmBaru,
-                            'query': '''
+                              },
+                              {
+                                'color': Colors.lime,
+                                'title': 'IKM Baru',
+                                'value': _ikmBaru,
+                                'icon': "ikm_baru.svg",
+                                'query': '''
                                 query{
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"baru"){
                                     id
@@ -1458,12 +1456,13 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                          },
-                          {
-                            'color': Colors.blueAccent,
-                            'title': 'Industri Kecil',
-                            'value': _industriKecil,
-                            'query': '''
+                              },
+                              {
+                                'color': Colors.blueAccent,
+                                'title': 'Industri Kecil',
+                                'value': _industriKecil,
+                                'icon': "industri_kecil.svg",
+                                'query': '''
                                 query{
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"kecil"){
                                     id
@@ -1495,12 +1494,13 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                          },
-                          {
-                            'color': Colors.amber,
-                            'title': 'Industri Menengah',
-                            'value': _industriMenengah,
-                            'query': '''
+                              },
+                              {
+                                'color': Colors.amber,
+                                'title': 'Industri Menengah',
+                                'value': _industriMenengah,
+                                'icon': "industri_menengah.svg",
+                                'query': '''
                                 query{
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"menengah"){
                                     id
@@ -1532,12 +1532,13 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                          },
-                          {
-                            'color': Colors.green,
-                            'title': 'Industri Besar',
-                            'value': _industriBesar,
-                            'query': '''
+                              },
+                              {
+                                'color': Colors.green,
+                                'title': 'Industri Besar',
+                                'value': _industriBesar,
+                                'icon': "industri_besar.svg",
+                                'query': '''
                                 query{
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"besar"){
                                     id
@@ -1569,12 +1570,13 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                          },
-                          {
-                            'color': Colors.teal,
-                            'title': 'Sertifikat Halal',
-                            'value': _sertifikatHalal,
-                            'query': '''
+                              },
+                              {
+                                'color': Colors.teal,
+                                'title': 'Sertifikat Halal',
+                                'value': _sertifikatHalal,
+                                'icon': "sert_halal.svg",
+                                'query': '''
                                 query{
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"halal"){
                                     id
@@ -1606,12 +1608,13 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                          },
-                          {
-                            'color': Colors.brown,
-                            'title': 'Sertifikat HAKI',
-                            'value': _sertifikatHaki,
-                            'query': '''
+                              },
+                              {
+                                'color': Colors.brown,
+                                'title': 'Sertifikat HAKI',
+                                'value': _sertifikatHaki,
+                                'icon': "sert_haki.svg",
+                                'query': '''
                                 query{
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"haki"){
                                     id
@@ -1643,12 +1646,13 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                          },
-                          {
-                            'color': Colors.pink,
-                            'title': 'Sertifikat SNI',
-                            'value': _sertifikatSni,
-                            'query': '''
+                              },
+                              {
+                                'color': Colors.pink,
+                                'title': 'Sertifikat SNI',
+                                'value': _sertifikatSni,
+                                'icon': "sert_sni.svg",
+                                'query': '''
                                 query{
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"sni"){
                                     id
@@ -1680,12 +1684,13 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                          },
-                          {
-                            'color': Color(0xff151D3B),
-                            'title': 'Sertifikat Test Report',
-                            'value': _sertifikatTestReport,
-                            'query': '''
+                              },
+                              {
+                                'color': Color(0xff151D3B),
+                                'title': 'Sert. Test Report',
+                                'value': _sertifikatTestReport,
+                                'icon': "sert_test_report.svg",
+                                'query': '''
                                 query{
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"test_report"){
                                     id
@@ -1717,12 +1722,13 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                          },
-                          {
-                            'color': Color(0xffF76E11),
-                            'title': 'Formal',
-                            'value': _ikmFormal,
-                            'query': '''
+                              },
+                              {
+                                'color': Color(0xffF76E11),
+                                'title': 'Formal',
+                                'value': _ikmFormal,
+                                'icon': "formal.svg",
+                                'query': '''
                                 query{
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"formal"){
                                     id
@@ -1754,12 +1760,13 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                          },
-                          {
-                            'color': Color(0xff4C0027),
-                            'title': 'Informal',
-                            'value': _ikmInformal,
-                            'query': '''
+                              },
+                              {
+                                'color': Color(0xff4C0027),
+                                'title': 'Informal',
+                                'value': _ikmInformal,
+                                'icon': "informal.svg",
+                                'query': '''
                                 query{
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"informal"){
                                     id
@@ -1791,179 +1798,853 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                          },
-                        ];
+                              },
+                            ];
 
-                        return GridView.count(
-                          physics: NeverScrollableScrollPhysics(),
-                          childAspectRatio: 1 / 1,
-                          crossAxisCount: 3,
-                          shrinkWrap: true,
-                          primary: true,
-                          children: indicatorDiagramList
-                              .asMap()
-                              .map((i, e) => MapEntry(
-                                  i,
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                DetailsStatistik(
-                                              title: e['title'],
-                                              graphqlQuery: e['query'],
-                                            ),
-                                          ));
-                                    },
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        customText(
-                                            context,
-                                            Color(0xff242F43),
-                                            intNullChecker(e['value'])
-                                                .toString(),
-                                            TextAlign.left,
-                                            20,
-                                            FontWeight.w500),
-                                        Row(
-                                          children: [
-                                            Container(
-                                              width: 8,
-                                              height: 8,
-                                              decoration: BoxDecoration(
+                            return GridView.count(
+                              physics: NeverScrollableScrollPhysics(),
+                              childAspectRatio: 1 / 0.25,
+                              crossAxisCount: 1,
+                              shrinkWrap: true,
+                              primary: true,
+                              children: indicatorDiagramList
+                                  .asMap()
+                                  .map((i, e) => MapEntry(
+                                      i,
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DetailsStatistik(
+                                                  title: e['title'],
+                                                  graphqlQuery: e['query'],
+                                                ),
+                                              ));
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
                                                 color: e['color'],
-                                                shape: BoxShape.rectangle,
-                                              ),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(8))),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 40,
+                                                          right: 25.0),
+                                                  child: SvgPicture.asset(
+                                                    "assets/images/" +
+                                                        e['icon'],
+                                                  ),
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      e['value'].toString(),
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 22,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    Text(
+                                                      e['title'],
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 18),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
                                             ),
-                                            Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4),
-                                              width: 80,
-                                              child: customText(
-                                                  context,
-                                                  Color(0xff242F43),
-                                                  e['title'],
-                                                  TextAlign.left,
-                                                  12,
-                                                  FontWeight.w400),
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  )))
-                              .values
-                              .toList(),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 32.0, top: 40),
-                //   child: customText(
-                //       context,
-                //       Color(0xff242F43),
-                //       'Statistik Berdasarkan Sektor Industri',
-                //       TextAlign.left,
-                //       14,
-                //       FontWeight.w500),
-                // ),
-                // Row(
-                //   children: [
-                //     Expanded(
-                //       child: AspectRatio(
-                //         aspectRatio: 1.3,
-                //         child: PieChart(
-                //           PieChartData(
-                //               pieTouchData: PieTouchData(
-                //                   touchCallback: (pieTouchResponse) {
-                //                 setState(() {
-                //                   final desiredTouch = pieTouchResponse
-                //                           .touchInput is! PointerExitEvent &&
-                //                       pieTouchResponse.touchInput
-                //                           is! PointerUpEvent;
-                //                   if (desiredTouch &&
-                //                       pieTouchResponse.touchedSection != null) {
-                //                     touchedIndex = pieTouchResponse
-                //                         .touchedSection!.touchedSectionIndex;
-                //                   } else {
-                //                     touchedIndex = -1;
-                //                   }
-                //                 });
-                //               }),
-                //               borderData: FlBorderData(
-                //                 show: false,
-                //               ),
-                //               sectionsSpace: 0,
-                //               centerSpaceRadius: 30,
-                //               sections: showingSections2()),
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 32, top: 16.0, right: 32),
-                  child: Container(
-                    child: GridView.count(
-                      physics: NeverScrollableScrollPhysics(),
-                      childAspectRatio: 1 / 1,
-                      crossAxisCount: 3,
-                      shrinkWrap: true,
-                      primary: true,
-                      children: _indicatorDiagram2
-                          .asMap()
-                          .map((i, e) => MapEntry(
-                              i,
-                              GestureDetector(
-                                onTap: e['ontap'],
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    customText(
-                                        context,
-                                        Color(0xff242F43),
-                                        _dataPieChart2[i].toString(),
-                                        TextAlign.left,
-                                        20,
-                                        FontWeight.w500),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 8,
-                                          height: 8,
-                                          decoration: BoxDecoration(
-                                            color: e['color'],
-                                            shape: BoxShape.rectangle,
                                           ),
                                         ),
-                                        Container(
-                                          padding:
-                                              const EdgeInsets.only(left: 4),
-                                          width: 80,
-                                          child: customText(
-                                              context,
-                                              Color(0xff242F43),
-                                              e['title'],
-                                              TextAlign.left,
-                                              12,
-                                              FontWeight.w400),
-                                        )
-                                      ],
-                                    )
-                                  ],
+                                      )))
+                                  .values
+                                  .toList(),
+                            );
+                          },
+                        ),
+                      ))
+                    : (Container(
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: AspectRatio(
+                                    aspectRatio: 1.3,
+                                    child: Query(
+                                      options: QueryOptions(
+                                          document: gql(getStatistikQuery())),
+                                      builder: (QueryResult result,
+                                          {fetchMore, refetch}) {
+                                        if (result.hasException) {
+                                          return Text(
+                                              result.exception.toString());
+                                        }
+                                        if (result.isLoading) {
+                                          return Text("");
+                                        }
+                                        final data =
+                                            result.data?['Statistik'][0];
+                                        final _totalIkm = data['total_ikm'];
+                                        final _totalTenagaKerja =
+                                            data['total_tenaga_kerja'];
+                                        final _industriKecil =
+                                            data['total_industri_kecil'];
+                                        final _industriMenengah =
+                                            data['total_industri_menengah'];
+                                        final _industriBesar =
+                                            data['total_industri_besar'];
+                                        final _ikmBaru = data['total_ikm_baru'];
+                                        final _sertifikatHalal =
+                                            data['total_ikm_sertifikat_halal'];
+                                        final _sertifikatHaki =
+                                            data['total_ikm_sertifikat_haki'];
+                                        final _sertifikatSni =
+                                            data['total_ikm_sertifikat_sni'];
+
+                                        return PieChart(
+                                          PieChartData(
+                                              pieTouchData: PieTouchData(
+                                                  touchCallback:
+                                                      (pieTouchResponse) {
+                                                setState(() {
+                                                  final desiredTouch =
+                                                      pieTouchResponse
+                                                                  .touchInput
+                                                              is! PointerExitEvent &&
+                                                          pieTouchResponse
+                                                                  .touchInput
+                                                              is! PointerUpEvent;
+                                                  if (desiredTouch &&
+                                                      pieTouchResponse
+                                                              .touchedSection !=
+                                                          null) {
+                                                    touchedIndex =
+                                                        pieTouchResponse
+                                                            .touchedSection!
+                                                            .touchedSectionIndex;
+                                                  } else {
+                                                    touchedIndex = -1;
+                                                  }
+                                                });
+                                              }),
+                                              borderData: FlBorderData(
+                                                show: false,
+                                              ),
+                                              sectionsSpace: 0,
+                                              centerSpaceRadius: 80,
+                                              sections: showingSections(
+                                                intNullChecker(_totalIkm),
+                                                intNullChecker(
+                                                    _totalTenagaKerja),
+                                                intNullChecker(_industriKecil),
+                                                intNullChecker(
+                                                    _industriMenengah),
+                                                intNullChecker(_industriBesar),
+                                                intNullChecker(_ikmBaru),
+                                                intNullChecker(
+                                                    _sertifikatHalal),
+                                                intNullChecker(_sertifikatHaki),
+                                                intNullChecker(_sertifikatSni),
+                                              )),
+                                        );
+                                      },
+                                    ),
+                                  ),
                                 ),
-                              )))
-                          .values
-                          .toList(),
-                    ),
-                  ),
-                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                    padding: const EdgeInsets.all(12),
+                                    color: Colors.blue.shade50,
+                                    child: Text(
+                                        "Klik Jenis Data Untuk Melihat Lebih Detail",
+                                        style: TextStyle(color: Colors.blue))),
+                              ],
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 32, top: 16.0, right: 32),
+                              child: Container(
+                                child: Query(
+                                  options: QueryOptions(
+                                      document: gql(getStatistikQuery())),
+                                  builder: (QueryResult result,
+                                      {fetchMore, refetch}) {
+                                    if (result.hasException) {
+                                      return Text(result.exception.toString());
+                                    }
+                                    if (result.isLoading) {
+                                      return Text("");
+                                    }
+
+                                    final data = result.data?['Statistik'][0];
+                                    final _totalIkm = data['total_ikm'];
+                                    final _totalTenagaKerja =
+                                        data['total_tenaga_kerja'];
+                                    final _industriKecil =
+                                        data['total_industri_kecil'];
+                                    final _industriMenengah =
+                                        data['total_industri_menengah'];
+                                    final _industriBesar =
+                                        data['total_industri_besar'];
+                                    final _ikmBaru = data['total_ikm_baru'];
+                                    final _sertifikatHalal =
+                                        data['total_ikm_sertifikat_halal'];
+                                    final _sertifikatHaki =
+                                        data['total_ikm_sertifikat_haki'];
+                                    final _sertifikatSni =
+                                        data['total_ikm_sertifikat_sni'];
+                                    final _sertifikatTestReport = data[
+                                        'total_ikm_sertifikat_test_report'];
+                                    final _ikmFormal = data['total_ikm_formal'];
+                                    final _ikmInformal =
+                                        data['total_ikm_informal'];
+
+                                    List indicatorDiagramList = [
+                                      {
+                                        'color': Color(0xff4930C5),
+                                        'title': 'Total IKM',
+                                        'value': _totalIkm,
+                                        'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                                      },
+                                      {
+                                        'color': Color(0xfff41AAC9),
+                                        'title': 'Tenaga Kerja',
+                                        'value': _totalTenagaKerja,
+                                        'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                                      },
+                                      {
+                                        'color': Colors.lime,
+                                        'title': 'IKM Baru',
+                                        'value': _ikmBaru,
+                                        'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"baru"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                                      },
+                                      {
+                                        'color': Colors.blueAccent,
+                                        'title': 'Industri Kecil',
+                                        'value': _industriKecil,
+                                        'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"kecil"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                                      },
+                                      {
+                                        'color': Colors.amber,
+                                        'title': 'Industri Menengah',
+                                        'value': _industriMenengah,
+                                        'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"menengah"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                                      },
+                                      {
+                                        'color': Colors.green,
+                                        'title': 'Industri Besar',
+                                        'value': _industriBesar,
+                                        'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"besar"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                                      },
+                                      {
+                                        'color': Colors.teal,
+                                        'title': 'Sertifikat Halal',
+                                        'value': _sertifikatHalal,
+                                        'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"halal"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                                      },
+                                      {
+                                        'color': Colors.brown,
+                                        'title': 'Sertifikat HAKI',
+                                        'value': _sertifikatHaki,
+                                        'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"haki"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                                      },
+                                      {
+                                        'color': Colors.pink,
+                                        'title': 'Sertifikat SNI',
+                                        'value': _sertifikatSni,
+                                        'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"sni"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                                      },
+                                      {
+                                        'color': Color(0xff151D3B),
+                                        'title': 'Sert. Test Report',
+                                        'value': _sertifikatTestReport,
+                                        'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"test_report"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                                      },
+                                      {
+                                        'color': Color(0xffF76E11),
+                                        'title': 'Formal',
+                                        'value': _ikmFormal,
+                                        'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"formal"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                                      },
+                                      {
+                                        'color': Color(0xff4C0027),
+                                        'title': 'Informal',
+                                        'value': _ikmInformal,
+                                        'query': '''
+                                query{
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"informal"){
+                                    id
+                                    nik
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+                              '''
+                                      },
+                                    ];
+
+                                    return GridView.count(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      childAspectRatio: 1 / 0.25,
+                                      crossAxisCount: 2,
+                                      shrinkWrap: true,
+                                      primary: true,
+                                      children: indicatorDiagramList
+                                          .asMap()
+                                          .map((i, e) => MapEntry(
+                                              i,
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            DetailsStatistik(
+                                                          title: e['title'],
+                                                          graphqlQuery:
+                                                              e['query'],
+                                                        ),
+                                                      ));
+                                                },
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                          width: 32,
+                                                          height: 16,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            8)),
+                                                            color: e['color'],
+                                                            shape: BoxShape
+                                                                .rectangle,
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 4),
+                                                          width: 120,
+                                                          child: customText(
+                                                              context,
+                                                              Color(0xff242F43),
+                                                              e['title'],
+                                                              TextAlign.left,
+                                                              12,
+                                                              FontWeight.w400),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              )))
+                                          .values
+                                          .toList(),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(left: 32.0, top: 40),
+                            //   child: customText(
+                            //       context,
+                            //       Color(0xff242F43),
+                            //       'Statistik Berdasarkan Sektor Industri',
+                            //       TextAlign.left,
+                            //       14,
+                            //       FontWeight.w500),
+                            // ),
+                            // Row(
+                            //   children: [
+                            //     Expanded(
+                            //       child: AspectRatio(
+                            //         aspectRatio: 1.3,
+                            //         child: PieChart(
+                            //           PieChartData(
+                            //               pieTouchData: PieTouchData(
+                            //                   touchCallback: (pieTouchResponse) {
+                            //                 setState(() {
+                            //                   final desiredTouch = pieTouchResponse
+                            //                           .touchInput is! PointerExitEvent &&
+                            //                       pieTouchResponse.touchInput
+                            //                           is! PointerUpEvent;
+                            //                   if (desiredTouch &&
+                            //                       pieTouchResponse.touchedSection != null) {
+                            //                     touchedIndex = pieTouchResponse
+                            //                         .touchedSection!.touchedSectionIndex;
+                            //                   } else {
+                            //                     touchedIndex = -1;
+                            //                   }
+                            //                 });
+                            //               }),
+                            //               borderData: FlBorderData(
+                            //                 show: false,
+                            //               ),
+                            //               sectionsSpace: 0,
+                            //               centerSpaceRadius: 30,
+                            //               sections: showingSections2()),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 32, top: 16.0, right: 32),
+                              child: Container(
+                                child: GridView.count(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  childAspectRatio: 1 / 1,
+                                  crossAxisCount: 3,
+                                  shrinkWrap: true,
+                                  primary: true,
+                                  children: _indicatorDiagram2
+                                      .asMap()
+                                      .map((i, e) => MapEntry(
+                                          i,
+                                          GestureDetector(
+                                            onTap: e['ontap'],
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                customText(
+                                                    context,
+                                                    Color(0xff242F43),
+                                                    _dataPieChart2[i]
+                                                        .toString(),
+                                                    TextAlign.left,
+                                                    20,
+                                                    FontWeight.w500),
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      width: 8,
+                                                      height: 8,
+                                                      decoration: BoxDecoration(
+                                                        color: e['color'],
+                                                        shape:
+                                                            BoxShape.rectangle,
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 4),
+                                                      width: 80,
+                                                      child: customText(
+                                                          context,
+                                                          Color(0xff242F43),
+                                                          e['title'],
+                                                          TextAlign.left,
+                                                          12,
+                                                          FontWeight.w400),
+                                                    )
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          )))
+                                      .values
+                                      .toList(),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
               ],
             ),
           ),
