@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:appsimanis/Provider/ThemeProvider.dart';
 import 'package:appsimanis/Widget/Button2.dart';
 import 'package:appsimanis/Widget/ButtonGradient1.dart';
+import 'package:appsimanis/Widget/CardProduk4.dart';
 import 'package:appsimanis/Widget/CustomText.dart';
 import 'package:appsimanis/Widget/DropDown3Style2.dart';
 import 'package:appsimanis/Widget/DropDownStringStyle3.dart';
@@ -11,8 +12,11 @@ import 'package:appsimanis/Widget/FilterButton.dart';
 import 'package:appsimanis/Widget/LoadingWidget.dart';
 import 'package:appsimanis/Widget/SearchButton1.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+
+import '../Widget/CardUMKM3.dart';
 
 class ProdukPage extends StatefulWidget {
   final String kategoriID;
@@ -373,6 +377,50 @@ class _ProdukPageState extends State<ProdukPage> {
   @override
   Widget build(BuildContext context) {
     // print(_iDkategori);
+    _listProduk = [
+      {
+        'nama': "Sepatu",
+        'harga': "20.000",
+        'deskripsi':
+            "Sepatu etnik kain tenun bali Tampil gaya, trendy dengan produk yang dibuat dengan bahan yg nyaman dipakai.Sepatu kain tenun bali tersedia berbagai motif dan warna, bahan kain tenun jepara dilapis spon 2 mm + merymesh Outsole : PPC uk 37 s/d 40",
+        'id_cabang_industri': "2",
+        'nama_usaha': "PT makmur sejahtera",
+        "no_hp": "081703999678",
+        "kabupaten": "Kota Mataram",
+        "kecamatan": "Mataram",
+        "kelurahan": "Punia",
+        "lat": "6.12",
+        "lng": "6.12"
+      },
+      {
+        'nama': "Baju",
+        'harga': "40.000",
+        'deskripsi':
+            "Sepatu etnik kain tenun bali Tampil gaya, trendy dengan produk yang dibuat dengan bahan yg nyaman dipakai.Sepatu kain tenun bali tersedia berbagai motif dan warna, bahan kain tenun jepara dilapis spon 2 mm + merymesh Outsole : PPC uk 37 s/d 40",
+        'id_cabang_industri': "2",
+        'nama_usaha': "PT makmur sejahtera",
+        "no_hp": "081703999678",
+        "kabupaten": "Kota Mataram",
+        "kecamatan": "Mataram",
+        "kelurahan": "Punia",
+        "lat": "6.12",
+        "lng": "6.12"
+      },
+      {
+        'nama': "Kripik",
+        'harga': "50.000",
+        'deskripsi':
+            "Sepatu etnik kain tenun bali Tampil gaya, trendy dengan produk yang dibuat dengan bahan yg nyaman dipakai.Sepatu kain tenun bali tersedia berbagai motif dan warna, bahan kain tenun jepara dilapis spon 2 mm + merymesh Outsole : PPC uk 37 s/d 40",
+        'id_cabang_industri': "2",
+        'nama_usaha': "PT makmur sejahtera",
+        "no_hp": "081703999678",
+        "kabupaten": "Kota Mataram",
+        "kecamatan": "Mataram",
+        "kelurahan": "Punia",
+        "lat": "6.12",
+        "lng": "6.12"
+      },
+    ];
     ThemeProvider themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
     List<Widget> filterWidget = [
@@ -643,211 +691,50 @@ class _ProdukPageState extends State<ProdukPage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Icon(
-                                    Icons.filter_alt_rounded,
-                                    color: Color(0xff545C6C),
+                                  Container(
+                                    padding: const EdgeInsets.all(14),
+                                    decoration: BoxDecoration(
+                                        border:
+                                            Border.all(color: Colors.black12)),
+                                    child: SvgPicture.asset(
+                                      "assets/images/filter.svg",
+                                    ),
                                   ),
-                                  customText(
-                                      context,
-                                      Color(0xff242F43),
-                                      "Filter",
-                                      TextAlign.left,
-                                      12,
-                                      FontWeight.w500)
                                 ],
                               ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24.0),
-                      child: customText(
-                          context,
-                          Color(0xff242F43),
-                          "Kategori Produk",
-                          TextAlign.left,
-                          16,
-                          FontWeight.w500),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16.0),
-                      child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 40,
-                          child: ListView(scrollDirection: Axis.horizontal,
-                              // children:  _listBadanUsahaCabangIndustri
-                              //         .asMap()
-                              //         .map((i, e) => MapEntry(
-                              //             i,
-                              //             Padding(
-                              //               padding:
-                              //                   const EdgeInsets.only(right: 8.0),
-                              //               child: GestureDetector(
-                              //                 onTap: () {
-                              //                   setState(() {
-                              //                     _iDkategori = e['id'];
-                              //                     _loading = true;
-                              //                   });
-                              //                   getProdukFilter(
-                              //                       e['id'],
-                              //                       "null",
-                              //                       _kabupaten,
-                              //                       _kecamatan,
-                              //                       _kelurahan,
-                              //                       10);
-                              //                 },
-                              //                 child: Container(
-                              //                   padding:
-                              //                       const EdgeInsets.symmetric(
-                              //                           horizontal: 16,
-                              //                           vertical: 10),
-                              //                   decoration: BoxDecoration(
-                              //                       color: _iDkategori == e['id']
-                              //                           ? Color(0xffEBFFEB)
-                              //                           : Colors.white,
-                              //                       borderRadius:
-                              //                           BorderRadius.all(
-                              //                               Radius.circular(16)),
-                              //                       border: Border.all(
-                              //                           width: 1,
-                              //                           color: _iDkategori ==
-                              //                                   e['id']
-                              //                               ? Color(0xff2BA33A)
-                              //                               : Color(0xffC8CBD0))),
-                              //                   child: customText(
-                              //                       context,
-                              //                       _iDkategori == e['id']
-                              //                           ? Color(0xff2BA33A)
-                              //                           : Color(0xff545C6C),
-                              //                       e['deskripsi'],
-                              //                       TextAlign.left,
-                              //                       14,
-                              //                       FontWeight.w400),
-                              //                 ),
-                              //               ),
-                              //             )))
-                              //         .values
-                              //         .toList(),
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 10),
-                                    decoration: BoxDecoration(
-                                        color: Color(0xffEBFFEB),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(16)),
-                                        border: Border.all(
-                                            width: 1,
-                                            color: Color(0xff2BA33A))),
-                                    child: customText(
-                                        context,
-                                        Color(0xff2BA33A),
-                                        convertIdKategori(widget.kategoriID),
-                                        TextAlign.left,
-                                        14,
-                                        FontWeight.w400),
-                                  ),
-                                )
-                              ])),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24.0),
-                      child: Container(
-                        child: GridView.count(
-                            physics: NeverScrollableScrollPhysics(),
-                            childAspectRatio: 1 / 1,
-                            crossAxisCount: 2,
-                            shrinkWrap: true,
-                            primary: true,
-                            children: _listProduk
-                                .map((e) => e["foto"] == null || e["foto"] == ""
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          Navigator.pushNamed(
-                                              context, "/detailsProduk",
-                                              arguments: e);
-                                        },
-                                        child: Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              height: 100,
-                                              color: themeProvider.bgColor,
-                                            ),
-                                            Icon(Icons.image_outlined,
-                                                size: 24,
-                                                color: Colors.grey.shade500)
-                                          ],
-                                        ),
-                                      )
-                                    : GestureDetector(
-                                        onTap: () {
-                                          Navigator.pushNamed(
-                                              context, "/detailsProduk",
-                                              arguments: e);
-                                        },
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Center(
-                                              child: Container(
-                                                height: 120,
-                                                width: 152,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          bottomLeft: Radius
-                                                              .circular(4),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  4),
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  8),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  8)),
-                                                  child: Image.network(
-                                                    _storageUrl + e["foto"],
-                                                    height: 120,
-                                                    width: 152,
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8.0, top: 8),
-                                              child: customText(
-                                                  context,
-                                                  Color(0xff242F43),
-                                                  e['nama'].toString().length >
-                                                          15
-                                                      ? e['nama']
-                                                              .toString()
-                                                              .substring(
-                                                                  0, 15) +
-                                                          ". . ."
-                                                      : e['nama'],
-                                                  TextAlign.left,
-                                                  14,
-                                                  FontWeight.w400),
-                                            )
-                                          ],
-                                        ),
-                                      ))
-                                .toList()),
+                    Container(
+                      width: MediaQuery.of(context).size.width - 200,
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      child: ListView(
+                        controller: _scrollController,
+                        children: _listProduk
+                            .map((e) => Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 16, right: 16),
+                                      child: cardProduk4(context, e),
+                                    ),
+                                    Container(
+                                      height: 8,
+                                    ),
+                                    Container(
+                                      color: Colors.black12,
+                                      height: 1,
+                                    ),
+                                    Container(
+                                      height: 8,
+                                    ),
+                                  ],
+                                ))
+                            .toList(),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -996,7 +883,7 @@ class _ProdukPageState extends State<ProdukPage> {
             ],
           ),
         ),
-        _loading ? loadingWidget(context) : Container()
+        // _loading ? loadingWidget(context) : Container()
       ],
     );
   }

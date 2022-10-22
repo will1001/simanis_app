@@ -124,11 +124,11 @@ class _HomeLayoutPageState extends State<HomeLayoutPage> {
           //   index: _selectedIndex,
           //   children: _widgetOptions,
           // ),
-            body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
+          body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
           bottomNavigationBar: BottomNavigationBar(
-            selectedIconTheme: IconThemeData(color: Color(0xff2BA33A)),
+            selectedIconTheme: IconThemeData(color: Colors.blue.shade700),
             unselectedItemColor: Color(0xffB2B5BC),
-            selectedItemColor: Color(0xff2BA33A),
+            selectedItemColor: Colors.blue.shade700,
             type: BottomNavigationBarType.fixed,
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(

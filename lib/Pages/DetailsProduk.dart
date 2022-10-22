@@ -14,6 +14,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../Widget/ListDataIKMWidget.dart';
+
 class DetailsProduk extends StatefulWidget {
   const DetailsProduk({Key? key}) : super(key: key);
 
@@ -38,6 +40,10 @@ class _DetailsProdukState extends State<DetailsProduk> {
         _listcabangIndustri.addAll(jsonDecode(res.body));
       });
     });
+  }
+
+  nullHandler(var field) {
+    return (field == null ? "" : field.toString());
   }
 
   @override
@@ -74,12 +80,36 @@ class _DetailsProdukState extends State<DetailsProduk> {
     ThemeProvider themeProvider =
         Provider.of<ThemeProvider>(context, listen: false);
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: SvgPicture.asset(
+              "assets/images/backArrow.svg",
+            ),
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Icon(
+              Icons.more_vert,
+              color: Colors.black,
+            ),
+          )
+        ],
+      ),
       body: ListView(
         children: [
           Container(
             // color: Colors.amber,
             width: MediaQuery.of(context).size.width,
-            height: 200,
+            height: 300,
             child: Stack(
               alignment: Alignment.topLeft,
               children: [
@@ -89,9 +119,9 @@ class _DetailsProdukState extends State<DetailsProduk> {
                     Image.network(
                       args != null
                           ? args['foto'] == null
-                              ? ""
+                              ? "https://www.btklsby.go.id/images/placeholder/basic.png"
                               : _storageUrl + args['foto']
-                          : "https://www.signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png",
+                          : "https://www.btklsby.go.id/images/placeholder/basic.png",
                       fit: BoxFit.fill,
                       width: MediaQuery.of(context).size.width,
                       height: 200,
@@ -102,137 +132,74 @@ class _DetailsProdukState extends State<DetailsProduk> {
                         ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 16, top: 16),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Color(0xff848A95), shape: BoxShape.circle),
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.chevron_left,
-                          color: Colors.white,
-                        )),
-                  ),
-                )
               ],
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 24, right: 16),
-            child: Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width - 132,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      customText(
-                          context,
-                          Color(0xff242F43),
-                          args == null ? "" : args['nama'],
-                          TextAlign.left,
-                          20,
-                          FontWeight.w500),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: customText(
-                            context,
-                            Color(0xff545C6C),
-                            args == null ? "" : args['nama_perusahaan'],
-                            TextAlign.left,
-                            14,
-                            FontWeight.w400),
-                      ),
-                    ],
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/detailsUMKM",
-                        arguments: args);
-                  },
-                  child: Container(
-                    width: 100,
-                    child: customText(context, Color(0xff2BA33A),
-                        'Profil Usaha', TextAlign.left, 14, FontWeight.w500),
-                  ),
-                )
-              ],
+            child: Container(
+              width: MediaQuery.of(context).size.width - 32,
+              child: customText(
+                  context,
+                  Color(0xff242F43),
+                  args == null ? "" : nullHandler(args['nama']),
+                  TextAlign.left,
+                  24,
+                  FontWeight.bold),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 24),
-            child: customText(context, Color(0xff000000), 'Deskripsi',
-                TextAlign.left, 14, FontWeight.w500),
+            padding: const EdgeInsets.only(left: 16, top: 10, right: 16),
+            child: Container(
+              width: MediaQuery.of(context).size.width - 32,
+              child: customText(
+                  context,
+                  Colors.blue,
+                  args == null ? "" : "Rp. " + nullHandler(args['harga']),
+                  TextAlign.left,
+                  16,
+                  FontWeight.w300),
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 8),
-            child: customText(
-                context,
-                Color(0xff727986),
-                args == null ? "" : args['deskripsi'],
-                TextAlign.left,
-                14,
-                FontWeight.w400),
+            padding: const EdgeInsets.only(left: 16, top: 24, right: 16),
+            child: Container(
+              width: MediaQuery.of(context).size.width - 32,
+              child: customText(context, Color(0xff242F43), "Detail Produk",
+                  TextAlign.left, 18, FontWeight.w500),
+            ),
+          ),
+          ListDataIKMWidget(context, "Nama Usaha",
+              args == null ? "" : nullHandler(args['nama_usaha'])),
+          ListDataIKMWidget(context, "Kab/Kota",
+              args == null ? "" : nullHandler(args['kabupaten'])),
+          ListDataIKMWidget(context, "Kecamatan",
+              args == null ? "" : nullHandler(args['kecamatan'])),
+          ListDataIKMWidget(context, "Kelurahan/Desa",
+              args == null ? "" : nullHandler(args['kelurahan'])),
+          Padding(
+            padding: const EdgeInsets.only(left: 16, top: 24, right: 16),
+            child: Container(
+              width: MediaQuery.of(context).size.width - 32,
+              child: customText(context, Color(0xff242F43), "Deskripsi",
+                  TextAlign.left, 18, FontWeight.w500),
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16, top: 24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                customText(context, Color(0xff000000), 'Produk', TextAlign.left,
-                    14, FontWeight.w500),
-                customText(context, Color(0xff2BA33A), 'Lihat Lainnya',
-                    TextAlign.left, 12, FontWeight.w400)
-              ],
+            padding: const EdgeInsets.only(left: 16, top: 24, right: 16),
+            child: Container(
+              width: MediaQuery.of(context).size.width - 32,
+              child: customText(
+                  context,
+                  Color(0xff9CA3AF),
+                  args == null ? "" : nullHandler(args['deskripsi']),
+                  TextAlign.left,
+                  16,
+                  FontWeight.w500),
             ),
           ),
           Container(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-            width: MediaQuery.of(context).size.width,
-            height: 100,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                args == null ? "" : args['foto'] ?? "",
-                args == null ? "" : args['foto'] ?? "",
-                args == null ? "" : args['foto'] ?? ""
-              ]
-                  .map((e) => Container(
-                        padding: const EdgeInsets.only(right: 16),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(4),
-                              topRight: Radius.circular(4)),
-                          child: Image.network(
-                            _storageUrl + e,
-                            fit: BoxFit.fill,
-                            width: 120,
-                            height: 80,
-                          ),
-                        ),
-                      ))
-                  .toList(),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: button2(
-                "Hubungi UMKM", Color(0xff2BA33A), Colors.white, context,
-                () async {
-              String url =
-                  "https://api.whatsapp.com/send?phone=62${args == null ? "" : args['nomor_telpon'].toString().substring(1, args == null ? "" : args['nomor_telpon'].length)}";
-              if (await canLaunch(url)) {
-                await launch(url);
-                return;
-              }
-              print("couldn't launch $url");
-            }),
+            height: 50,
           )
         ],
       ),

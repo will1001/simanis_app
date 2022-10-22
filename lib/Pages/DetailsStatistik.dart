@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Widget/CardUMKM3.dart';
+
 class DetailsStatistik extends StatefulWidget {
   final String title;
   final String graphqlQuery;
@@ -141,9 +143,24 @@ class _DetailsStatistikState extends State<DetailsStatistik> {
                     : ListView(
                         controller: _scrollController,
                         children: _listBadanUsaha.map<Widget>((e) {
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
-                            child: cardUMKM2(context, e),
+                          return Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 16, right: 16),
+                                child: cardUMKM3(context, e),
+                              ),
+                              Container(
+                                height: 8,
+                              ),
+                              Container(
+                                color: Colors.black12,
+                                height: 1,
+                              ),
+                              Container(
+                                height: 8,
+                              ),
+                            ],
                           );
                         }).toList(),
                       ),

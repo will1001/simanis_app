@@ -51,11 +51,11 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        color: Color(0xff2BA33A),
+        color: Colors.blue.shade700,
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.green,
+          primarySwatch: Colors.blue,
         ),
         initialRoute: '/splashScreen',
         routes: <String, WidgetBuilder>{
