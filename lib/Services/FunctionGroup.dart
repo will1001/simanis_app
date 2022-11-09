@@ -11,14 +11,14 @@ class FunctionGroup {
   CRUD crud = new CRUD();
   saveCache(Map<String, String?> data) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? email = prefs.getString('email');
+    // String? email = prefs.getString('email');
 
-    if (email == "" || email == null) {
-      await prefs.setString('email', data["email"] ?? "");
-      await prefs.setString('nama', data["nama"] ?? "");
-      await prefs.setString('idUser', data["idUser"] ?? "");
+    // if (email == "" || email == null) {
+      await prefs.setString('idUser', data["id"] ?? "");
+      await prefs.setString('namaUser', data["nama"] ?? "");
+      await prefs.setString('fotoUser', data["foto"] ?? "");
      
-    }
+    // }
   }
 
   checkLoginCache() async {

@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(milliseconds: 1500), () async {
-      Navigator.pushNamed(context, '/homeLayoutPage');
+      Navigator.pushNamed(context, '/login');
     });
     getGpsPermission();
   }

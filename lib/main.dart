@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
           '/produkPageMember': (BuildContext context) => ProdukPageMember(),
           '/pengajuanPembiayaanPage': (BuildContext context) =>
               PengajuanPembiayaanPage(),
-          '/homePage': (BuildContext context) => HomePage(loginCache: 0),
+          '/homePage': (BuildContext context) => HomePage(),
           '/ListDataIKM': (BuildContext context) => ListDataIKM(loginCache: 1),
           '/homeLayoutPage': (BuildContext context) => HomeLayoutPage(),
           '/statistikPage': (BuildContext context) =>

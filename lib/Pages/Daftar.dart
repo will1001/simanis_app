@@ -52,6 +52,8 @@ class _DaftarState extends State<Daftar> {
   bool _passwordError = false;
   bool _confirmPasswordError = false;
   bool _obscPass = true;
+  String _errMsg = "";
+  Color _colorMsg = Colors.red;
 
   String _message = "";
   String _provinsi = "52";
@@ -111,6 +113,16 @@ class _DaftarState extends State<Daftar> {
     ''';
   }
 
+  registerMutation(nik, pass, nama, no_hp) {
+    return '''
+      mutation{
+        register(nik:"${nik}",password:"${pass}",nama_direktur:"${nama}",no_hp:"${no_hp}"){
+          messagges
+        }
+      }
+    ''';
+  }
+
   getAlamat() async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -148,11 +160,10 @@ class _DaftarState extends State<Daftar> {
   @override
   void initState() {
     super.initState();
-    crud.getData("/provinsi/52/kabupaten").then((data) {
-      setState(() {
-        _listKabupaten = jsonDecode(data.body);
-      });
-    });
+    _nikController.addListener(() {});
+    _passwordController.addListener(() {});
+    _namaPemilikController.addListener(() {});
+    _nomorTelponController.addListener(() {});
   }
 
   @override
@@ -231,8 +242,85 @@ class _DaftarState extends State<Daftar> {
               _obscPass = !_obscPass;
             });
           }),
-          button2(
-              "Registter", Colors.blue.shade600, Colors.white, context, () {}),
+          Padding(padding: const EdgeInsets.only(bottom: 26)),
+          _errMsg != ""
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 250,
+                        child: Text(
+                          _errMsg,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: _colorMsg),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              : Container(),
+          Mutation(
+            options: MutationOptions(
+              document: gql(registerMutation(
+                  _nikController.text,
+                  _passwordController.text,
+                  _namaPemilikController.text,
+                  _nomorTelponController.text)),
+
+              // or do something with the result.data on completion
+              onCompleted: (dynamic resultData) {
+                // print(_nikController.text == "");
+                if (_nikController.text == "" &&
+                    _passwordController.text == "" &&
+                    _namaPemilikController.text == "" &&
+                    _nomorTelponController.text == "") {
+                  setState(() {
+                    _errMsg = "Mohon Lengkapi Semua Data";
+                  });
+                }
+                // String msg = resultData['login']['messagges'];
+
+                // if (msg != "success") {
+                //   setState(() {
+                //     _errMsg = msg;
+                //   });
+                // } else {
+                //   // Map<String, String> data = {
+                //   //   "id": resultData['login']['id'],
+                //   //   "nama": resultData['login']['nama'],
+                //   //   "foto": resultData['login']['foto'],
+                //   // };
+                //   // functionGroup.saveCache(data);
+                //   // Navigator.pushNamed(context, '/homeLayoutPage');
+                //   setState(() {
+                //     _errMsg = "Pendaftaran Berhasil, Silahkan Login";
+                //     _colorMsg = Colors.green;
+                //   });
+                // }
+                FocusManager.instance.primaryFocus?.unfocus();
+
+                // print(data);
+              },
+              onError: (err) {
+                print(err);
+              },
+            ),
+            builder: (RunMutation runMutation, QueryResult? result) {
+              return button2(
+                  "Register",
+                  Colors.blue.shade600,
+                  Colors.white,
+                  context,
+                  () => runMutation({
+                        'nik': _nikController.text,
+                        'password': _passwordController.text,
+                        'nama_direktur': _namaPemilikController.text,
+                        'no_hp': _nomorTelponController.text,
+                      }));
+            },
+          ),
           Padding(
             padding: const EdgeInsets.only(top: 24.0, bottom: 45),
             child: GestureDetector(

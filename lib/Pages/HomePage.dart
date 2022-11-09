@@ -12,6 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 
@@ -34,9 +35,7 @@ query{
 ''';
 
 class HomePage extends StatefulWidget {
-  final int loginCache;
-
-  const HomePage({Key? key, required this.loginCache}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -46,6 +45,9 @@ class _HomePageState extends State<HomePage> {
   String _storageUrl = "https://simanis.ntbprov.go.id/storage/";
   late DateTime currentBackPressTime;
   int _current = 0;
+  String _idUser = "";
+  String _namaUser = "";
+  String _fotoUser = "";
   CarouselController buttonCarouselController = CarouselController();
   List _slideShowImg = [
     'assets/images/slideshow1.jpg',
@@ -123,11 +125,20 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    if (widget.loginCache == 0) {
-      getProduk(10);
-      // getBadanUsaha(10);
-      getCma();
-    }
+    getLoginCache();
+  }
+
+  getLoginCache() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? id = prefs.getString('idUser');
+    String? nama = prefs.getString('namaUser');
+    String? foto = prefs.getString('fotoUser');
+
+    setState(() {
+      _idUser = id!;
+      _namaUser = nama!;
+      _fotoUser = foto!;
+    });
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -309,7 +320,7 @@ class _HomePageState extends State<HomePage> {
                           backgroundImage: NetworkImage(
                               "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"),
                         ),
-                        customText(context, Colors.black, "Wili Rahmat M",
+                        customText(context, Colors.black, _namaUser,
                             TextAlign.left, 24, FontWeight.bold),
                         customText(context, Colors.black38, "Akun Member IKM",
                             TextAlign.left, 18, FontWeight.normal),
@@ -423,7 +434,7 @@ class _HomePageState extends State<HomePage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            customText(context, Colors.black, "Wili Rahmat M",
+                            customText(context, Colors.black, _namaUser,
                                 TextAlign.left, 18, FontWeight.normal),
                             customText(
                                 context,

@@ -28,7 +28,7 @@ class _HomeLayoutPageState extends State<HomeLayoutPage> {
   late DateTime currentBackPressTime;
   int _selectedIndex = 0;
   FunctionGroup functionGroup = new FunctionGroup();
-  bool _loginCache = false;
+  // bool _loginCache = true;
   bool _loop = true;
   SystemProvider? systemProvider;
   void _onItemTapped(int index) {
@@ -61,19 +61,19 @@ class _HomeLayoutPageState extends State<HomeLayoutPage> {
     return Future.value(true);
   }
 
-  changeStateLoginCache(bool _status) {
-    setState(() {
-      _loginCache = _status;
-    });
-  }
+  // changeStateLoginCache(bool _status) {
+  //   setState(() {
+  //     _loginCache = _status;
+  //   });
+  // }
 
   @override
   void initState() {
     super.initState();
 
-    functionGroup.checkLoginCache().then((loginStatus) {
-      changeStateLoginCache(loginStatus);
-    });
+    // functionGroup.checkLoginCache().then((loginStatus) {
+    //   changeStateLoginCache(loginStatus);
+    // });
   }
 
   @override
@@ -90,28 +90,28 @@ class _HomeLayoutPageState extends State<HomeLayoutPage> {
     //  print('args123');
     // print(args == null ? 'null' : (args as Map)["kategori"] ?? 'null');
     List<Widget> _widgetOptions = <Widget>[
-      HomePage(
-        loginCache: _selectedIndex,
-      ),
+      HomePage(),
+      HomePage(),
+      HomePage(),
       // ListDataIKMHomeMenu(),
-      ListDataIKM(
-        loginCache: _selectedIndex,
-      ),
+      // ListDataIKM(
+      //   loginCache: _selectedIndex,
+      // ),
       // HomePage(),
-      StatistikPage(
-        loginCache: _selectedIndex,
-      ),
-      ProdukPage(
-        loginCache: _selectedIndex,
-        kategoriID: args == null ? 'null' : (args as Map)["kategori"] ?? 'null',
-        aksesLink:
-            args == null ? 'home2' : (args as Map)["aksesLink"] ?? 'home2',
-      ),
-      _loginCache
-          ? MemberPage(
-              dataUsers: args == null ? {} : (args as Map)["dataUsers"] ?? {},
-            )
-          : Login()
+      // StatistikPage(
+      //   loginCache: _selectedIndex,
+      // ),
+      // ProdukPage(
+      //   loginCache: _selectedIndex,
+      //   kategoriID: args == null ? 'null' : (args as Map)["kategori"] ?? 'null',
+      //   aksesLink:
+      //       args == null ? 'home2' : (args as Map)["aksesLink"] ?? 'home2',
+      // ),
+      // _loginCache
+      //     ? MemberPage(
+      //         dataUsers: args == null ? {} : (args as Map)["dataUsers"] ?? {},
+      //       )
+      //     : Login()
       // LoginMemberLayout(
       //   loginCache: _loginCache,
       //   dataUsers: args == null ? {} : (args as Map)["dataUsers"] ?? {},
@@ -151,10 +151,10 @@ class _HomeLayoutPageState extends State<HomeLayoutPage> {
               //   icon: Icon(Icons.assessment),
               //   label: 'Statistik',
               // ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profil',
-              ),
+              // BottomNavigationBarItem(
+              //   icon: Icon(Icons.person),
+              //   label: 'Profil',
+              // ),
             ],
             currentIndex: _selectedIndex,
             onTap: _onItemTapped,
