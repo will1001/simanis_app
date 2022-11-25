@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Widget/Button2.dart';
 import '../Widget/CustomText.dart';
@@ -14,15 +16,45 @@ class PengaturanAkun extends StatefulWidget {
 
 class _PengaturanAkunState extends State<PengaturanAkun> {
   bool _passError = false;
-  bool _obscPass = true;
+  bool _obscPass1 = true;
+  bool _obscPass2 = true;
+  bool _obscPass3 = true;
+  String _idUser = "";
+  String _errMsg = "";
+  Color _errMsgColor = Colors.red;
 
-  TextEditingController passwordTextEditingController =
+  TextEditingController oldPasswordTextEditingController =
+      new TextEditingController();
+  TextEditingController newPasswordTextEditingController =
+      new TextEditingController();
+  TextEditingController newPasswordConfirmTextEditingController =
       new TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    oldPasswordTextEditingController.addListener(() {});
+    newPasswordTextEditingController.addListener(() {});
+    newPasswordConfirmTextEditingController.addListener(() {});
+    getIdUser();
   }
+
+  getIdUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? idUser = prefs.getString('idUser');
+
+    setState(() {
+      _idUser = idUser!;
+    });
+  }
+
+  String updatePasswordMutation = r'''
+      mutation($id: String!,$old_password: String!,$new_password: String!){
+        UpdatePassword(id:$id,old_password:$old_password,new_password:$new_password){
+          messagges
+        }
+      }
+    ''';
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +73,8 @@ class _PengaturanAkunState extends State<PengaturanAkun> {
           ),
         ),
         centerTitle: true,
-        title: customText(context, Colors.black, "Notifikasi", TextAlign.left,
-            18, FontWeight.normal),
+        title: customText(context, Colors.black, "Update Password",
+            TextAlign.left, 18, FontWeight.normal),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -59,10 +91,10 @@ class _PengaturanAkunState extends State<PengaturanAkun> {
                   "Password",
                   "Password Tidak Boleh Kosong",
                   _passError,
-                  passwordTextEditingController,
-                  _obscPass, () {
+                  oldPasswordTextEditingController,
+                  _obscPass1, () {
                 setState(() {
-                  _obscPass = !_obscPass;
+                  _obscPass1 = !_obscPass1;
                 });
               }),
             ),
@@ -77,10 +109,10 @@ class _PengaturanAkunState extends State<PengaturanAkun> {
                   "Password",
                   "Password Tidak Boleh Kosong",
                   _passError,
-                  passwordTextEditingController,
-                  _obscPass, () {
+                  newPasswordTextEditingController,
+                  _obscPass2, () {
                 setState(() {
-                  _obscPass = !_obscPass;
+                  _obscPass2 = !_obscPass2;
                 });
               }),
             ),
@@ -95,15 +127,73 @@ class _PengaturanAkunState extends State<PengaturanAkun> {
                   "Password",
                   "Password Tidak Boleh Kosong",
                   _passError,
-                  passwordTextEditingController,
-                  _obscPass, () {
+                  newPasswordConfirmTextEditingController,
+                  _obscPass3, () {
                 setState(() {
-                  _obscPass = !_obscPass;
+                  _obscPass3 = !_obscPass3;
                 });
               }),
             ),
-            button2("Update Password", Colors.blue.shade600,
-                Color.fromARGB(255, 255, 255, 255), context, () {}),
+            _errMsg != ""
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 250,
+                          child: Text(
+                            _errMsg,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: _errMsgColor),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                : Container(),
+            Mutation(
+              options: MutationOptions(
+                document: gql(updatePasswordMutation),
+
+                // or do something with the result.data on completion
+                onCompleted: (dynamic resultData) {
+                  // print(updatePasswordMutation(
+                  //     _idUser,
+                  //     oldPasswordTextEditingController.text,
+                  //     newPasswordTextEditingController.text));
+                  if (newPasswordTextEditingController.text !=
+                      newPasswordConfirmTextEditingController.text) {
+                    setState(() {
+                      _errMsg = "Password Tidak Sama";
+                    });
+                  } else {
+                    String msg = resultData['UpdatePassword']['messagges'];
+                    setState(() {
+                      _errMsg = msg;
+                      _errMsgColor = msg == "Password Berhasil Dirubah"
+                          ? Colors.green
+                          : Colors.red;
+                    });
+                  }
+
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
+                onError: (err) {
+                  print(err);
+                },
+              ),
+              builder: (RunMutation runMutation, QueryResult? result) {
+                return button2("Update Password", Colors.blue.shade600,
+                    Color.fromARGB(255, 255, 255, 255), context, () {
+                  runMutation(<String, dynamic>{
+                    'id': _idUser,
+                    'old_password': oldPasswordTextEditingController.text,
+                    'new_password': newPasswordTextEditingController.text,
+                  });
+                });
+              },
+            ),
           ],
         ),
       ),

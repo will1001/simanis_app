@@ -318,7 +318,7 @@ class _HomePageState extends State<HomePage> {
                         CircleAvatar(
                           radius: 50,
                           backgroundImage: NetworkImage(
-                              "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"),
+                              'https://simanis.ntbprov.go.id' + _fotoUser),
                         ),
                         customText(context, Colors.black, _namaUser,
                             TextAlign.left, 24, FontWeight.bold),
@@ -378,15 +378,26 @@ class _HomePageState extends State<HomePage> {
                       TextAlign.left, 18, FontWeight.normal),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: customText(context, Colors.black, "Pengajuan Produk",
-                    TextAlign.left, 18, FontWeight.normal),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/pengajuanProduk');
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: customText(context, Colors.black, "Pengajuan Produk",
+                      TextAlign.left, 18, FontWeight.normal),
+                ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: customText(context, Colors.black, "Surat Rekomendasi",
-                    TextAlign.left, 18, FontWeight.normal),
+              GestureDetector(
+                onTap: (){
+                  Navigator.pushNamed(context, '/Surat');
+
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: customText(context, Colors.black, "Surat Rekomendasi",
+                      TextAlign.left, 18, FontWeight.normal),
+                ),
               ),
               Container(
                 color: Colors.black12,
@@ -404,8 +415,16 @@ class _HomePageState extends State<HomePage> {
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: customText(context, Colors.red, "Logout", TextAlign.left,
-                    18, FontWeight.normal),
+                child: GestureDetector(
+                  onTap: () async {
+                    SharedPreferences preferences =
+                        await SharedPreferences.getInstance();
+                    await preferences.clear();
+                    Navigator.pushNamed(context, '/login');
+                  },
+                  child: customText(context, Colors.red, "Logout",
+                      TextAlign.left, 18, FontWeight.normal),
+                ),
               ),
             ],
           ),
@@ -428,7 +447,7 @@ class _HomePageState extends State<HomePage> {
                           child: CircleAvatar(
                             radius: 30,
                             backgroundImage: NetworkImage(
-                                "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"),
+                                'https://simanis.ntbprov.go.id' + _fotoUser),
                           ),
                         ),
                         Column(

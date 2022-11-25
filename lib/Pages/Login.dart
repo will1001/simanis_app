@@ -33,18 +33,15 @@ class _LoginState extends State<Login> {
   bool _obscPass = true;
   bool _nikError = false;
   bool _passError = false;
-  String _nik = "";
-  String _pass = "";
   String _errMsg = "";
   FunctionGroup functionGroup = new FunctionGroup();
   TextEditingController nikTextEditingController = new TextEditingController();
   TextEditingController passwordTextEditingController =
       new TextEditingController();
 
-  loginMutation(nik, pass) {
-    return '''
-      mutation{
-        login(nik:"${nik}",password:"${pass}"){
+  String loginMutation = r'''
+      mutation($nik: String!,$password: String!){
+        login(nik:$nik,password:$password){
           id
           nama
           foto
@@ -52,21 +49,12 @@ class _LoginState extends State<Login> {
         }
       }
     ''';
-  }
 
   @override
   void initState() {
     super.initState();
-    nikTextEditingController.addListener(() {
-      setState(() {
-        _nik = nikTextEditingController.text;
-      });
-    });
-    passwordTextEditingController.addListener(() {
-      setState(() {
-        _nik = passwordTextEditingController.text;
-      });
-    });
+    nikTextEditingController.addListener(() {});
+    passwordTextEditingController.addListener(() {});
     setState(() {
       // emailTextEditingController.text = "wilirahmatm@gmail.com";
       // passwordTextEditingController.text = "wili123";
@@ -172,8 +160,7 @@ class _LoginState extends State<Login> {
                   : Container(),
               Mutation(
                 options: MutationOptions(
-                  document: gql(loginMutation(nikTextEditingController.text,
-                      passwordTextEditingController.text)),
+                  document: gql(loginMutation),
 
                   // or do something with the result.data on completion
                   onCompleted: (dynamic resultData) {
@@ -201,15 +188,15 @@ class _LoginState extends State<Login> {
                   },
                 ),
                 builder: (RunMutation runMutation, QueryResult? result) {
-                  return button2(
-                      "Login",
-                      Colors.blue.shade600,
-                      Color.fromARGB(255, 255, 255, 255),
-                      context,
-                      () => runMutation({
-                            'nik': nikTextEditingController.text,
-                            'password': passwordTextEditingController.text,
-                          }));
+                  return button2("Login", Colors.blue.shade600,
+                      Color.fromARGB(255, 255, 255, 255), context, () {
+                    // print(nikTextEditingController.text);
+                    // print(passwordTextEditingController.text);
+                    runMutation(<String, dynamic>{
+                      'nik': nikTextEditingController.text,
+                      'password': passwordTextEditingController.text,
+                    });
+                  });
                 },
               ),
               Column(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -17,7 +18,13 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(milliseconds: 1500), () async {
-      Navigator.pushNamed(context, '/login');
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? idUser = prefs.getString('idUser');
+      if (idUser == "" || idUser == null) {
+        Navigator.pushNamed(context, '/login');
+      } else {
+        Navigator.pushNamed(context, '/homeLayoutPage');
+      }
     });
     getGpsPermission();
   }

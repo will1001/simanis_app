@@ -10,6 +10,7 @@ Widget inputFormStyle4(
     bool errorSign,
     TextEditingController _controller,
     bool _obscureText,
+    var _initialValue,
     var _iconPressed) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,

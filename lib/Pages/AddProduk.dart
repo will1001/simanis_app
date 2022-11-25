@@ -130,6 +130,7 @@ class _AddProdukState extends State<AddProduk> {
                           _namaProdukError,
                           _namaProdukController,
                           false,
+                          null,
                           () {}),
                     ),
                     customText(context, Color(0xff242F43), "Deskripsi Produk",
@@ -145,6 +146,7 @@ class _AddProdukState extends State<AddProduk> {
                           _deskripsiProdukError,
                           _deskripsiProdukController,
                           false,
+                          null,
                           () {}),
                     ),
                     Padding(

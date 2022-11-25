@@ -1,10 +1,12 @@
 import 'package:appsimanis/Pages/AddProduk.dart';
 import 'package:appsimanis/Pages/Daftar.dart';
+import 'package:appsimanis/Pages/DataTambahan.dart';
 import 'package:appsimanis/Pages/DetailUsaha.dart';
 import 'package:appsimanis/Pages/DetailsDataUMKM.dart';
 import 'package:appsimanis/Pages/DetailsProduk.dart';
 import 'package:appsimanis/Pages/DetailsStatistik.dart';
 import 'package:appsimanis/Pages/FormPengajuanDana.dart';
+import 'package:appsimanis/Pages/FormPengajuanProduk.dart';
 import 'package:appsimanis/Pages/HomeLayoutPage.dart';
 import 'package:appsimanis/Pages/HomePage.dart';
 import 'package:appsimanis/Pages/InformasiIKM.dart';
@@ -13,11 +15,13 @@ import 'package:appsimanis/Pages/ListDataIKM.dart';
 import 'package:appsimanis/Pages/Login.dart';
 import 'package:appsimanis/Pages/MemberPage.dart';
 import 'package:appsimanis/Pages/PengajuanDana.dart';
+import 'package:appsimanis/Pages/PengajuanProduk.dart';
 import 'package:appsimanis/Pages/ProdukPage.dart';
 import 'package:appsimanis/Pages/ProdukPageMember.dart';
 import 'package:appsimanis/Pages/ProfilPage.dart';
 import 'package:appsimanis/Pages/SplashScreen.dart';
 import 'package:appsimanis/Pages/StatistikPage.dart';
+import 'package:appsimanis/Pages/Surat.dart';
 import 'package:appsimanis/Provider/ThemeProvider.dart';
 import 'package:flutter/material.dart';
 // import 'package:dio/dio.dart';
@@ -79,8 +83,7 @@ class MyApp extends StatelessWidget {
           '/homePage': (BuildContext context) => HomePage(),
           '/ListDataIKM': (BuildContext context) => ListDataIKM(loginCache: 1),
           '/homeLayoutPage': (BuildContext context) => HomeLayoutPage(),
-          '/statistikPage': (BuildContext context) =>
-              StatistikPage(loginCache: 2),
+          '/statistikPage': (BuildContext context) => StatistikPage(),
           '/detailsUMKM': (BuildContext context) => DetailsDataUMKM(),
           '/detailsProduk': (BuildContext context) => DetailsProduk(),
           '/AddProduk': (BuildContext context) => AddProduk(),
@@ -89,8 +92,13 @@ class MyApp extends StatelessWidget {
           '/detailUsaha': (BuildContext context) => DetailUsaha(),
           '/pengaturanAkun': (BuildContext context) => PengaturanAkun(),
           '/kartu': (BuildContext context) => Kartu(),
+          '/Surat': (BuildContext context) => Surat(),
           '/pengajuanDana': (BuildContext context) => PengajuanDana(),
           '/formPengajuanDana': (BuildContext context) => FormPengajuanDana(),
+          '/dataTambahan': (BuildContext context) => DataTambahan(),
+          '/pengajuanProduk': (BuildContext context) => PengajuanProduk(),
+          '/formPengajuanProduk': (BuildContext context) =>
+              FormPengajuanProduk(),
         },
       ),
     );

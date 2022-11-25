@@ -113,15 +113,13 @@ class _DaftarState extends State<Daftar> {
     ''';
   }
 
-  registerMutation(nik, pass, nama, no_hp) {
-    return '''
-      mutation{
-        register(nik:"${nik}",password:"${pass}",nama_direktur:"${nama}",no_hp:"${no_hp}"){
+  String registerMutation = r'''
+      mutation($nik: String!,$password: String!,$nama_direktur: String!,$no_hp: String!){
+        register(nik:$nik,password:$password,nama_direktur:$nama_direktur,no_hp:$no_hp){
           messagges
         }
       }
     ''';
-  }
 
   getAlamat() async {
     Position position = await Geolocator.getCurrentPosition(
@@ -193,7 +191,7 @@ class _DaftarState extends State<Daftar> {
                 TextAlign.left, 17, FontWeight.normal),
           ),
           inputFormStyle4(null, "Nomor Induk Kependudukan", "text", "NIK",
-              "NIK Tidak Boleh Kosong", false, _nikController, false, () {}),
+              "NIK Tidak Boleh Kosong", false, _nikController, false,null, () {}),
           Padding(
             padding: const EdgeInsets.only(top: 16, bottom: 8),
             child: customText(context, themeProvider.fontColor1, "Nama",
@@ -208,6 +206,7 @@ class _DaftarState extends State<Daftar> {
               false,
               _namaPemilikController,
               false,
+                          null,
               () {}),
           Padding(
             padding: const EdgeInsets.only(top: 16, bottom: 8),
@@ -223,6 +222,7 @@ class _DaftarState extends State<Daftar> {
               false,
               _passwordController,
               false,
+                          null,
               () {}),
           Padding(
             padding: const EdgeInsets.only(top: 16, bottom: 8),
@@ -263,11 +263,7 @@ class _DaftarState extends State<Daftar> {
               : Container(),
           Mutation(
             options: MutationOptions(
-              document: gql(registerMutation(
-                  _nikController.text,
-                  _passwordController.text,
-                  _namaPemilikController.text,
-                  _nomorTelponController.text)),
+              document: gql(registerMutation),
 
               // or do something with the result.data on completion
               onCompleted: (dynamic resultData) {
@@ -280,25 +276,12 @@ class _DaftarState extends State<Daftar> {
                     _errMsg = "Mohon Lengkapi Semua Data";
                   });
                 }
-                // String msg = resultData['login']['messagges'];
 
-                // if (msg != "success") {
-                //   setState(() {
-                //     _errMsg = msg;
-                //   });
-                // } else {
-                //   // Map<String, String> data = {
-                //   //   "id": resultData['login']['id'],
-                //   //   "nama": resultData['login']['nama'],
-                //   //   "foto": resultData['login']['foto'],
-                //   // };
-                //   // functionGroup.saveCache(data);
-                //   // Navigator.pushNamed(context, '/homeLayoutPage');
-                //   setState(() {
-                //     _errMsg = "Pendaftaran Berhasil, Silahkan Login";
-                //     _colorMsg = Colors.green;
-                //   });
-                // }
+                setState(() {
+                  _errMsg = "Pendaftaran Berhasil Silahkan Login";
+                  _colorMsg = Colors.green;
+                });
+
                 FocusManager.instance.primaryFocus?.unfocus();
 
                 // print(data);
@@ -309,16 +292,14 @@ class _DaftarState extends State<Daftar> {
             ),
             builder: (RunMutation runMutation, QueryResult? result) {
               return button2(
-                  "Register",
-                  Colors.blue.shade600,
-                  Colors.white,
-                  context,
-                  () => runMutation({
-                        'nik': _nikController.text,
-                        'password': _passwordController.text,
-                        'nama_direktur': _namaPemilikController.text,
-                        'no_hp': _nomorTelponController.text,
-                      }));
+                  "Register", Colors.blue.shade600, Colors.white, context, () {
+                runMutation(<String, dynamic>{
+                  'nik': _nikController.text,
+                  'password': _passwordController.text,
+                  'nama_direktur': _namaPemilikController.text,
+                  'no_hp': _nomorTelponController.text,
+                });
+              });
             },
           ),
           Padding(

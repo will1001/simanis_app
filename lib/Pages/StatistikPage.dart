@@ -34,9 +34,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/gestures.dart';
 
 class StatistikPage extends StatefulWidget {
-  final int loginCache;
-
-  const StatistikPage({Key? key, required this.loginCache}) : super(key: key);
+  const StatistikPage({Key? key}) : super(key: key);
 
   @override
   _StatistikPageState createState() => _StatistikPageState();
@@ -46,7 +44,6 @@ class _StatistikPageState extends State<StatistikPage> {
   String _storageUrl = 'https://simanis.ntbprov.go.id/storage/';
   late DateTime currentBackPressTime;
   FunctionGroup functionGroup = new FunctionGroup();
-  bool _loginCache = false;
   List _listBadanUsaha = [];
   List _listProduk = [];
   List _listBadanUsahaNotNullFoto = [];
@@ -1012,9 +1009,9 @@ class _StatistikPageState extends State<StatistikPage> {
     // TODO: implement initState
     super.initState();
 
-    if (widget.loginCache == 2) {
-      if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-    }
+    // if (widget.loginCache == 2) {
+    //   if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    // }
   }
 
   @override

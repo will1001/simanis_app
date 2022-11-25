@@ -92,7 +92,8 @@ class _HomeLayoutPageState extends State<HomeLayoutPage> {
     List<Widget> _widgetOptions = <Widget>[
       HomePage(),
       HomePage(),
-      HomePage(),
+      StatistikPage(),
+      StatistikPage(),
       // ListDataIKMHomeMenu(),
       // ListDataIKM(
       //   loginCache: _selectedIndex,

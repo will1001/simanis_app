@@ -46,6 +46,8 @@ dependencies:
   carousel_slider: ^4.0.0
   google_fonts: ^2.1.0
   share: ^2.0.4
+  vm_service: ^8.1.0
+  file_picker: ^5.2.2
 
 dev_dependencies:
   flutter_test:
@@ -132,6 +134,10 @@ flutter:
     - assets/images/sert_test_report.svg
     - assets/images/formal.svg
     - assets/images/informal.svg
+    - assets/images/tas_icon.svg
+    - assets/images/delete_icon.svg
+    - assets/images/file.svg
+    - assets/images/surat.PNG
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
