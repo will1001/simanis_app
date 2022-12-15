@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'HomePage.dart';
+import 'ListDataProduk.dart';
 
 class HomeLayoutPage extends StatefulWidget {
   const HomeLayoutPage({Key? key}) : super(key: key);
@@ -91,9 +92,11 @@ class _HomeLayoutPageState extends State<HomeLayoutPage> {
     // print(args == null ? 'null' : (args as Map)["kategori"] ?? 'null');
     List<Widget> _widgetOptions = <Widget>[
       HomePage(),
-      HomePage(),
+      ListDataIKM(
+        kategoriID: args == null ? '' : (args as Map)["kategori"] ?? ''
+      ),
       StatistikPage(),
-      StatistikPage(),
+      ListDataProduk(),
       // ListDataIKMHomeMenu(),
       // ListDataIKM(
       //   loginCache: _selectedIndex,

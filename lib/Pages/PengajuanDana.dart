@@ -79,14 +79,16 @@ class _PengajuanDanaState extends State<PengajuanDana> {
           ),
         ),
         centerTitle: true,
-        title: customText(context, Colors.black, "Pengajuan Dana",
+        title: customText(context, Colors.black, "Pembiayan Usaha",
             TextAlign.left, 18, FontWeight.normal),
       ),
       backgroundColor: Color(0xffE5E5E5),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Query(
-          options: QueryOptions(document: gql(getPengajuanDanaQuery())),
+          options: QueryOptions(
+              document: gql(getPengajuanDanaQuery()),
+              fetchPolicy: FetchPolicy.networkOnly),
           builder: (QueryResult result, {fetchMore, refetch}) {
             if (result.hasException) {
               return Text(result.exception.toString());
@@ -184,27 +186,11 @@ class _PengajuanDanaState extends State<PengajuanDana> {
                                   final _dataList =
                                       result.data?['DataPendukung'];
 
-                                  // print(result.data?['DataPendukung'].length !=
-                                  //     0);
-
                                   if (result.data?['DataPendukung'].length !=
                                       0) {
                                     return Container();
                                   }
-                                  return Container(
-                                    padding: const EdgeInsets.only(top: 16),
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(16)),
-                                    child: button2(
-                                        "Lengkapi Data",
-                                        Colors.blue.shade600,
-                                        Color.fromARGB(255, 255, 255, 255),
-                                        context, () {
-                                      Navigator.pushNamed(
-                                          context, '/dataTambahan');
-                                    }),
-                                  );
+                                  return Container();
                                 },
                               )
                             : Container()

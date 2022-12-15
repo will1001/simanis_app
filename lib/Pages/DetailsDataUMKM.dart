@@ -30,17 +30,17 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
-  String _storageUrl = "https://simanis.ntbprov.go.id/storage/";
+  String _storageUrl = "https://simanis.ntbprov.go.id";
   // var _kGooglePlex;
   String _foto = "Alat";
   List _slideFoto = [];
 
-  // initialMap()async{
-  //   CameraPosition _kGooglePlex = CameraPosition(
-  //   target: LatLng(37.42796133580664, -122.085749655962),
-  //   zoom: 14.4746,
-  // );
-  // }
+  initialMap() async {
+    CameraPosition _kGooglePlex = CameraPosition(
+      target: LatLng(37.42796133580664, -122.085749655962),
+      zoom: 14.4746,
+    );
+  }
 
   nullHandler(var field) {
     return (field == null ? "" : field.toString());
@@ -78,7 +78,6 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       var arguments = (ModalRoute.of(context)!.settings.arguments as Map);
-      print(arguments);
       setState(() {
         args = arguments;
         arguments == null
@@ -87,12 +86,12 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
                 'https://www.signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png'
               ]
             : _slideFoto = [
-                arguments['foto_ruang_produksi'] == null
+                arguments['produk'] == null
                     ? 'https://www.signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png'
-                    : _storageUrl + arguments['foto_alat_produksi'],
-                arguments['foto_alat_produksi'] == null
+                    : _storageUrl + arguments['produk'],
+                arguments['produk'] == null
                     ? 'https://www.signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png'
-                    : _storageUrl + arguments['foto_ruang_produksi']
+                    : _storageUrl + arguments['produk']
               ];
       });
       if (arguments["lat"] != null && arguments["lng"] != null) {
@@ -260,12 +259,12 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
               context, "NIK", args == null ? "" : nullHandler(args['nik'])),
           ListDataIKMWidget(context, "Nama",
               args == null ? "" : nullHandler(args['nama_direktur'])),
-          ListDataIKMWidget(
-              context, "Kab/Kota", args == null ? "" : nullHandler(args[''])),
-          ListDataIKMWidget(
-              context, "Kecamatan", args == null ? "" : nullHandler(args[''])),
+          ListDataIKMWidget(context, "Kab/Kota",
+              args == null ? "" : nullHandler(args['kabupaten'])),
+          ListDataIKMWidget(context, "Kecamatan",
+              args == null ? "" : nullHandler(args['kecamatan'])),
           ListDataIKMWidget(context, "Kelurahan/Desa",
-              args == null ? "" : nullHandler(args[''])),
+              args == null ? "" : nullHandler(args['kelurahan'])),
           ListDataIKMWidget(context, "Alamat Lengkap",
               args == null ? "" : nullHandler(args['alamat_lengkap'])),
           ListDataIKMWidget(
@@ -276,8 +275,8 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
               args == null ? "" : nullHandler(args['bentuk_usaha'])),
           ListDataIKMWidget(context, "Tahun Berdiri",
               args == null ? "" : nullHandler(args['tahun_berdiri'])),
-          ListDataIKMWidget(context, "Legalitas Usaha",
-              args == null ? "" : nullHandler(args[''])),
+          // ListDataIKMWidget(context, "Legalitas Usaha",
+          //     args == null ? "" : nullHandler(args[''])),
           ListDataIKMWidget(context, "NIB Tahun",
               args == null ? "" : nullHandler(args['nib_tahun'])),
           ListDataIKMWidget(
@@ -286,8 +285,8 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
               args == null
                   ? ""
                   : nullHandler(args['nomor_sertifikat_halal_tahun'])),
-          ListDataIKMWidget(
-              context, "SNI Tahun", args == null ? "" : nullHandler(args[''])),
+          ListDataIKMWidget(context, "SNI Tahun",
+              args == null ? "" : nullHandler(args['sni_tahun'])),
           ListDataIKMWidget(context, "Jenis Usaha",
               args == null ? "" : nullHandler(args['jenis_usaha'])),
           ListDataIKMWidget(context, "Cabang Industri",
@@ -317,9 +316,13 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
                   ? ""
                   : nullHandler(args['kapasitas_produksi_perbulan'])),
           ListDataIKMWidget(context, "Nilai Produksi",
-              args == null ? "" : nullHandler(args[''])),
-          ListDataIKMWidget(context, "Nilai Bahan Baku",
-              args == null ? "" : nullHandler(args[''])),
+              args == null ? "" : nullHandler(args['nilai_produksi_perbulan'])),
+          ListDataIKMWidget(
+              context,
+              "Nilai Bahan Baku",
+              args == null
+                  ? ""
+                  : nullHandler(args['nilai_bahan_baku_perbulan'])),
           ListDataIKMWidget(context, "Latitude",
               args == null ? "" : nullHandler(args['lat'])),
           ListDataIKMWidget(context, "Longitude",

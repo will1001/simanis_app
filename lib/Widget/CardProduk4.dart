@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'CustomText.dart';
 
-String _storageUrl = "https://simanis.ntbprov.go.id/storage/";
+String _storageUrl = "https://simanis.ntbprov.go.id";
 
 Widget cardProduk4(BuildContext context, var e) {
   return GestureDetector(
@@ -78,20 +79,23 @@ Widget cardProduk4(BuildContext context, var e) {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          color: Color(0xff727986),
-                          size: 20,
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: SvgPicture.asset(
+                            "assets/images/tas_icon.svg",
+                          ),
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width - 230,
                           child: customText(
                               context,
                               Color(0xff727986),
-                              e['deskripsi'].toString().length > 30
-                                  ? e['deskripsi'].toString().substring(0, 30) +
+                              e['nama_usaha'].toString().length > 30
+                                  ? e['nama_usaha']
+                                          .toString()
+                                          .substring(0, 30) +
                                       ' . . .'
-                                  : e['deskripsi'] ?? "",
+                                  : e['nama_usaha'] ?? "",
                               TextAlign.left,
                               14,
                               FontWeight.w400),

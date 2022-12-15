@@ -220,7 +220,7 @@ class _DaftarState extends State<Daftar> {
               "No HP",
               "No HP Tidak Boleh Kosong",
               false,
-              _passwordController,
+              _nomorTelponController,
               false,
                           null,
               () {}),
@@ -236,7 +236,7 @@ class _DaftarState extends State<Daftar> {
               "Password",
               "No HP Tidak Boleh Kosong",
               false,
-              _nomorTelponController,
+              _passwordController,
               _obscPass, () {
             setState(() {
               _obscPass = !_obscPass;

@@ -41,6 +41,11 @@ class _PengajuanProdukState extends State<PengajuanProduk> {
           id
           id_badan_usaha
           nama
+          harga
+          nama_usaha
+          nama_direktur
+          no_hp
+          alamat_lengkap
           deskripsi
           foto
           sertifikat_halal
@@ -88,7 +93,9 @@ class _PengajuanProdukState extends State<PengajuanProduk> {
       body: Padding(
         padding: const EdgeInsets.all(0.0),
         child: Query(
-          options: QueryOptions(document: gql(getPengajuanProdukQuery())),
+          options: QueryOptions(
+              document: gql(getPengajuanProdukQuery()),
+              fetchPolicy: FetchPolicy.networkOnly),
           builder: (QueryResult result, {fetchMore, refetch}) {
             if (result.hasException) {
               return Text(result.exception.toString());
@@ -99,75 +106,88 @@ class _PengajuanProdukState extends State<PengajuanProduk> {
             final _PengajuanProdukList = result.data?['Produk'];
             return ListView(
               children: _PengajuanProdukList.map<Widget>((e) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: Container(
-                    // padding: const EdgeInsets.all(16),
-                    // decoration: BoxDecoration(
-                    //   color: Colors.white,
-                    //   borderRadius: BorderRadius.circular(16.0),
-                    // ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            // crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Image.network(
-                                'https://simanis.ntbprov.go.id' + e['foto'],
-                                height: 100,
-                                width: 100,
-                                fit: BoxFit.cover,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  customText(
-                                      context,
-                                      Colors.black,
-                                      "Miniatur Kayu - Becak",
-                                      TextAlign.left,
-                                      18,
-                                      FontWeight.bold),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 32.0),
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 8.0),
-                                          child: SvgPicture.asset(
-                                            "assets/images/tas_icon.svg",
-                                          ),
-                                        ),
-                                        customText(
-                                            context,
-                                            Colors.black38,
-                                            "Mataram Craft Shop",
-                                            TextAlign.left,
-                                            14,
-                                            FontWeight.normal)
-                                      ],
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/detailsProduk',
+                        arguments: e);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: Container(
+                      // padding: const EdgeInsets.all(16),
+                      // decoration: BoxDecoration(
+                      //   color: Colors.white,
+                      //   borderRadius: BorderRadius.circular(16.0),
+                      // ),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              // crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 28.0),
+                                  child: Image.network(
+                                    'https://simanis.ntbprov.go.id' + e['foto'],
+                                    height: 80,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    customText(context, Colors.black, e['nama'],
+                                        TextAlign.left, 18, FontWeight.bold),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: customText(
+                                          context,
+                                          Colors.blue.shade300,
+                                          "Rp. " + e['harga'],
+                                          TextAlign.left,
+                                          18,
+                                          FontWeight.normal),
                                     ),
-                                  )
-                                ],
-                              ),
-                              // SvgPicture.asset(
-                              //   "assets/images/delete_icon.svg",
-                              // )
-                            ],
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 22.0),
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 8.0),
+                                            child: SvgPicture.asset(
+                                              "assets/images/tas_icon.svg",
+                                            ),
+                                          ),
+                                          customText(
+                                              context,
+                                              Colors.black38,
+                                              e['nama_usaha'],
+                                              TextAlign.left,
+                                              14,
+                                              FontWeight.normal)
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                // SvgPicture.asset(
+                                //   "assets/images/delete_icon.svg",
+                                // )
+                              ],
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Container(
-                            height: 1,
-                            color: Colors.grey,
-                          ),
-                        )
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Container(
+                              height: 1,
+                              color: Colors.grey,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 );

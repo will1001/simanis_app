@@ -31,6 +31,7 @@ class _FormPengajuanProdukState extends State<FormPengajuanProduk> {
   String _deskripsi = "";
 
   bool _namaProdukError = false;
+  bool _hargaProdukError = false;
   bool _sertifikat_halal_noError = false;
   bool _sertifikat_halal_thnError = false;
   bool _sertifikat_haki_noError = false;
@@ -38,6 +39,8 @@ class _FormPengajuanProdukState extends State<FormPengajuanProduk> {
   bool _sertifikat_sni_noError = false;
   bool _sertifikat_sni_thnError = false;
   TextEditingController namaProdukTextEditingController =
+      new TextEditingController();
+  TextEditingController hargaProdukTextEditingController =
       new TextEditingController();
   TextEditingController sertifikat_halal_noTextEditingController =
       new TextEditingController();
@@ -57,8 +60,8 @@ class _FormPengajuanProdukState extends State<FormPengajuanProduk> {
   CRUD crud = new CRUD();
 
   String PengajuanProdukMutation = r'''
-      mutation($user_id: String!,$sertifikat_halal_thn: String!,$sertifikat_halal_no: String!,$sertifikat_haki_thn: String!,$sertifikat_haki_no: String!,$sertifikat_sni_thn: String!,$sertifikat_sni_no: String!,$nama: String!,$deskripsi: String!,$foto: Upload!){
-        PengajuanProduk(user_id: $user_id,sertifikat_halal_no: $sertifikat_halal_no,sertifikat_halal_thn: $sertifikat_halal_thn,sertifikat_haki_no: $sertifikat_haki_no,sertifikat_haki_thn: $sertifikat_haki_thn,sertifikat_sni_no: $sertifikat_sni_no,sertifikat_sni_thn: $sertifikat_sni_thn,nama: $nama,deskripsi: $deskripsi,foto: $foto){
+      mutation($user_id: String!,$nama: String!,$harga: String!,$deskripsi: String!,$foto: Upload!){
+        PengajuanProduk(user_id: $user_id,nama: $nama,harga: $harga,deskripsi: $deskripsi,foto: $foto){
           messagges
         }
       }
@@ -153,165 +156,180 @@ class _FormPengajuanProdukState extends State<FormPengajuanProduk> {
                   false,
                   () {}),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    customText(context, Colors.black, "No Sertifikat HAKI",
-                        TextAlign.left, 14, FontWeight.w400),
-                    Container(
-                      width: 150,
-                      height: 100,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 4.0, bottom: 24),
-                        child: inputFormStyle3(
-                            null,
-                            "No Sertifikat HAKI",
-                            "text",
-                            "No Sertifikat HAKI",
-                            "No Sertifikat HAKI Tidak Boleh Kosong",
-                            _sertifikat_halal_noError,
-                            sertifikat_halal_noTextEditingController,
-                            false,
-                            () {}),
-                      ),
-                    )
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    customText(context, Colors.black, "Tahun", TextAlign.left,
-                        14, FontWeight.w400),
-                    Container(
-                      width: 150,
-                      height: 100,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 4.0, bottom: 24),
-                        child: inputFormStyle3(
-                            null,
-                            "Tahun",
-                            "text",
-                            "Tahun",
-                            "Tahun Tidak Boleh Kosong",
-                            _sertifikat_halal_thnError,
-                            sertifikat_halal_thnTextEditingController,
-                            false,
-                            () {}),
-                      ),
-                    )
-                  ],
-                ),
-              ],
+            customText(context, Colors.black, "Harga Produk", TextAlign.left, 14,
+                FontWeight.w400),
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0, bottom: 24),
+              child: inputFormStyle3(
+                  null,
+                  "Harga Produk",
+                  "text",
+                  "Harga Produk",
+                  "Harga Produk Tidak Boleh Kosong",
+                  _hargaProdukError,
+                  hargaProdukTextEditingController,
+                  false,
+                  () {}),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    customText(context, Colors.black, "No Sertifikat HAKI",
-                        TextAlign.left, 14, FontWeight.w400),
-                    Container(
-                      width: 150,
-                      height: 100,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 4.0, bottom: 24),
-                        child: inputFormStyle3(
-                            null,
-                            "No Sertifikat HAKI",
-                            "text",
-                            "No Sertifikat HAKI",
-                            "No Sertifikat HAKI Tidak Boleh Kosong",
-                            _sertifikat_haki_noError,
-                            sertifikat_haki_noTextEditingController,
-                            false,
-                            () {}),
-                      ),
-                    )
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    customText(context, Colors.black, "Tahun", TextAlign.left,
-                        14, FontWeight.w400),
-                    Container(
-                      width: 150,
-                      height: 100,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 4.0, bottom: 24),
-                        child: inputFormStyle3(
-                            null,
-                            "Tahun",
-                            "text",
-                            "Tahun",
-                            "Tahun Tidak Boleh Kosong",
-                            _sertifikat_haki_thnError,
-                            sertifikat_haki_thnTextEditingController,
-                            false,
-                            () {}),
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    customText(context, Colors.black, "No Sertifikat HAKI",
-                        TextAlign.left, 14, FontWeight.w400),
-                    Container(
-                      width: 150,
-                      height: 100,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 4.0, bottom: 24),
-                        child: inputFormStyle3(
-                            null,
-                            "No Sertifikat HAKI",
-                            "text",
-                            "No Sertifikat HAKI",
-                            "No Sertifikat HAKI Tidak Boleh Kosong",
-                            _sertifikat_sni_noError,
-                            sertifikat_sni_noTextEditingController,
-                            false,
-                            () {}),
-                      ),
-                    )
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    customText(context, Colors.black, "Tahun", TextAlign.left,
-                        14, FontWeight.w400),
-                    Container(
-                      width: 150,
-                      height: 100,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 4.0, bottom: 24),
-                        child: inputFormStyle3(
-                            null,
-                            "Tahun",
-                            "text",
-                            "Tahun",
-                            "Tahun Tidak Boleh Kosong",
-                            _sertifikat_sni_thnError,
-                            sertifikat_sni_thnTextEditingController,
-                            false,
-                            () {}),
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         customText(context, Colors.black, "No Sertifikat HAKI",
+            //             TextAlign.left, 14, FontWeight.w400),
+            //         Container(
+            //           width: 150,
+            //           height: 100,
+            //           child: Padding(
+            //             padding: const EdgeInsets.only(top: 4.0, bottom: 24),
+            //             child: inputFormStyle3(
+            //                 null,
+            //                 "No Sertifikat HAKI",
+            //                 "text",
+            //                 "No Sertifikat HAKI",
+            //                 "No Sertifikat HAKI Tidak Boleh Kosong",
+            //                 _sertifikat_halal_noError,
+            //                 sertifikat_halal_noTextEditingController,
+            //                 false,
+            //                 () {}),
+            //           ),
+            //         )
+            //       ],
+            //     ),
+            //     Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         customText(context, Colors.black, "Tahun", TextAlign.left,
+            //             14, FontWeight.w400),
+            //         Container(
+            //           width: 150,
+            //           height: 100,
+            //           child: Padding(
+            //             padding: const EdgeInsets.only(top: 4.0, bottom: 24),
+            //             child: inputFormStyle3(
+            //                 null,
+            //                 "Tahun",
+            //                 "text",
+            //                 "Tahun",
+            //                 "Tahun Tidak Boleh Kosong",
+            //                 _sertifikat_halal_thnError,
+            //                 sertifikat_halal_thnTextEditingController,
+            //                 false,
+            //                 () {}),
+            //           ),
+            //         )
+            //       ],
+            //     ),
+            //   ],
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         customText(context, Colors.black, "No Sertifikat HAKI",
+            //             TextAlign.left, 14, FontWeight.w400),
+            //         Container(
+            //           width: 150,
+            //           height: 100,
+            //           child: Padding(
+            //             padding: const EdgeInsets.only(top: 4.0, bottom: 24),
+            //             child: inputFormStyle3(
+            //                 null,
+            //                 "No Sertifikat HAKI",
+            //                 "text",
+            //                 "No Sertifikat HAKI",
+            //                 "No Sertifikat HAKI Tidak Boleh Kosong",
+            //                 _sertifikat_haki_noError,
+            //                 sertifikat_haki_noTextEditingController,
+            //                 false,
+            //                 () {}),
+            //           ),
+            //         )
+            //       ],
+            //     ),
+            //     Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         customText(context, Colors.black, "Tahun", TextAlign.left,
+            //             14, FontWeight.w400),
+            //         Container(
+            //           width: 150,
+            //           height: 100,
+            //           child: Padding(
+            //             padding: const EdgeInsets.only(top: 4.0, bottom: 24),
+            //             child: inputFormStyle3(
+            //                 null,
+            //                 "Tahun",
+            //                 "text",
+            //                 "Tahun",
+            //                 "Tahun Tidak Boleh Kosong",
+            //                 _sertifikat_haki_thnError,
+            //                 sertifikat_haki_thnTextEditingController,
+            //                 false,
+            //                 () {}),
+            //           ),
+            //         )
+            //       ],
+            //     ),
+            //   ],
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         customText(context, Colors.black, "No Sertifikat HAKI",
+            //             TextAlign.left, 14, FontWeight.w400),
+            //         Container(
+            //           width: 150,
+            //           height: 100,
+            //           child: Padding(
+            //             padding: const EdgeInsets.only(top: 4.0, bottom: 24),
+            //             child: inputFormStyle3(
+            //                 null,
+            //                 "No Sertifikat HAKI",
+            //                 "text",
+            //                 "No Sertifikat HAKI",
+            //                 "No Sertifikat HAKI Tidak Boleh Kosong",
+            //                 _sertifikat_sni_noError,
+            //                 sertifikat_sni_noTextEditingController,
+            //                 false,
+            //                 () {}),
+            //           ),
+            //         )
+            //       ],
+            //     ),
+            //     Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         customText(context, Colors.black, "Tahun", TextAlign.left,
+            //             14, FontWeight.w400),
+            //         Container(
+            //           width: 150,
+            //           height: 100,
+            //           child: Padding(
+            //             padding: const EdgeInsets.only(top: 4.0, bottom: 24),
+            //             child: inputFormStyle3(
+            //                 null,
+            //                 "Tahun",
+            //                 "text",
+            //                 "Tahun",
+            //                 "Tahun Tidak Boleh Kosong",
+            //                 _sertifikat_sni_thnError,
+            //                 sertifikat_sni_thnTextEditingController,
+            //                 false,
+            //                 () {}),
+            //           ),
+            //         )
+            //       ],
+            //     ),
+            //   ],
+            // ),
             customText(context, Colors.black, "Deskripsi Produk",
                 TextAlign.left, 14, FontWeight.w400),
             Container(
@@ -357,6 +375,13 @@ class _FormPengajuanProdukState extends State<FormPengajuanProduk> {
                           context,
                           Colors.black,
                           "Click here to Upload a file",
+                          TextAlign.left,
+                          14,
+                          FontWeight.w400),
+                      customText(
+                          context,
+                          Colors.black,
+                          "UPLOAD FILE (MAX : 5MB)",
                           TextAlign.left,
                           14,
                           FontWeight.w400),
@@ -412,19 +437,8 @@ class _FormPengajuanProdukState extends State<FormPengajuanProduk> {
                   );
                   runMutation(<String, dynamic>{
                     "user_id": _idUser,
-                    "sertifikat_halal_no":
-                        sertifikat_halal_noTextEditingController.text,
-                    "sertifikat_halal_thn":
-                        sertifikat_halal_thnTextEditingController.text,
-                    "sertifikat_haki_no":
-                        sertifikat_haki_noTextEditingController.text,
-                    "sertifikat_haki_thn":
-                        sertifikat_haki_thnTextEditingController.text,
-                    "sertifikat_sni_no":
-                        sertifikat_sni_noTextEditingController.text,
-                    "sertifikat_sni_thn":
-                        sertifikat_sni_thnTextEditingController.text,
                     "nama": namaProdukTextEditingController.text,
+                    "harga": hargaProdukTextEditingController.text,
                     "deskripsi": _deskripsi,
                     "foto": multipartFile,
                   });

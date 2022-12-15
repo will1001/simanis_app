@@ -1350,13 +1350,44 @@ class _StatistikPageState extends State<StatistikPage> {
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial id
+                                    nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -1388,13 +1419,16 @@ class _StatistikPageState extends State<StatistikPage> {
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -1423,16 +1457,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                 'icon': "ikm_baru.svg",
                                 'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"baru"){
+                                  badanUsaha(page:1,filter:"2",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -1461,16 +1498,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                 'icon': "industri_kecil.svg",
                                 'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"kecil"){
+                                  badanUsaha(page:1,filter:"3",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -1499,16 +1539,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                 'icon': "industri_menengah.svg",
                                 'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"menengah"){
+                                  badanUsaha(page:1,filter:"4",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -1537,16 +1580,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                 'icon': "industri_besar.svg",
                                 'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"besar"){
+                                  badanUsaha(page:1,filter:"5",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -1575,16 +1621,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                 'icon': "sert_halal.svg",
                                 'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"halal"){
+                                  badanUsaha(page:1,filter:"6",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"halal"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -1613,16 +1662,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                 'icon': "sert_haki.svg",
                                 'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"haki"){
+                                  badanUsaha(page:1,filter:"7",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"haki"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -1651,16 +1703,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                 'icon': "sert_sni.svg",
                                 'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"sni"){
+                                  badanUsaha(page:1,filter:"8",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"sni"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -1689,16 +1744,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                 'icon': "sert_test_report.svg",
                                 'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"test_report"){
+                                  badanUsaha(page:1,filter:"9",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"test_report"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -1727,16 +1785,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                 'icon': "formal.svg",
                                 'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"formal"){
+                                  badanUsaha(page:1,filter:"10",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -1765,16 +1826,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                 'icon': "informal.svg",
                                 'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"informal"){
+                                  badanUsaha(page:1,filter:"11",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -2026,13 +2090,16 @@ class _StatistikPageState extends State<StatistikPage> {
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -2063,13 +2130,16 @@ class _StatistikPageState extends State<StatistikPage> {
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -2097,16 +2167,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                         'value': _ikmBaru,
                                         'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"baru"){
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -2134,16 +2207,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                         'value': _industriKecil,
                                         'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"kecil"){
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -2171,16 +2247,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                         'value': _industriMenengah,
                                         'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"menengah"){
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -2208,16 +2287,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                         'value': _industriBesar,
                                         'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"besar"){
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -2248,13 +2330,16 @@ class _StatistikPageState extends State<StatistikPage> {
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"halal"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -2285,13 +2370,16 @@ class _StatistikPageState extends State<StatistikPage> {
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"haki"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -2322,13 +2410,16 @@ class _StatistikPageState extends State<StatistikPage> {
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"sni"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -2359,13 +2450,16 @@ class _StatistikPageState extends State<StatistikPage> {
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"test_report"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -2393,16 +2487,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                         'value': _ikmFormal,
                                         'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"formal"){
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun
@@ -2430,16 +2527,19 @@ class _StatistikPageState extends State<StatistikPage> {
                                         'value': _ikmInformal,
                                         'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",jenis_industri:"informal"){
+                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
                                     nama_direktur
                                     alamat_lengkap
                                     no_hp
                                     nama_usaha
                                     bentuk_usaha
                                     tahun_berdiri
-                                    formal_informal
                                     nib_tahun
                                     nomor_sertifikat_halal_tahun
                                     sertifikat_merek_tahun

@@ -131,7 +131,7 @@ class _NotificationListState extends State<NotificationList> {
                                 customText(
                                     context,
                                     Colors.black,
-                                    "Pengajuan Dana",
+                                    "Pembiayan Usaha",
                                     TextAlign.left,
                                     18,
                                     FontWeight.bold),

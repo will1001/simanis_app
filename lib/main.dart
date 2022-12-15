@@ -12,6 +12,7 @@ import 'package:appsimanis/Pages/HomePage.dart';
 import 'package:appsimanis/Pages/InformasiIKM.dart';
 import 'package:appsimanis/Pages/LinkPerbankan.dart';
 import 'package:appsimanis/Pages/ListDataIKM.dart';
+import 'package:appsimanis/Pages/ListDataProduk.dart';
 import 'package:appsimanis/Pages/Login.dart';
 import 'package:appsimanis/Pages/MemberPage.dart';
 import 'package:appsimanis/Pages/PengajuanDana.dart';
@@ -81,7 +82,10 @@ class MyApp extends StatelessWidget {
           '/pengajuanPembiayaanPage': (BuildContext context) =>
               PengajuanPembiayaanPage(),
           '/homePage': (BuildContext context) => HomePage(),
-          '/ListDataIKM': (BuildContext context) => ListDataIKM(loginCache: 1),
+          '/ListDataIKM': (BuildContext context) => ListDataIKM(
+                kategoriID: "",
+              ),
+          '/ListDataProduk': (BuildContext context) => ListDataProduk(),
           '/homeLayoutPage': (BuildContext context) => HomeLayoutPage(),
           '/statistikPage': (BuildContext context) => StatistikPage(),
           '/detailsUMKM': (BuildContext context) => DetailsDataUMKM(),

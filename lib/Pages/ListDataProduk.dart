@@ -4,6 +4,7 @@ import 'package:appsimanis/Provider/ThemeProvider.dart';
 import 'package:appsimanis/Widget/Button1.dart';
 import 'package:appsimanis/Widget/Button2.dart';
 import 'package:appsimanis/Widget/ButtonGradient1.dart';
+import 'package:appsimanis/Widget/CardProduk4.dart';
 import 'package:appsimanis/Widget/CardUMKM.dart';
 import 'package:appsimanis/Widget/CardUMKM2.dart';
 import 'package:appsimanis/Widget/CardUMKM3.dart';
@@ -30,21 +31,20 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../main.dart';
 
-class ListDataIKM extends StatefulWidget {
-  final String kategoriID;
-  const ListDataIKM({Key? key, required this.kategoriID}) : super(key: key);
+class ListDataProduk extends StatefulWidget {
+  const ListDataProduk({Key? key}) : super(key: key);
 
   @override
-  _ListDataIKMState createState() => _ListDataIKMState();
+  _ListDataProdukState createState() => _ListDataProdukState();
 }
 
-class _ListDataIKMState extends State<ListDataIKM> {
+class _ListDataProdukState extends State<ListDataProduk> {
   final globalKey = GlobalKey<ScaffoldState>();
   ScrollController _scrollController = new ScrollController();
 
   int _subMenu = 0;
   int _page = 1;
-  List _listBadanUsaha = [];
+  List _listProduk = [];
   String? _kabupaten = null;
   String? _kecamatan = null;
   String? _kelurahan = null;
@@ -55,7 +55,7 @@ class _ListDataIKMState extends State<ListDataIKM> {
   List _listKecamatan = [];
   List _listKelurahan = [];
   List _listCabangIndustri = [];
-  List _listBadanUsahaNotNullFoto = [];
+  List _listProdukNotNullFoto = [];
   bool _loading = true;
   bool _filterTerdekat = false;
   bool _openFilterMenu = false;
@@ -68,7 +68,6 @@ class _ListDataIKMState extends State<ListDataIKM> {
     'Sudah diverifikasi',
     'Belum diverifikasi'
   ];
-
   String _statusVerifikasi = 'null';
 
   var HeadTable = [
@@ -78,22 +77,10 @@ class _ListDataIKMState extends State<ListDataIKM> {
     'Alamat',
     'Status Verifikasi',
     'Nomor Telepon',
-    // 'male',
-    // 'famale',
-    // 'nilai_investasi',
-    // 'kapasitas_produksi',
   ];
 
-  getBadanUsahaFilter(
-      String? _idCabangIndustri,
-      String status,
-      String? idKabupaten,
-      String? idKecamatan,
-      String? idKelurahan,
-      int _limit) {
-    // print(
-    //     '/badan_usaha/filter/$status/$_limit/$_idCabangIndustri/$idKabupaten/$idKecamatan/$idKelurahan');
-
+  getProdukFilter(String? _idCabangIndustri, String status, String? idKabupaten,
+      String? idKecamatan, String? idKelurahan, int _limit) {
     switch (_idCabangIndustri) {
       case 'Semua':
         _idCabangIndustri = null;
@@ -119,16 +106,15 @@ class _ListDataIKMState extends State<ListDataIKM> {
       default:
     }
     if (_limit == 10) {
-      _listBadanUsaha.clear();
+      _listProduk.clear();
     }
     crud
         .getData(
             '/badan_usaha/filter/$status/$_limit/$_idCabangIndustri/$idKabupaten/$idKecamatan/$idKelurahan')
         .then((res) {
-      // print(jsonDecode(res.body));
       setState(() {
-        _listBadanUsaha.addAll(jsonDecode(res.body));
-        _listBadanUsahaNotNullFoto = jsonDecode(res.body)
+        _listProduk.addAll(jsonDecode(res.body));
+        _listProdukNotNullFoto = jsonDecode(res.body)
             .where((el) =>
                 el['foto_alat_produksi'] != null &&
                 el['foto_alat_produksi'] != '')
@@ -139,51 +125,37 @@ class _ListDataIKMState extends State<ListDataIKM> {
     });
   }
 
-  cariBadanUsaha(String keyword) {
+  cariProduk(String keyword) {
     // print('keyword');
     // print(keyword);
     if (keyword == '') {
-      getBadanUsaha();
+      getProduk();
     } else {
-      getBadanUsaha();
+      getProduk();
     }
   }
 
-  // getBadanUsaha() {
-  //   crud.getData('/badan_usaha/limit/10').then((res) {
-  //     // print(jsonDecode(res.body));
-  //     setState(() {
-  //       _listBadanUsaha = jsonDecode(res.body);
-  //       _loading = false;
-  //     });
-  //   });
-  // }
-
-  getBadanUsaha() {
-    setState(() {
-      _cabangIndustri = widget.kategoriID;
-    });
-    var data = client.value
-        .query(QueryOptions(document: gql(getBadanUsahaQuery(_page))));
+  getProduk() {
+    var data =
+        client.value.query(QueryOptions(document: gql(getProdukQuery(_page))));
     data.then((value) => {
-          print(value.data?['badanUsaha']),
+          print(value),
           setState(() {
-            _listBadanUsaha.addAll(value.data?['badanUsaha']);
+            _listProduk.addAll(value.data?['Produk']);
             _loading = false;
           })
         });
   }
 
-  getBadanUsahaTerdekat(int _limit, String lat, String lng, String status) {
-    // print('/badan_usaha/terdekat/$lat/$lng/$_limit/$status');
+  getProdukTerdekat(int _limit, String lat, String lng, String status) {
     crud.getData('/badan_usaha/terdekat/$lat/$lng/$_limit/$status').then((res) {
       setState(() {
         if (_limit == 10) {
-          _listBadanUsaha.clear();
+          _listProduk.clear();
           _loading = true;
         }
-        _listBadanUsaha.addAll(jsonDecode(res.body));
-        _listBadanUsahaNotNullFoto = jsonDecode(res.body)
+        _listProduk.addAll(jsonDecode(res.body));
+        _listProdukNotNullFoto = jsonDecode(res.body)
             .where((el) =>
                 el['foto_alat_produksi'] != null &&
                 el['foto_alat_produksi'] != '')
@@ -199,7 +171,6 @@ class _ListDataIKMState extends State<ListDataIKM> {
       setState(() {
         _listCabangIndustri.add({'id': '212', 'nama': 'Semua'});
         _listCabangIndustri.addAll(jsonDecode(res.body));
-        // getBadanUsaha(10, _statusVerifikasi);
       });
     });
   }
@@ -212,45 +183,26 @@ class _ListDataIKMState extends State<ListDataIKM> {
       _lng = position.longitude.toString();
       _filterTerdekat = true;
     });
-    getBadanUsahaTerdekat(_limit, position.latitude.toString(),
+    getProdukTerdekat(_limit, position.latitude.toString(),
         position.longitude.toString(), _statusVerifikasi);
   }
 
-  getBadanUsahaQuery(int page) {
+  getProdukQuery(int page) {
     return '''
      query{
-                                  badanUsaha(page:${page},kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}"){
-                                    id
-                                    nik
-                                    kabupaten
-                                    kecamatan
-                                    kelurahan
-                                    produk
-                                    nama_direktur
-                                    alamat_lengkap
-                                    no_hp
-                                    nama_usaha
-                                    bentuk_usaha
-                                    tahun_berdiri
-                                    nib_tahun
-                                    nomor_sertifikat_halal_tahun
-                                    sertifikat_merek_tahun
-                                    nomor_test_report_tahun
-                                    jenis_usaha
-                                    cabang_industri
-                                    sub_cabang_industri
-                                    id_kbli
-                                    investasi_modal
-                                    jumlah_tenaga_kerja_pria
-                                    jumlah_tenaga_kerja_wanita
-                                    kapasitas_produksi_perbulan
-                                    lat
-                                    lng
-                                    foto_alat_produksi
-                                    foto_ruang_produksi
-                                    media_sosial
-                                  }
-                                }
+          Produk(page:${page}){
+          id
+          id_badan_usaha
+          nama
+          harga
+          nama_usaha
+          deskripsi
+          foto
+          sertifikat_halal
+          sertifikat_haki
+          sertifikat_sni
+        }
+    }
     ''';
   }
 
@@ -258,41 +210,19 @@ class _ListDataIKMState extends State<ListDataIKM> {
     setState(() {
       _page += 1;
     });
-    getBadanUsaha();
+    getProduk();
   }
 
   @override
   void initState() {
     super.initState();
 
-    // if (widget.loginCache == 1) {
-    getBadanUsaha();
-    // getCabangIndsutri();
-    // getBadanUsaha(10, _statusVerifikasi);
-    // crud.getData('/provinsi/52/kabupaten').then((data) {
-    //   //print(data.statusCode);
-    //   setState(() {
-    //     _listKabupaten = jsonDecode(data.body);
-    //   });
-    // });
+    getProduk();
+
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         _getMoreData();
-
-        // if (_iDkategori == 'Semua' &&
-        //     _kabupaten == null &&
-        //     _kecamatan == null &&
-        //     _kelurahan == null &&
-        //     !_filterTerdekat) {
-        //   // getBadanUsaha(_dataLoaded + 10, _statusVerifikasi);
-        // } else if (_filterTerdekat) {
-        //   getLatLng(_dataLoaded + 10);
-        // } else {
-        //   getBadanUsahaFilter(_iDkategori, _statusVerifikasi, _kabupaten,
-        //       _kecamatan, _kelurahan, _dataLoaded + 10);
-        // }
-
       }
     });
     // }
@@ -314,13 +244,11 @@ class _ListDataIKMState extends State<ListDataIKM> {
     List<Widget> filterWidget = [
       customText(context, Colors.black, 'Filters', TextAlign.left, 21,
           FontWeight.w700),
-
       Padding(
         padding: const EdgeInsets.only(top: 30.0),
         child: customText(context, Colors.black, 'Sektor Industri',
             TextAlign.left, 14, FontWeight.w500),
       ),
-
       Padding(
         padding: const EdgeInsets.only(top: 20.0, bottom: 15),
         child: Row(
@@ -366,50 +294,18 @@ class _ListDataIKMState extends State<ListDataIKM> {
           ],
         ),
       ),
-
       filterButton(
           context, 'Kimia , Farmasi, Kosmetik & Kesehatan', _iDkategori, () {
         setState(() {
           _iDkategori = 'Kimia , Farmasi, Kosmetik & Kesehatan';
         });
       }),
-
-      // dropDown3(_iDkategori, 'nama', 'Cabang Industri', _listCabangIndustri,
-      //     (newValue) {
-      //   setState(() {
-      //     _iDkategori = newValue!;
-      //     // setState(() {
-      //     //   _loading = true;
-      //     // });
-      //     // if (newValue == '212') {
-      //     //   getBadanUsaha(10, args.toString());
-      //     // } else {
-      //     //   getBadanUsahaFilter(_iDkategori, args.toString(), _kabupaten,
-      //     //       _kecamatan, _kelurahan, 10);
-      //     // }
-      //   });
-      // }),
-      // dropDownString(_kabupaten, 'Kabupaten', _listKabupaten, (newValue) {
-      //   // getBadanUsahaFilter(
-      //   //     _iDkategori, args.toString(), newValue, null, null, 10);
-      //   crud.getData('/kabupaten/' + newValue + '/kecamatan').then((data) {
-      //     setState(() {
-      //       // _loading = true;
-      //       _kecamatan = null;
-      //       _kelurahan = null;
-      //       _listKecamatan.clear();
-      //       _listKelurahan.clear();
-      //       _listKecamatan = jsonDecode(data.body);
-      //       _kabupaten = newValue;
-      //     });
-      //   });
-      // }),
       Padding(
         padding: const EdgeInsets.only(top: 20.0),
         child: dropDown3style2(
             context, _kabupaten, 'name', 'Pilih', 'Kabupaten :', _listKabupaten,
             (newValue) {
-          // getBadanUsahaFilter(
+          // getProdukFilter(
           //     _iDkategori, args.toString(), newValue, null, null, 10);
           crud.getData('/kabupaten/' + newValue + '/kecamatan').then((data) {
             setState(() {
@@ -429,11 +325,8 @@ class _ListDataIKMState extends State<ListDataIKM> {
         child: dropDown3style2(
             context, _kecamatan, 'name', 'Pilih', 'Kecamatan :', _listKecamatan,
             (newValue) {
-          // getBadanUsahaFilter(
-          //     _iDkategori, args.toString(), _kabupaten, newValue, null, 10);
           crud.getData('/kecamatan/' + newValue + '/kelurahan').then((data) {
             setState(() {
-              // _loading = true;
               _kelurahan = null;
               _listKelurahan.clear();
               _listKelurahan = jsonDecode(data.body);
@@ -442,59 +335,16 @@ class _ListDataIKMState extends State<ListDataIKM> {
           });
         }),
       ),
-
       Padding(
         padding: const EdgeInsets.only(top: 6.0),
         child: dropDown3style2(
             context, _kelurahan, 'name', 'Pilih', 'Kelurahan :', _listKelurahan,
             (newValue) {
-          // getBadanUsahaFilter(
-          //     _iDkategori, args.toString(), _kabupaten, _kecamatan, newValue, 10);
           setState(() {
-            // _loading = true;
             _kelurahan = newValue;
           });
         }),
       ),
-      // Text(_listKabupaten[0].toString()),
-      // dropDownString(_kecamatan, 'Kecamatan', _listKecamatan, (newValue) {
-      //   // getBadanUsahaFilter(
-      //   //     _iDkategori, args.toString(), _kabupaten, newValue, null, 10);
-      //   crud.getData('/kecamatan/' + newValue + '/kelurahan').then((data) {
-      //     setState(() {
-      //       // _loading = true;
-      //       _kelurahan = null;
-      //       _listKelurahan.clear();
-      //       _listKelurahan = jsonDecode(data.body);
-      //       _kecamatan = newValue;
-      //     });
-      //   });
-      // }),
-
-      // dropDownString(_kelurahan, 'Kelurahan', _listKelurahan, (newValue) {
-      //   // getBadanUsahaFilter(
-      //   //     _iDkategori, args.toString(), _kabupaten, _kecamatan, newValue, 10);
-      //   setState(() {
-      //     // _loading = true;
-      //     _kelurahan = newValue;
-      //   });
-      // }),
-
-      // button1('Terapkan filter', themeProvider.buttonColor, context, () {
-      //   setState(() {
-      //     _loading = true;
-      //     _filterTerdekat = false;
-      //   });
-      //   if (_iDkategori == null &&
-      //       _kabupaten == null &&
-      //       _kecamatan == null &&
-      //       _kelurahan == null) {
-      //     getBadanUsaha(10, args.toString());
-      //   } else {
-      //     getBadanUsahaFilter(_iDkategori, args.toString(), _kabupaten,
-      //         _kecamatan, _kelurahan, 10);
-      //   }
-      // }),
       Padding(
         padding: const EdgeInsets.only(top: 30.0),
         child: ButtonGradient1(context, 'Terapkan', 10, () {
@@ -506,10 +356,10 @@ class _ListDataIKMState extends State<ListDataIKM> {
               _kabupaten == null &&
               _kecamatan == null &&
               _kelurahan == null) {
-            // getBadanUsaha(10, _statusVerifikasi);
+            // getProduk(10, _statusVerifikasi);
             Navigator.pop(context);
           } else {
-            getBadanUsahaFilter(_iDkategori, _statusVerifikasi, _kabupaten,
+            getProdukFilter(_iDkategori, _statusVerifikasi, _kabupaten,
                 _kecamatan, _kelurahan, 10);
             Navigator.pop(context);
           }
@@ -523,7 +373,7 @@ class _ListDataIKMState extends State<ListDataIKM> {
             GestureDetector(
                 onTap: () {
                   clearFilter();
-                  getBadanUsahaFilter(
+                  getProdukFilter(
                       null, _statusVerifikasi, null, null, null, 10);
                 },
                 child: customText(context, Color(0xff545C6C), 'Reset',
@@ -547,7 +397,7 @@ class _ListDataIKMState extends State<ListDataIKM> {
                   Padding(
                     padding:
                         const EdgeInsets.only(left: 16.0, top: 16, bottom: 16),
-                    child: customText(context, Colors.black, 'Data IKM',
+                    child: customText(context, Colors.black, 'Data Produk',
                         TextAlign.center, 16, FontWeight.w500),
                   ),
                   Padding(
@@ -568,20 +418,21 @@ class _ListDataIKMState extends State<ListDataIKM> {
                         scrollDirection: Axis.horizontal,
                         children: [
                           SearchButton1(
-                              context, 'Cari Data IKM', _keywordController, () {
+                              context, 'Cari Data Produk', _keywordController,
+                              () {
                             setState(() {
                               _loading = true;
                             });
                             FocusScope.of(context).requestFocus(FocusNode());
-                            cariBadanUsaha(_keywordController.text);
+                            cariProduk(_keywordController.text);
                           }, () {
                             _keywordController.text = '';
                             FocusScope.of(context).requestFocus(FocusNode());
                             setState(() {
-                              _listBadanUsaha.clear();
+                              _listProduk.clear();
                               _loading = true;
                             });
-                            // getBadanUsaha(10, 'null');
+                            // getProduk(10, 'null');
                             clearFilter();
                           }),
                           Padding(
@@ -636,7 +487,7 @@ class _ListDataIKMState extends State<ListDataIKM> {
                   //                       // _statusVerifikasi =
                   //                       //     e == 'Semua' ? 'null' : e;
                   //                     });
-                  //                     // getBadanUsaha(
+                  //                     // getProduk(
                   //                     //     10, (e == 'Semua' ? 'null' : e));
                   //                   },
                   //                   child: Column(
@@ -676,13 +527,13 @@ class _ListDataIKMState extends State<ListDataIKM> {
                     height: MediaQuery.of(context).size.height * 0.6,
                     child: ListView(
                       controller: _scrollController,
-                      children: _listBadanUsaha
+                      children: _listProduk
                           .map((e) => Column(
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 16, right: 16),
-                                    child: cardUMKM3(context, e),
+                                    child: cardProduk4(context, e),
                                   ),
                                   Container(
                                     height: 8,
@@ -858,11 +709,11 @@ class _ListDataIKMState extends State<ListDataIKM> {
                               _kabupaten == null &&
                               _kecamatan == null &&
                               _kelurahan == null) {
-                            // getBadanUsaha(10, _statusVerifikasi);
+                            // getProduk(10, _statusVerifikasi);
                             // Navigator.pop(context);
 
                           } else {
-                            getBadanUsahaFilter(_iDkategori, args.toString(),
+                            getProdukFilter(_iDkategori, args.toString(),
                                 _kabupaten, _kecamatan, _kelurahan, 10);
                             // Navigator.pop(context);
 

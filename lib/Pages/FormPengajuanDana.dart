@@ -48,6 +48,34 @@ class _FormPengajuanDanaState extends State<FormPengajuanDana> {
   ];
   String _idUser = "";
 
+  Future<void> _showMyDialog(String msg) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(''),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(msg),
+                // Text('Would you like to approve of this message?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Tutup'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   CRUD crud = new CRUD();
 
   getInstansiQuery() {
@@ -102,7 +130,6 @@ class _FormPengajuanDanaState extends State<FormPengajuanDana> {
           user_id:"${user_id}",
           jumlah_dana:"${jumlah_dana}",
           waktu_pinjaman:"${waktu_pinjaman}",
-          alasan:"${alasan}",
           instansi:"${instansi}",
           jenis_pengajuan:"${jenis_pengajuan}",
           jumlah_dana_bank:"${jumlah_dana_bank}",
@@ -181,12 +208,14 @@ class _FormPengajuanDanaState extends State<FormPengajuanDana> {
                     setState(() {
                       _idInstansi = newValue;
                       _userIdInstansi = user_id[0]['user_id'];
+                      _idJumlahPinjaman = null;
+                      _idJangkaWaktu = null;
                     });
                   });
                 },
               ),
             ),
-            _idInstansi == "2"
+            _idInstansi == "1"
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -258,7 +287,7 @@ class _FormPengajuanDanaState extends State<FormPengajuanDana> {
                       )
                     ],
                   )
-                : _idInstansi == "1"
+                : _idInstansi != "1"
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -289,6 +318,8 @@ class _FormPengajuanDanaState extends State<FormPengajuanDana> {
                                 }
                                 final _dataList =
                                     result.data?['ListJumlahPinjaman'];
+
+                                print(_dataList);
                                 return dropDownStringStyle2(
                                     _idJumlahPinjaman,
                                     'Pilih Jumlah Pinjaman',
@@ -359,13 +390,16 @@ class _FormPengajuanDanaState extends State<FormPengajuanDana> {
                                 }
                                 final _dataList =
                                     result.data?['SimulasiAngsuran'];
+
                                 var formatter = NumberFormat('#,###,000');
                                 return Text("Total Angsuran: " +
                                     (_dataList.length != 0
-                                        ? formatter
-                                            .format(int.parse(
-                                                _dataList[0]['angsuran']))
-                                            .toString()
+                                        ? _dataList[0]['angsuran'] == ""
+                                            ? "0"
+                                            : formatter
+                                                .format(int.parse(
+                                                    _dataList[0]['angsuran']))
+                                                .toString()
                                         : ""));
                               },
                             ),
@@ -389,7 +423,7 @@ class _FormPengajuanDanaState extends State<FormPengajuanDana> {
                 ),
                 Mutation(
                   options: MutationOptions(
-                    document: gql(_idInstansi == "1"
+                    document: gql(_idInstansi != "1"
                         ? PengajuanDanaMutation(
                             _idUser,
                             null,
@@ -410,11 +444,17 @@ class _FormPengajuanDanaState extends State<FormPengajuanDana> {
                             null,
                             null,
                           )),
+                    update: (GraphQLDataProxy cache, QueryResult? result) {
+                      return cache;
+                    },
                     onCompleted: (dynamic resultData) {
-                     
-
-                      Navigator.pop(context);
-                      Navigator.popAndPushNamed(context, '/pengajuanDana');
+                      String msg = resultData['PengajuanDana']['messagges'];
+                      if (msg != "success") {
+                        _showMyDialog(msg);
+                      } else {
+                        Navigator.pop(context);
+                        Navigator.popAndPushNamed(context, '/pengajuanDana');
+                      }
 
                       FocusManager.instance.primaryFocus?.unfocus();
                     },

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'CustomText.dart';
 
-String _storageUrl = "https://simanis.ntbprov.go.id/storage/";
+String _storageUrl = "https://simanis.ntbprov.go.id";
 
 Widget cardUMKM3(BuildContext context, var e) {
   return GestureDetector(
@@ -21,14 +21,12 @@ Widget cardUMKM3(BuildContext context, var e) {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12.0),
                   child: Image.network(
-                    e['foto_ruang_produksi'] == Null ||
-                            e['foto_ruang_produksi'] == 'null' ||
-                            e['foto_ruang_produksi'] == ""
+                    e['produk'] == Null ||
+                            e['produk'] == 'null' ||
+                            e['produk'] == ""
                         ? 'https://www.btklsby.go.id/images/placeholder/basic.png'
-                        : (e['foto_ruang_produksi'] == null
-                                ? ""
-                                : _storageUrl) +
-                            (e['foto_ruang_produksi'] ??
+                        : (e['produk'] == null ? "" : _storageUrl) +
+                            (e['produk'] ??
                                 "https://www.btklsby.go.id/images/placeholder/basic.png"),
                     width: 100,
                     height: 100,

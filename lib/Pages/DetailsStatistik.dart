@@ -52,6 +52,7 @@ class _DetailsStatistikState extends State<DetailsStatistik> {
   }
 
   getBadanUsaha() async {
+    print(_query);
     var data = client.value.query(QueryOptions(document: gql(_query)));
     data.then((value) => {
           setState(() {
@@ -97,7 +98,6 @@ class _DetailsStatistikState extends State<DetailsStatistik> {
           _scrollController.position.maxScrollExtent) {
         if (_listBadanUsaha.length < 50) {
         } else {
-          print("go");
           _getMoreData();
         }
       }
