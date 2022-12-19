@@ -1977,6 +1977,8 @@ class _StatistikPageState extends State<StatistikPage> {
                                         final _sertifikatSni =
                                             data['total_ikm_sertifikat_sni'];
 
+                                            
+
                                         return PieChart(
                                           PieChartData(
                                               pieTouchData: PieTouchData(
@@ -2080,12 +2082,13 @@ class _StatistikPageState extends State<StatistikPage> {
                                     final _ikmInformal =
                                         data['total_ikm_informal'];
 
-                                    List indicatorDiagramList = [
-                                      {
-                                        'color': Color(0xff4930C5),
-                                        'title': 'Total IKM',
-                                        'value': _totalIkm,
-                                        'query': '''
+                                  List indicatorDiagramList = [
+                              {
+                                'color': Color(0xff4930C5),
+                                'title': 'Total IKM',
+                                'value': _totalIkm,
+                                'icon': "total_ikm.svg",
+                                'query': '''
                                 query{
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}"){
                                     id
@@ -2116,16 +2119,45 @@ class _StatistikPageState extends State<StatistikPage> {
                                     lng
                                     foto_alat_produksi
                                     foto_ruang_produksi
+                                    media_sosial id
+                                    nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
                                     media_sosial
                                   }
                                 }
                               '''
-                                      },
-                                      {
-                                        'color': Color(0xfff41AAC9),
-                                        'title': 'Tenaga Kerja',
-                                        'value': _totalTenagaKerja,
-                                        'query': '''
+                              },
+                              {
+                                'color': Color(0xfff41AAC9),
+                                'title': 'Tenaga Kerja',
+                                'icon': "tenaga_kerja.svg",
+                                'value': _totalTenagaKerja,
+                                'query': '''
                                 query{
                                   badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
@@ -2160,14 +2192,15 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                                      },
-                                      {
-                                        'color': Colors.lime,
-                                        'title': 'IKM Baru',
-                                        'value': _ikmBaru,
-                                        'query': '''
+                              },
+                              {
+                                'color': Colors.lime,
+                                'title': 'IKM Baru',
+                                'value': _ikmBaru,
+                                'icon': "ikm_baru.svg",
+                                'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
+                                  badanUsaha(page:1,filter:"2",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
                                     kabupaten
@@ -2200,14 +2233,15 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                                      },
-                                      {
-                                        'color': Colors.blueAccent,
-                                        'title': 'Industri Kecil',
-                                        'value': _industriKecil,
-                                        'query': '''
+                              },
+                              {
+                                'color': Colors.blueAccent,
+                                'title': 'Industri Kecil',
+                                'value': _industriKecil,
+                                'icon': "industri_kecil.svg",
+                                'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
+                                  badanUsaha(page:1,filter:"3",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
                                     kabupaten
@@ -2240,14 +2274,15 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                                      },
-                                      {
-                                        'color': Colors.amber,
-                                        'title': 'Industri Menengah',
-                                        'value': _industriMenengah,
-                                        'query': '''
+                              },
+                              {
+                                'color': Colors.amber,
+                                'title': 'Industri Menengah',
+                                'value': _industriMenengah,
+                                'icon': "industri_menengah.svg",
+                                'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
+                                  badanUsaha(page:1,filter:"4",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
                                     kabupaten
@@ -2280,14 +2315,15 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                                      },
-                                      {
-                                        'color': Colors.green,
-                                        'title': 'Industri Besar',
-                                        'value': _industriBesar,
-                                        'query': '''
+                              },
+                              {
+                                'color': Colors.green,
+                                'title': 'Industri Besar',
+                                'value': _industriBesar,
+                                'icon': "industri_besar.svg",
+                                'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
+                                  badanUsaha(page:1,filter:"5",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
                                     kabupaten
@@ -2320,14 +2356,15 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                                      },
-                                      {
-                                        'color': Colors.teal,
-                                        'title': 'Sertifikat Halal',
-                                        'value': _sertifikatHalal,
-                                        'query': '''
+                              },
+                              {
+                                'color': Colors.teal,
+                                'title': 'Sertifikat Halal',
+                                'value': _sertifikatHalal,
+                                'icon': "sert_halal.svg",
+                                'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"halal"){
+                                  badanUsaha(page:1,filter:"6",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"halal"){
                                     id
                                     nik
                                     kabupaten
@@ -2360,14 +2397,15 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                                      },
-                                      {
-                                        'color': Colors.brown,
-                                        'title': 'Sertifikat HAKI',
-                                        'value': _sertifikatHaki,
-                                        'query': '''
+                              },
+                              {
+                                'color': Colors.brown,
+                                'title': 'Sertifikat HAKI',
+                                'value': _sertifikatHaki,
+                                'icon': "sert_haki.svg",
+                                'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"haki"){
+                                  badanUsaha(page:1,filter:"7",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"haki"){
                                     id
                                     nik
                                     kabupaten
@@ -2400,14 +2438,15 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                                      },
-                                      {
-                                        'color': Colors.pink,
-                                        'title': 'Sertifikat SNI',
-                                        'value': _sertifikatSni,
-                                        'query': '''
+                              },
+                              {
+                                'color': Colors.pink,
+                                'title': 'Sertifikat SNI',
+                                'value': _sertifikatSni,
+                                'icon': "sert_sni.svg",
+                                'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"sni"){
+                                  badanUsaha(page:1,filter:"8",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"sni"){
                                     id
                                     nik
                                     kabupaten
@@ -2440,14 +2479,15 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                                      },
-                                      {
-                                        'color': Color(0xff151D3B),
-                                        'title': 'Sert. Test Report',
-                                        'value': _sertifikatTestReport,
-                                        'query': '''
+                              },
+                              {
+                                'color': Color(0xff151D3B),
+                                'title': 'Sert. Test Report',
+                                'value': _sertifikatTestReport,
+                                'icon': "sert_test_report.svg",
+                                'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"test_report"){
+                                  badanUsaha(page:1,filter:"9",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}",sertifikat:"test_report"){
                                     id
                                     nik
                                     kabupaten
@@ -2480,14 +2520,15 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                                      },
-                                      {
-                                        'color': Color(0xffF76E11),
-                                        'title': 'Formal',
-                                        'value': _ikmFormal,
-                                        'query': '''
+                              },
+                              {
+                                'color': Color(0xffF76E11),
+                                'title': 'Formal',
+                                'value': _ikmFormal,
+                                'icon': "formal.svg",
+                                'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
+                                  badanUsaha(page:1,filter:"10",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
                                     kabupaten
@@ -2520,14 +2561,15 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                                      },
-                                      {
-                                        'color': Color(0xff4C0027),
-                                        'title': 'Informal',
-                                        'value': _ikmInformal,
-                                        'query': '''
+                              },
+                              {
+                                'color': Color(0xff4C0027),
+                                'title': 'Informal',
+                                'value': _ikmInformal,
+                                'icon': "informal.svg",
+                                'query': '''
                                 query{
-                                  badanUsaha(page:1,kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
+                                  badanUsaha(page:1,filter:"11",kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}",sub_cabang_industri:"${_subCabangIndustri != null ? _subCabangIndustri : ''}"){
                                     id
                                     nik
                                     kabupaten
@@ -2560,9 +2602,8 @@ class _StatistikPageState extends State<StatistikPage> {
                                   }
                                 }
                               '''
-                                      },
-                                    ];
-
+                              },
+                            ];
                                     return GridView.count(
                                       physics: NeverScrollableScrollPhysics(),
                                       childAspectRatio: 1 / 0.25,

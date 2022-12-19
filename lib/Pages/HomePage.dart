@@ -263,7 +263,7 @@ class _HomePageState extends State<HomePage> {
           Navigator.pushNamed(context, '/homeLayoutPage',
               arguments: <String, dynamic>{
                 "selectedIndex": 1,
-                "kategori": "5",
+                "kategori": "6",
                 "aksesLink": "home"
               });
         }
@@ -275,7 +275,7 @@ class _HomePageState extends State<HomePage> {
           Navigator.pushNamed(context, '/homeLayoutPage',
               arguments: <String, dynamic>{
                 "selectedIndex": 1,
-                "kategori": "6",
+                "kategori": "5",
                 "aksesLink": "home"
               });
         }

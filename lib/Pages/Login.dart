@@ -39,6 +39,46 @@ class _LoginState extends State<Login> {
   TextEditingController passwordTextEditingController =
       new TextEditingController();
 
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(''),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Hubungi Admin Untuk Mengubah Password'),
+                // Text('Would you like to approve of this message?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Tutup'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Chat Admin'),
+              onPressed: () async {
+                String url =
+                    "https://api.whatsapp.com/send?phone=6287728937983";
+                if (await canLaunch(url)) {
+                  await launch(url);
+                  return;
+                }
+                print("couldn't launch $url");
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   String loginMutation = r'''
       mutation($nik: String!,$password: String!){
         login(nik:$nik,password:$password){
@@ -126,13 +166,7 @@ class _LoginState extends State<Login> {
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        String url =
-                            "https://simanis.ntbprov.go.id:8443/get_password.php?locale=default";
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                          return;
-                        }
-                        print("couldn't launch $url");
+                        _showMyDialog();
                       },
                       child: customText(context, Colors.black, "Lupa password?",
                           TextAlign.right, 14, FontWeight.w400),

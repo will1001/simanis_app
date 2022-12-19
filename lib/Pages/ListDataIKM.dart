@@ -145,7 +145,7 @@ class _ListDataIKMState extends State<ListDataIKM> {
     if (keyword == '') {
       getBadanUsaha();
     } else {
-      getBadanUsaha();
+      searchBadanUsaha(keyword);
     }
   }
 
@@ -168,6 +168,19 @@ class _ListDataIKMState extends State<ListDataIKM> {
     data.then((value) => {
           print(value.data?['badanUsaha']),
           setState(() {
+            _listBadanUsaha.clear();
+            _listBadanUsaha.addAll(value.data?['badanUsaha']);
+            _loading = false;
+          })
+        });
+  }
+
+  searchBadanUsaha(_keyword) {
+    var data = client.value.query(
+        QueryOptions(document: gql(searchBadanUsahaQuery(_page, _keyword))));
+    data.then((value) => {
+          setState(() {
+            _listBadanUsaha.clear();
             _listBadanUsaha.addAll(value.data?['badanUsaha']);
             _loading = false;
           })
@@ -220,6 +233,44 @@ class _ListDataIKMState extends State<ListDataIKM> {
     return '''
      query{
                                   badanUsaha(page:${page},kabupaten:"${_kabupaten != null ? _kabupaten : ''}",kecamatan:"${_kecamatan != null ? _kecamatan : ''}",kelurahan:"${_kelurahan != null ? _kelurahan : ''}",cabang_industri:"${_cabangIndustri != null ? _cabangIndustri : ''}"){
+                                    id
+                                    nik
+                                    kabupaten
+                                    kecamatan
+                                    kelurahan
+                                    produk
+                                    nama_direktur
+                                    alamat_lengkap
+                                    no_hp
+                                    nama_usaha
+                                    bentuk_usaha
+                                    tahun_berdiri
+                                    nib_tahun
+                                    nomor_sertifikat_halal_tahun
+                                    sertifikat_merek_tahun
+                                    nomor_test_report_tahun
+                                    jenis_usaha
+                                    cabang_industri
+                                    sub_cabang_industri
+                                    id_kbli
+                                    investasi_modal
+                                    jumlah_tenaga_kerja_pria
+                                    jumlah_tenaga_kerja_wanita
+                                    kapasitas_produksi_perbulan
+                                    lat
+                                    lng
+                                    foto_alat_produksi
+                                    foto_ruang_produksi
+                                    media_sosial
+                                  }
+                                }
+    ''';
+  }
+
+  searchBadanUsahaQuery(int page, String keyword) {
+    return '''
+     query{
+                                  badanUsaha(page:${page},keyword:"${keyword}"){
                                     id
                                     nik
                                     kabupaten

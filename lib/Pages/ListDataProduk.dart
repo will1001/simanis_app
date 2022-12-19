@@ -131,7 +131,7 @@ class _ListDataProdukState extends State<ListDataProduk> {
     if (keyword == '') {
       getProduk();
     } else {
-      getProduk();
+      searchProduk(keyword);
     }
   }
 
@@ -141,6 +141,20 @@ class _ListDataProdukState extends State<ListDataProduk> {
     data.then((value) => {
           print(value),
           setState(() {
+            _listProduk.clear();
+
+            _listProduk.addAll(value.data?['Produk']);
+            _loading = false;
+          })
+        });
+  }
+
+  searchProduk(_keyword) {
+    var data = client.value
+        .query(QueryOptions(document: gql(searchProdukQuery(_page, _keyword))));
+    data.then((value) => {
+          setState(() {
+            _listProduk.clear();
             _listProduk.addAll(value.data?['Produk']);
             _loading = false;
           })
@@ -191,6 +205,25 @@ class _ListDataProdukState extends State<ListDataProduk> {
     return '''
      query{
           Produk(page:${page}){
+          id
+          id_badan_usaha
+          nama
+          harga
+          nama_usaha
+          deskripsi
+          foto
+          sertifikat_halal
+          sertifikat_haki
+          sertifikat_sni
+        }
+    }
+    ''';
+  }
+
+  searchProdukQuery(int page, String keyword) {
+    return '''
+     query{
+          Produk(page:${page},keyword:"${keyword}"){
           id
           id_badan_usaha
           nama

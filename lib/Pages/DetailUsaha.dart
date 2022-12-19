@@ -481,7 +481,7 @@ class _DetailUsahaState extends State<DetailUsaha> {
   }
 
   loadRecentBadanUsahaData(datas) {
-    print(datas[0]['ktp']);
+    // print(datas[0]['id_kabupaten']);
     setState(() {
       _nikController.text = datas[0]['nik'] ?? "";
       _namaController.text = datas[0]['nama_direktur'] ?? "";
@@ -512,11 +512,13 @@ class _DetailUsahaState extends State<DetailUsaha> {
       _latController.text = datas[0]['lat'] ?? "";
       _longController.text = datas[0]['lng'] ?? "";
       _medsosController.text = datas[0]['media_sosial'] ?? "";
-      _kabupaten = datas[0]['id_kabupaten']
-          ? ""
+
+      _kabupaten = datas[0]['id_kabupaten'] != ""
+          ? datas[0]['id_kabupaten']
           : datas[0]['id_kabupaten'] == 0
               ? null
               : datas[0]['id_kabupaten'];
+
       _kecamatan = datas[0]['id_kecamatan'] ?? "";
       _kelurahan = datas[0]['id_kelurahan'] ?? "";
       _bentukUsaha = datas[0]['bentuk_usaha'] ?? "";

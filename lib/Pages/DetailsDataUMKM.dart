@@ -255,78 +255,78 @@ class _DetailsDataUMKMState extends State<DetailsDataUMKM> {
                   TextAlign.left, 18, FontWeight.w500),
             ),
           ),
-          ListDataIKMWidget(
-              context, "NIK", args == null ? "" : nullHandler(args['nik'])),
+          // ListDataIKMWidget(
+          //     context, "NIK", args == null ? "" : nullHandler(args['nik'])),
           ListDataIKMWidget(context, "Nama",
               args == null ? "" : nullHandler(args['nama_direktur'])),
-          ListDataIKMWidget(context, "Kab/Kota",
-              args == null ? "" : nullHandler(args['kabupaten'])),
-          ListDataIKMWidget(context, "Kecamatan",
-              args == null ? "" : nullHandler(args['kecamatan'])),
-          ListDataIKMWidget(context, "Kelurahan/Desa",
-              args == null ? "" : nullHandler(args['kelurahan'])),
+          // ListDataIKMWidget(context, "Kab/Kota",
+          //     args == null ? "" : nullHandler(args['kabupaten'])),
+          // ListDataIKMWidget(context, "Kecamatan",
+          //     args == null ? "" : nullHandler(args['kecamatan'])),
+          // ListDataIKMWidget(context, "Kelurahan/Desa",
+          //     args == null ? "" : nullHandler(args['kelurahan'])),
           ListDataIKMWidget(context, "Alamat Lengkap",
               args == null ? "" : nullHandler(args['alamat_lengkap'])),
           ListDataIKMWidget(
               context, "No Hp", args == null ? "" : nullHandler(args['no_hp'])),
           ListDataIKMWidget(context, "Nama Usaha",
               args == null ? "" : nullHandler(args['nama_usaha'])),
-          ListDataIKMWidget(context, "Bentuk Usaha",
-              args == null ? "" : nullHandler(args['bentuk_usaha'])),
-          ListDataIKMWidget(context, "Tahun Berdiri",
-              args == null ? "" : nullHandler(args['tahun_berdiri'])),
+          // ListDataIKMWidget(context, "Bentuk Usaha",
+          //     args == null ? "" : nullHandler(args['bentuk_usaha'])),
+          // ListDataIKMWidget(context, "Tahun Berdiri",
+          //     args == null ? "" : nullHandler(args['tahun_berdiri'])),
           // ListDataIKMWidget(context, "Legalitas Usaha",
           //     args == null ? "" : nullHandler(args[''])),
-          ListDataIKMWidget(context, "NIB Tahun",
-              args == null ? "" : nullHandler(args['nib_tahun'])),
-          ListDataIKMWidget(
-              context,
-              "No Sertifikat Halal Tahun",
-              args == null
-                  ? ""
-                  : nullHandler(args['nomor_sertifikat_halal_tahun'])),
-          ListDataIKMWidget(context, "SNI Tahun",
-              args == null ? "" : nullHandler(args['sni_tahun'])),
+          // ListDataIKMWidget(context, "NIB Tahun",
+          //     args == null ? "" : nullHandler(args['nib_tahun'])),
+          // ListDataIKMWidget(
+          //     context,
+          //     "No Sertifikat Halal Tahun",
+          //     args == null
+          //         ? ""
+          //         : nullHandler(args['nomor_sertifikat_halal_tahun'])),
+          // ListDataIKMWidget(context, "SNI Tahun",
+          //     args == null ? "" : nullHandler(args['sni_tahun'])),
           ListDataIKMWidget(context, "Jenis Usaha",
               args == null ? "" : nullHandler(args['jenis_usaha'])),
-          ListDataIKMWidget(context, "Cabang Industri",
-              args == null ? "" : nullHandler(args['cabang_industri'])),
-          ListDataIKMWidget(context, "Sub Cabang Industri",
-              args == null ? "" : nullHandler(args['sub_cabang_industri'])),
-          ListDataIKMWidget(context, "ID KBLI",
-              args == null ? "" : nullHandler(args['id_kbli'])),
-          ListDataIKMWidget(context, "Investasi Modal",
-              args == null ? "" : nullHandler(args['investasi_modal'])),
-          ListDataIKMWidget(
-              context,
-              "Jumlah Tenaga Kerja Pria",
-              args == null
-                  ? ""
-                  : nullHandler(args['jumlah_tenaga_kerja_pria'])),
-          ListDataIKMWidget(
-              context,
-              "Jumlah Tenaga Kerja Wanita",
-              args == null
-                  ? ""
-                  : nullHandler(args['jumlah_tenaga_kerja_wanita'])),
-          ListDataIKMWidget(
-              context,
-              "Kapasitas Produksi ",
-              args == null
-                  ? ""
-                  : nullHandler(args['kapasitas_produksi_perbulan'])),
-          ListDataIKMWidget(context, "Nilai Produksi",
-              args == null ? "" : nullHandler(args['nilai_produksi_perbulan'])),
-          ListDataIKMWidget(
-              context,
-              "Nilai Bahan Baku",
-              args == null
-                  ? ""
-                  : nullHandler(args['nilai_bahan_baku_perbulan'])),
-          ListDataIKMWidget(context, "Latitude",
-              args == null ? "" : nullHandler(args['lat'])),
-          ListDataIKMWidget(context, "Longitude",
-              args == null ? "" : nullHandler(args['lng'])),
+          // ListDataIKMWidget(context, "Cabang Industri",
+          //     args == null ? "" : nullHandler(args['cabang_industri'])),
+          // ListDataIKMWidget(context, "Sub Cabang Industri",
+          //     args == null ? "" : nullHandler(args['sub_cabang_industri'])),
+          // ListDataIKMWidget(context, "ID KBLI",
+          //     args == null ? "" : nullHandler(args['id_kbli'])),
+          // ListDataIKMWidget(context, "Investasi Modal",
+          //     args == null ? "" : nullHandler(args['investasi_modal'])),
+          // ListDataIKMWidget(
+          //     context,
+          //     "Jumlah Tenaga Kerja Pria",
+          //     args == null
+          //         ? ""
+          //         : nullHandler(args['jumlah_tenaga_kerja_pria'])),
+          // ListDataIKMWidget(
+          //     context,
+          //     "Jumlah Tenaga Kerja Wanita",
+          //     args == null
+          //         ? ""
+          //         : nullHandler(args['jumlah_tenaga_kerja_wanita'])),
+          // ListDataIKMWidget(
+          //     context,
+          //     "Kapasitas Produksi ",
+          //     args == null
+          //         ? ""
+          //         : nullHandler(args['kapasitas_produksi_perbulan'])),
+          // ListDataIKMWidget(context, "Nilai Produksi",
+          //     args == null ? "" : nullHandler(args['nilai_produksi_perbulan'])),
+          // ListDataIKMWidget(
+          //     context,
+          //     "Nilai Bahan Baku",
+          //     args == null
+          //         ? ""
+          //         : nullHandler(args['nilai_bahan_baku_perbulan'])),
+          // ListDataIKMWidget(context, "Latitude",
+          //     args == null ? "" : nullHandler(args['lat'])),
+          // ListDataIKMWidget(context, "Longitude",
+          //     args == null ? "" : nullHandler(args['lng'])),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 16, right: 16),
             child: Container(
